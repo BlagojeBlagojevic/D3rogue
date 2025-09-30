@@ -1,0 +1,69 @@
+{
+    "Sprite":
+    [
+        {
+            "path": "assets/playera.png",
+            "scale": 1.0
+        },
+        
+        {
+            "path": "assets/monsters/abomination.png",
+            "scale": 1.0
+        },
+        {
+            "path": "assets/monsters/ghoul.png",
+            "scale": 1.0
+        },
+        
+        {
+            "path": "assets/monsters/banshee.png",
+            "scale": 1.0
+        },
+        
+        {
+            "path": "assets/monsters/necromancer.png",
+            "scale": 1.0
+        },
+        
+        {
+            "path": "assets/monsters/wagon.png",
+            "scale": 1.5
+        },
+        
+        {
+            "path": "assets/monsters/zombie.png",
+            "scale": 1.0
+        },
+        
+        
+        {
+            "path": "assets/monsters/acolyte.png",
+            "scale": 1.5
+        },
+        {
+            "path": "assets/monsters/acolyteB.png",
+            "scale": 1.5
+        },
+        
+        {
+            "path": "assets/monsters/acolyteS.png",
+            "scale": 1.5
+        },
+        
+        {
+            "path": "assets/monsters/acolyteDeath.png",
+            "scale": 1.5
+        },
+        {
+            "path": "assets/monsters/acolyteDeathBow.png",
+            "scale": 1.5
+        },
+        {
+            "path": "assets/monsters/acolyteDeathWarrior.png",
+            "scale": 1.5
+        }
+        
+        
+        
+    ]
+}

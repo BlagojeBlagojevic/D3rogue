@@ -1,0 +1,649 @@
+#include "renderer.h"
+
+//Let be brige be hear
+
+EngineData* init_engine(World *world, int player_entity_id, const char* name_atlas, const char* water_atlas) {
+	const Position p =  world->position[player_entity_id];
+
+
+
+	//Tbd from map file
+
+	EngineData *engine 		  = malloc(1*sizeof(EngineData));
+	engine->isRenderInventory = false;
+	engine->isRenderPickup    = false;
+	engine->isRenderMap       = false;
+	engine->isRenderStats     = false;
+	//engine->tempStr = (Str){0};
+	memset(&engine->tempStr, 0, sizeof(Str));
+	//We see
+	engine->tempItemList = (Num){0};
+	engine->whatItem = 0;
+	
+	world->items = (Item_DA){0};
+	Image map_image;
+	map_image.width  = world->map.w;
+	map_image.height = world->map.h;
+	map_image.format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
+	uint8_t *data = malloc(map_image.width * map_image.height);
+	for(int y = 0; y < world->map.h; y++ ) {
+		for(int x = 0; x < world->map.w; x++ ) {
+			if(world->map.walling[y][x] == '#') {
+				data[y*world->map.w+x] = 255; //WALL
+				}
+			else {
+				data[y* world->map.w+x] = 0; //FLOOR
+				}
+			}
+		}
+	map_image.data = data;
+	//Unloaded at the end
+
+	//engine->texture = LoadTextureFromImage(map_image);
+
+
+
+	engine->camera.position = (Vector3) {
+		(float)p.x, 0.6f, (float)p.y
+		};
+	engine->camera.target = (Vector3) {
+		0.185f, 0.6f, 0.0f
+		};
+	engine->camera.up = (Vector3) {
+		0.01f, 1.0f, 0.01f
+		};
+	engine->camera.fovy = 45.0f;
+	engine->camera.projection = CAMERA_PERSPECTIVE;
+
+	engine->mesh = GenMeshCubicmap(map_image, (Vector3) {
+		1.0f, 1.0f, 1.0f
+		});
+	engine->model = LoadModelFromMesh(engine->mesh);
+	
+	engine->nextPosition = engine->camera.position;
+	engine->playerYaw = 0.0f;
+	engine->targetYaw = 0.0f;
+	engine->isMoving = false;
+	engine->drawDistance = 100;
+
+	Texture texture_matirial = LoadTexture(name_atlas); ;
+	engine->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture_matirial;
+
+	engine->modelPosition = (Vector3) {
+		0.0f, 0.0f, 0.0f
+		};
+
+	UnloadImage(map_image);
+	SetTargetFPS(60);
+	engine->isEntMoving = false;
+	engine->isMoving = false;
+	engine->isGasRun = false;
+	Texture textureW_matirial = LoadTexture(water_atlas);	
+	//Water stuffs
+	//C img
+	bool isFirst = false;
+	engine->water = (ModelMesh_DA){0};
+	for(int y = 0; y < world->map.h; y++){
+		for(int x = 0; x < world->map.w; x++){
+			if(world->map.walling[y][x] == '~'){
+				ModelMesh m;
+				m.mesh = GenMeshPlane(1.0, 1.0, 1.0, 1.0);
+				m.model = LoadModelFromMesh(m.mesh);
+				m.model.materials[0].maps->texture = textureW_matirial;
+				m.model.transform = MatrixTranslate((float)x, 0.001f, (float)y); 
+				da_append(&engine->water, m);
+			}
+		}
+	}
+	
+	//engine->modelW = LoadModelFromMesh(engine->mesh);
+	//Texture textureW_matirial = LoadTexture(water_atlas); ;
+	//engine->modelW.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textureW_matirial;
+	//UnloadImage(waterImage);
+	return engine;
+	}
+
+
+
+void render_loop(World *world, EngineData *engine) {
+	DROP(world);
+
+	ClearBackground(RAYWHITE);
+
+	BeginMode3D(engine->camera);
+	//LOG("model %s", engine->model);
+	DrawModel(engine->model, engine->modelPosition, 1.0f, WHITE);
+	//DrawCube((Vector3){0, 0, 0}, 10, 10, 10, GREEN);
+	EndMode3D();
+
+	DrawFPS(10, 10);
+
+	//UpdateCamera(&engine->camera, CAMERA_FREE);
+	}
+
+
+	
+void render_map(World *world, EngineData *engine){
+	//ENTIRE MAP
+	const int sizeX = engine->width  / 150;
+	const int sizeY = engine->height / 150;
+	const Color colorBacg = {18, 18, 18, 255};
+	Color c = WHITE;
+	c.a = 128;
+	//MAP
+	DrawRectangle(0, 0, engine->width, engine->height, c);
+	for(int y = 0; y < world->map.h; y++){
+		for(int x = 0; x < world->map.w; x++){
+			if((world->map.walling[y][x] == ' ' || world->map.walling[y][x] == '*') && world->isExpMap[y][x] == 1)
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);
+			if(world->map.walling[y][x] == '#'&& world->isExpMap[y][x] == 1){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, colorBacg);
+			}
+			
+			if((world->map.walling[y][x] == '+' || world->map.walling[y][x] == '-') && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);
+				DrawText("+", x*sizeX, y*sizeY , 10, GREEN);
+			
+			}
+				
+			if((world->map.walling[y][x] == '~') && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLUE);
+				DrawText("~", x*sizeX, y*sizeY , 10, BLUE);
+			
+			}
+				
+			if((world->map.walling[y][x] == '\"') && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);
+				DrawText("\"", x*sizeX, y*sizeY , 10, GREEN);
+				
+			}
+				
+			//DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);		
+		}
+	}
+	 CompMask mask = COMP_POSITION | COMP_RENDER;
+	 DrawText("@", world->position[0].x * sizeX, world->position[0].y * sizeY, 10,  GREEN);
+	//for(int i = 1; i < MAX_ENTITIES; i++){
+	//	if ((world->masks[i] & mask) == mask){
+	//		DrawRectangle(world->position[i].x*sizeX, world->position[i].y*sizeY, sizeX, sizeY, WHITE);
+	//	}
+	//}
+	if(IsKeyPressed(KEY_C)){
+		engine->isRenderMap = false;
+	}
+
+}	
+	
+
+void render_map_testing(World *world, EngineData *engine){
+	DROP(engine);
+	//ENTIRE MAP
+	const int sizeX = 1200 / 80;
+	const int sizeY = 800 / 80;
+	
+	//MAP
+	for(int y = 0; y < world->map.h; y++){
+		for(int x = 0; x < world->map.w; x++){
+			if(world->map.walling[y][x] == '#')
+			DrawText("#", x*sizeX, y*sizeY , 10, GREEN);
+			if(world->map.walling[y][x] == '+')
+			DrawText("+", x*sizeX, y*sizeY , 10, GREEN);
+			if(world->gasMap[y][x].type != gasNo)
+			DrawText("P", x*sizeX, y*sizeY , 10, BLUE);
+					
+		}
+	}
+	 CompMask mask = COMP_POSITION | COMP_RENDER;
+	 DrawText("@", world->position[0].x * sizeX, world->position[0].y * sizeY, 10,  RAYWHITE);
+	for(int i = 1; i < MAX_ENTITIES; i++){
+		if ((world->masks[i] & mask) == mask){
+			DrawText("M", world->position[i].x * sizeX, world->position[i].y * sizeY,10, RED);
+		}
+	}
+	
+}
+
+//Tet for now be able to be set up
+void render_event_messages(EngineData *engine, const int x, const int y, const int w, const int h){
+	Color c = BLACK;
+	
+	c.a = 128;
+	
+	//Tbd some texture
+	DrawRectangle(x, y, w, h, c);
+	//Ren c mes
+	//Tbd num messages thru func
+	if(engine->messeges.items != NULL || engine->messeges.count > 0)
+	for(int i = 0; i < 5; i++){
+		const int index = engine->messeges.count - i - 1;
+		if(index < 0){
+			break;
+		}
+		const int xPos = x + 10;
+		int yPos = y + 10 + 20 * i;
+		DrawText(engine->messeges.items[index], xPos, yPos, 20, WHITE);
+		
+		
+	}	
+}	
+
+
+
+void load_sprites(Sprite_DA *sprites, const char* name){
+
+	char *content = malloc(MAX_SIZE_OF_JSON);
+	memset(content, '\0', MAX_SIZE_OF_JSON);
+	FILE *f = fopen(name, "r");
+	if(f == NULL) {
+		ASSERT("Sprite JSON does not exist\n\n");
+		//TBD Error windows popup or something
+		}
+	const int  size = fread(content, sizeof(char), MAX_SIZE_OF_JSON, f);
+	DROP(size);
+	LOG("%s\n", content);
+	cJSON *json = cJSON_Parse(content);
+	ERR_JSON(json);
+	cJSON *s = cJSON_GetObjectItemCaseSensitive(json, "Sprite");
+	ERR_JSON(s);
+	cJSON *temp = NULL;
+	cJSON_ArrayForEach(temp, s) {
+		cJSON *path  = cJSON_GetObjectItemCaseSensitive(temp, "path");
+		cJSON *scale = cJSON_GetObjectItemCaseSensitive(temp, "scale"); 
+		ERR_JSON(path);
+		ERR_JSON(scale);
+		Sprite s;
+		s.scale   = (float)scale->valuedouble;
+		s.texture = LoadTexture(path->valuestring); 
+		da_append(sprites, s);
+		}
+	cJSON_Delete(json);
+	fclose(f);
+	f = fopen("nonEntJSON.json", "r");
+	if(f == NULL){
+		ASSERT("Non Existaned file");
+	}
+	memset(content, '\0', MAX_SIZE_OF_JSON);
+	const int  sa = fread(content, sizeof(char), MAX_SIZE_OF_JSON, f);
+	DROP(sa);
+	json = cJSON_Parse(content);
+	ERR_JSON(json);
+	cJSON *path = cJSON_GetObjectItemCaseSensitive(json , "Paths");
+	ERR_JSON(path);
+	temp = NULL;
+	cJSON_ArrayForEach(temp, path) {
+		Sprite s;
+		s.scale   = 3;
+		s.texture = LoadTexture(temp->valuestring);
+		da_append(sprites, s);
+	}
+	free(content);
+	//Textures for poison
+	Image map_image = GenImageColor(500, 500, (Color){255, 0, 0, 50});
+	Sprite sp;
+	sp.scale = 1;
+	sp.texture = LoadTextureFromImage(map_image);
+	da_append(sprites, sp);
+					
+	//
+
+
+
+}
+
+/*
+void render_droped_items(World *world, EngineData *engine, Sprite_DA* sprites){
+	for(int i = 0; i < world->items.count; i++){
+		Position p = world->items.items[i].pos;
+		//MESSAGE_F("%d %d", (int)p.x, (int)p.y);
+		printf("%d %d\n", (int)p.x, (int)p.y);
+		const Vector3 pos = (Vector3) {
+			(float)p.x, 0.01f, (float)p.y - 0.5f
+			};
+		DrawBillboard(engine->camera, sprites->items[PileItem].texture, pos, 0.7f, WHITE);
+		//DrawBillboard(engine->camera, s.texture, pos, 1.6f, WHITE);	
+		//DrawRectangle(p.x, p.y, 100, 100, RED);
+	}
+}
+*/
+void render_stats(World* world, Item_DA* inventory, EngineData* engine){
+	
+	DROP(inventory);
+
+	char* tempStr = malloc(STR_SIZE);
+	memset(tempStr, '\0', sizeof(char)*STR_SIZE);
+	const Color tBLACK = (Color){0, 0, 0, 220};
+	const int fontWidth = 20;
+	DrawRectangle(0, 0, engine->width, engine->height, tBLACK); 
+	int y = 0, x = 50;
+	DrawText("Stats:", (x+=20), (y+=50), 20, WHITE);
+	
+	snprintf(tempStr, STR_SIZE, "Health: %d/%d", world->health[0].current, world->health[0].max);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	if(IsKeyPressed(KEY_C)){
+			engine->isRenderStats = (engine->isRenderStats) ? 0 : 1;
+		}
+
+
+	free(tempStr);
+
+	
+}
+
+
+
+
+//Tbd Rename to inventory system
+void render_inventory_system(World* world, Item_DA* inventory, EngineData* engine){
+
+	if(engine->tempStr.count == 0)
+	for(int i = 0; i < inventory->count; i++){
+		char *itemStr = malloc(STR_SIZE);
+	    char *tempStr = malloc(STR_SIZE);
+		
+		memset(itemStr, 0, STR_SIZE);
+		memset(tempStr, 0, STR_SIZE);
+		if(strcpy(itemStr, inventory->items[i].name) == NULL){
+			ASSERT("String overflow");
+		}
+		if(strcat(itemStr, "               ") == NULL){
+			ASSERT("String overflow");
+		}
+		snprintf(tempStr, STR_SIZE, "D%d_", inventory->items[i].nDice);		
+		if(strcat(itemStr, tempStr) == NULL){
+			ASSERT("String overflow");
+		}
+		snprintf(tempStr, STR_SIZE, "%d  ", inventory->items[i].value);		
+		if(strcat(itemStr, tempStr) == NULL){
+			ASSERT("String overflow");
+		}
+		//If change max amount of stats for items change hear
+		if(inventory->items[i].stats.cons != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Cons %d, ", inventory->items[i].stats.cons);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+			}
+		
+		if(inventory->items[i].stats.dex != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Dex %d, ", inventory->items[i].stats.dex);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}	
+		
+		if(inventory->items[i].stats.inte != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Inte %d, ", inventory->items[i].stats.inte);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		
+		if(inventory->items[i].stats.str != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Str %d, ", inventory->items[i].stats.str);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		if(inventory->items[i].isEqu == true){
+			if(inventory->items[i].to == EQUIPTED_WEPON){
+				if(strcat(itemStr, "Wielded") == NULL){
+					ASSERT("String overflow");
+				}
+			}
+			else if(inventory->items[i].to == EQUIPTED_RANGE){
+				if(strcat(itemStr, "Wielded Range") == NULL){
+					ASSERT("String overflow");
+				}
+			}
+			else{
+				if(strcat(itemStr, "Equipted") == NULL){
+					ASSERT("String overflow");
+				}
+			}	
+			
+		}
+			
+		da_append(&engine->tempStr, itemStr);
+		//MESSAGE_F("%s", engine->tempStr.items[engine->tempStr.count - 1]);	
+		free(tempStr);
+	}
+	//free(itemStr);
+	//
+
+	//Red str
+	const Color tBLACK = (Color){0, 0, 0, 220};
+	const int fontWidth = 20;
+	DrawRectangle(0, 0, engine->width, engine->height, tBLACK); 
+
+	for(int i = 0; i < engine->tempStr.count; i++){
+		if(i == engine->whatItem){
+			DrawRectangle(50, 50 + i * 20, engine->width, fontWidth, WHITE);
+		}
+	
+		DrawText(engine->tempStr.items[i], 50, 50 + i * 20, fontWidth, RED);
+			
+	}
+
+
+		//PlayerInventory Load
+	//Let logic be hear for disabling enbling and cordination
+	if(IsKeyPressed(KEY_C)){
+			engine->isRenderInventory = (engine->isRenderInventory) ? 0 : 1;
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->tempStr.count = 0;
+			engine->whatItem = 0;
+		}
+	if(IsKeyPressed(KEY_UP)){
+		if(engine->whatItem > 0){
+			engine->whatItem--;			
+		}
+		else{
+			engine->whatItem = engine->tempStr.count - 1;
+		}
+	}
+	
+	if(IsKeyPressed(KEY_DOWN)){
+		if((engine->tempStr.count - 1) > engine->whatItem ){
+			engine->whatItem++;			
+		}
+		else{
+			engine->whatItem = 0;
+		}
+	}
+	if(IsKeyPressed(KEY_RIGHT)){
+		if(inventory->items[engine->whatItem].to >= EQUIPTED_ARMOR 
+			&& inventory->items[engine->whatItem].to <= EQUIPTED_HEAD){
+			equipt_item(&world->inventory[0], engine->whatItem);
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->tempStr.count = 0;
+			//exit(-1);
+		}
+		else{
+			engine->whatAction = inventory->items[engine->whatAction].to; //Dispach systems
+		
+		}
+		
+	}
+}
+
+void setup_item_system(World* world, EngineData* engine){
+	engine->tempItemList.count = 0;
+	for(int i = 0; i < world->items.count; i++){
+		if(world->position[0].x == world->items.items[i].pos.x &&  world->position[0].y == world->items.items[i].pos.y){
+			da_append(&engine->tempItemList, i);
+			//exit(-1);
+		}
+	}
+}
+
+
+
+void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
+	
+	if(engine->tempItemList.count != 0 && engine->tempStr.count == 0)
+	for(int i = 0; i < engine->tempItemList.count; i++){
+		//exit(-1);
+		//if(engine->tempItemList.items[])
+		char *itemStr = malloc(STR_SIZE);
+	    char *tempStr = malloc(STR_SIZE);
+		int what = engine->tempItemList.items[i];
+		memset(itemStr, 0, STR_SIZE);
+		memset(tempStr, 0, STR_SIZE);
+		if(strcpy(itemStr, inventory->items[what].name) == NULL){
+			ASSERT("String overflow");
+		}
+		if(strcat(itemStr, "               ") == NULL){
+			ASSERT("String overflow");
+		}
+		snprintf(tempStr, STR_SIZE, "D%d_", inventory->items[what].nDice);		
+		if(strcat(itemStr, tempStr) == NULL){
+			ASSERT("String overflow");
+		}
+		
+		snprintf(tempStr, STR_SIZE, "%d  ", inventory->items[what].value);		
+		if(strcat(itemStr, tempStr) == NULL){
+			ASSERT("String overflow");
+		}
+		
+		//If change max amount of stats for items change hear
+		if(inventory->items[what].stats.cons != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Cons %d, ", inventory->items[what].stats.cons);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+			}
+		
+		if(inventory->items[what].stats.dex != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Dex %d, ", inventory->items[what].stats.dex);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}	
+		
+		if(inventory->items[what].stats.inte != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Inte %d, ", inventory->items[what].stats.inte);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		
+		if(inventory->items[what].stats.str != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Str %d, ", inventory->items[what].stats.str);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		if(inventory->items[what].isEqu == true){
+			if(inventory->items[what].to == EQUIPTED_WEPON){
+				if(strcat(itemStr, "Wielded") == NULL){
+					ASSERT("String overflow");
+				}
+			}
+			else{
+				if(strcat(itemStr, "Equipted") == NULL){
+					ASSERT("String overflow");
+				}
+			}	
+			
+		}
+			
+		da_append(&engine->tempStr, itemStr);
+		//MESSAGE_F("%s", engine->tempStr.items[engine->tempStr.count - 1]);	
+		free(tempStr);
+	}
+	//free(itemStr);
+	//
+
+	//Red str
+	const Color tBLACK = (Color){0, 0, 0, 220};
+	const int fontWidth = 20;
+	DrawRectangle(0, 0, engine->width, engine->height, tBLACK); 
+
+	for(int i = 0; i < engine->tempStr.count; i++){
+		if(i == engine->whatItem){
+			DrawRectangle(50, 50 + i * 20, engine->width, fontWidth, WHITE);
+		}
+		if(engine->tempStr.items[i] != NULL)
+		DrawText(engine->tempStr.items[i], 50, 50 + i * 20, fontWidth, RED);
+			
+	}
+
+
+		//PlayerInventory Load
+	//Let logic be hear for disabling enbling and cordination
+	if(IsKeyPressed(KEY_C)){
+			engine->isRenderPickup = (engine->isRenderPickup) ? 0 : 1;
+			engine->tempItemList.count = 0;
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->tempStr.count = 0; 
+		}
+	if(IsKeyPressed(KEY_UP)){
+		if(engine->whatItem > 0){
+			engine->whatItem--;			
+		}
+		else{
+			engine->whatItem = engine->tempStr.count - 1;
+		}
+	}
+	
+	if(IsKeyPressed(KEY_DOWN)){
+		if((engine->tempStr.count - 1) > engine->whatItem ){
+			engine->whatItem++;			
+		}
+		else{
+			engine->whatItem = 1;
+		}
+	}
+
+	if(IsKeyPressed(KEY_RIGHT) && engine->tempItemList.count != 0){
+		//Pickup item from list
+		const int n = engine->tempItemList.items[engine->whatItem];
+		Item what = world->items.items[n];
+		
+		da_append(&world->inventory[0], what);
+		//setup_item_system(world, engine);
+		
+		for(int i = 0; i < engine->tempStr.count; i++){
+			free(engine->tempStr.items[i]);
+		}	
+
+		da_remove_unordered(&world->items, n);
+		da_remove_unordered(&engine->tempItemList, engine->whatItem);
+		
+		//for(int i = 0; i < engine->tempStr.count; i++){
+		//	free(engine->tempStr.items[i]);
+		//}
+		engine->whatItem = 0;
+		engine->tempStr.count = 0;
+		setup_item_system(world, engine);
+		//setup_item_system(world, engine);
+		//Remove rendering item from world
+		for(int i = 1; i < MAX_ENTITIES; i++){
+			if(what.type == (world->renderable[i].type - S_Sword)){
+				if(world->position[i].x == world->position[0].x && world->position[i].y == world->position[0].y){
+					destroy_entity(world, i);
+					//exit(-1);
+					//break;
+				}
+
+			}
+		}		
+	}
+
+}

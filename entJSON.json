@@ -1,0 +1,238 @@
+{
+  "ent": [
+    {
+      "name": "Artas",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 1 },
+      "COMP_HEALTH": { "is": true, "health": 23, "maxhealth": 23 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 18, "dex": 12, "inte": 14, "cons": 16, "morale": 15, "perception": 10, "stealth": 5, "dmgmin": 5, "dmgmax": 12 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.4 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.5, "name": "Sword"},
+        {"chance": 0.3, "name": "LeatherArmor"},
+        {"chance": 0.2, "name": "Bow"}
+      ]
+    },
+    {
+      "name": "Abomination",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 1 },
+      "COMP_HEALTH": { "is": true, "health": 28, "maxhealth": 28 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 20, "dex": 6, "inte": 6, "cons": 20, "morale": 12, "perception": 8, "stealth": 2, "dmgmin": 7, "dmgmax": 15 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.7, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.7, "name": "RustySword"},
+        {"chance": 0.1, "name": "BattleAxe"},
+        {"chance": 0.2, "name": "ChainMail"},
+        {"chance": 0.1, "name": "Tourch"}
+      ]
+    },
+    {
+      "name": "Ghoul",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 2 },
+      "COMP_HEALTH": { "is": true, "health": 17, "maxhealth": 17 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 12, "dex": 14, "inte": 6, "cons": 12, "morale": 8, "perception": 10, "stealth": 10, "dmgmin": 3, "dmgmax": 9 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.7, "chanceW": 0.7, "chanceRe": 0.01, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.6, "name": "Dagger"},
+        {"chance": 0.4, "name": "SoftLeatherArmour"}
+      ]
+    },
+    {
+      "name": "Banshee",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 3 },
+      "COMP_HEALTH": { "is": true, "health": 11, "maxhealth": 11 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 6, "dex": 12, "inte": 18, "cons": 8, "morale": 10, "perception": 12, "stealth": 15, "dmgmin": 2, "dmgmax": 7 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.1, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.8, "name": "FRobe"},
+        {"chance": 0.2, "name": "Tourch"}
+      ]
+    },
+    {
+      "name": "Necromancer",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 4 },
+      "COMP_HEALTH": { "is": true, "health": 17, "maxhealth": 17 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 8, "dex": 10, "inte": 20, "cons": 12, "morale": 12, "perception": 14, "stealth": 6, "dmgmin": 2, "dmgmax": 6 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.5, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.2 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.6, "name": "Robe"},
+        {"chance": 0.3, "name": "Trident"},
+        {"chance": 0.3, "name": "Tourch"},
+        {"chance": 0.1, "name": "LetherBoots"},
+        {"chance": 0.1, "name":  "PaddedHood"},
+        {"chance": 0.01, "name": "CrownOfWisdom"}
+      ]
+    },
+    {
+      "name": "Wagon",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 5 },
+      "COMP_HEALTH": { "is": true, "health": 35, "maxhealth": 35 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 4, "dex": 2, "inte": 2, "cons": 25, "morale": 5, "perception": 4, "stealth": 0, "dmgmin": 1, "dmgmax": 3 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.01, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 1.0, "name": "Shovel"}
+      ]
+    },
+    {
+      "name": "Zombie",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 6 },
+      "COMP_HEALTH": { "is": true, "health": 20, "maxhealth": 20 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 14, "dex": 6, "inte": 4, "cons": 14, "morale": 6, "perception": 6, "stealth": 2, "dmgmin": 4, "dmgmax": 10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.7, "name": "RustySword"},
+        {"chance": 0.3, "name": "LeatherArmor"},
+        {"chance": 0.2, "name": "FRobe" }
+      ]
+    },
+    {
+      "name": "Acolyte Scout",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 7 },
+      "COMP_HEALTH": { "is": true, "health": 14, "maxhealth": 14 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 10, "dex": 16, "inte": 8, "cons": 10, "morale": 8, "perception": 14, "stealth": 12, "dmgmin": 3, "dmgmax": 8 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.33, "chanceH": 0.5, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.6, "name": "Dagger"},
+        {"chance": 0.6, "name": "BroadSword"},
+        {"chance": 0.3, "name": "SoftLeatherArmour"},
+        {"chance": 0.1, "name": "LetherBoots"},
+        {"chance": 0.2, "name":  "PaddedHood"},
+        {"chance": 0.6, "name": "Robe"}
+      ]
+    },
+    {
+      "name": "Acolyte Bowman",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 8 },
+      "COMP_HEALTH": { "is": true, "health": 14, "maxhealth": 14 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 10, "dex": 18, "inte": 10, "cons": 10, "morale": 8, "perception": 16, "stealth": 8, "dmgmin": 3, "dmgmax": 9 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.90, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.7 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.6, "name": "Robe"},
+        {"chance": 1.0, "name": "Bow"},
+        {"chance": 0.4, "name": "LetherBoots"},
+        {"chance": 0.2, "name":  "PaddedHood"},
+        {"chance": 1.0, "name": "Arrows"}
+      ]
+    },
+    {
+      "name": "Acolyte Warrior",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 9 },
+      "COMP_HEALTH": { "is": true, "health": 20, "maxhealth": 20 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 16, "dex": 10, "inte": 8, "cons": 14, "morale": 10, "perception": 10, "stealth": 5, "dmgmin": 5, "dmgmax": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.6, "name": "Sword"},
+        {"chance": 0.6, "name": "Robe"},
+        {"chance": 0.1, "name": "LetherBoots"},
+        {"chance": 0.2, "name":  "PaddedHood"},
+        {"chance": 0.2, "name": "LeatherArmor"}
+      ]
+    },
+    {
+      "name": "Acolyte Death Scout",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 10 },
+      "COMP_HEALTH": { "is": true, "health": 17, "maxhealth": 17 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 12, "dex": 18, "inte": 10, "cons": 12, "morale": 12, "perception": 16, "stealth": 14, "dmgmin": 4, "dmgmax": 10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.01, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.7, "name": "AwlPike"},
+        {"chance": 0.1, "name": "Pike"},
+        {"chance": 0.1, "name": "LetherBoots"},
+        {"chance": 0.2, "name":  "PaddedHood"},
+        {"chance": 0.5, "name": "SoftStuddedLeather"}
+      ]
+    },
+    {
+      "name": "Acolyte Death Archer",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 11 },
+      "COMP_HEALTH": { "is": true, "health": 17, "maxhealth": 17 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 12, "dex": 20, "inte": 12, "cons": 12, "morale": 12, "perception": 18, "stealth": 10, "dmgmin": 4, "dmgmax": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.9, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.9 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.5, "name": "MainGauche"},
+        {"chance": 1.0, "name": "Bow"},
+        {"chance": 1.0, "name": "Arrows"},
+        {"chance": 0.5, "name": "LetherBoots"},
+        {"chance": 0.2, "name":  "PaddedHood"}
+        
+      ]
+    },
+    {
+      "name": "Acolyte Death Warrior",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 12 },
+      "COMP_HEALTH": { "is": true, "health": 25, "maxhealth": 25 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 20, "dex": 12, "inte": 10, "cons": 18, "morale": 14, "perception": 12, "stealth": 6, "dmgmin": 6, "dmgmax": 13 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.01, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.9, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.7, "name": "Rapier"},
+        {"chance": 0.3, "name": "ChainMail"},
+        {"chance": 0.1, "name": "LetherBoots"},
+        {"chance": 0.2, "name": "PaddedHood"}
+      ]
+    }
+  ]
+}
