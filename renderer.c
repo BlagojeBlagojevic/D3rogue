@@ -77,7 +77,11 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 		};
 
 	UnloadImage(map_image);
+	#ifdef __EMSCRIPTEN__
+	SetTargetFPS(30);
+	#else
 	SetTargetFPS(60);
+	#endif
 	engine->isEntMoving = false;
 	engine->isMoving = false;
 	engine->isGasRun = false;

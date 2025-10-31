@@ -167,10 +167,13 @@ int main() {
     
     // Initialize window
     //SetConfigFlags(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
-    SetConfigFlags(FLAG_FULLSCREEN_MODE);  
+//#ifndef __EMSCRIPTEN__
+//    SetConfigFlags(FLAG_FULLSCREEN_MODE);  
+//#endif    
     InitWindow(1200, 700, "3D Roguelike");
-    int monitor = GetCurrentMonitor();
-    SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+
+ //   int monitor = GetCurrentMonitor();
+ //   SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
 
     // Initialize world items and inventory
     world.items = (Item_DA){0};
@@ -222,9 +225,10 @@ int main() {
     add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
     add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
 
-    engine->width  = GetMonitorWidth(monitor);
-    engine->height = GetMonitorHeight(monitor);
-    
+  //  engine->width  = GetMonitorWidth(monitor);
+  //  engine->height = GetMonitorHeight(monitor);
+    engine->width = 1200;
+    engine->height = 700;
     // Initialize messages and sprites
     engine->messeges.count = 0;
     engine->messeges.capacity = 0;
