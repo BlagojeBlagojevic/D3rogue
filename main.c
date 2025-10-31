@@ -1,203 +1,306 @@
 // main.c
-#include<stdio.h>
+#include <stdio.h>
 #include "ecs.h"
 #include "system.h"
 #include "renderer.h"
-#include <unistd.h>  // For sleep()
 #include "Map/Map.h"
+#include <time.h>
 
-
-
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 #define MAP_TESTING
-#include<time.h>
-int main() {
-	srand(time(NULL));
-	World world;
-	init_world(&world);
-	Global_Ent_DA entDA = {0};
-	load_global_ent(&entDA, "entJSON.json");
 
-	// Create player
-	int player = create_entity(&world);
-	add_component(&world, player, COMP_POSITION, &(Position) {
-		0, 0
-		});
-	add_component(&world, player, COMP_HEALTH, &(Health) {
-		100, 100
-		});
-	add_component(&world, player, COMP_STATS,  &(Stats) {
-		20, 20, 20, 20, 0, 5, 5, 2, 1
-	});	
-	add_tag(&world, player, COMP_PLAYER);
-	add_component(&world, player, COMP_INPUT, NULL);
-	add_component(&world, player, COMP_GAS, &(Gas){gasBasic, true, 50, RED});
-	//add_item_to_inventory(DMace, &world.inventory[player], true);
-	//add_item_to_inventory(Sword, &world.inventory[player], false);
-	add_item_to_inventory(Dagger, &world.inventory[player], false);
-	add_item_to_inventory(LeatherArmor, &world.inventory[player], false);
-	add_item_to_inventory(Bow, &world.inventory[player], false);
-	//add_item_to_inventory(Arrows, &world.inventory[player], false);
-	add_item_to_inventory(Arrows, &world.inventory[player], false);
-	add_item_to_inventory(Tourch, &world.inventory[player], false);
+// Increase matrix stack size for WebGL/raylib compatibility
+#define RL_MAX_MATRIX_STACK_SIZE 64
 
-	InitWindow(1100, 700, "raylib [models] example - cubesmap loading and drawing");
-	
-	Image a = LoadImage("assets/door/open.png");
-	
-	UnloadImage(a);
-	generate_map(&world, &entDA);
-
-	EngineData *engine = init_engine(&world, player, "assets/tex.png", "assets/wa.jpeg");
-	engine->width = 1100;
-	engine->height = 700;
-	
-	if(engine == NULL) {
-		ASSERT("Not allocated ENGINE");
-		}
-
-	//EnableEventWaiting();
-
-		
+// Global variables for Emscripten main loop
+static World* g_world = NULL;
+static EngineData* g_engine = NULL;
+static Sprite_DA g_sprites = {0};
+static Global_Ent_DA g_entDA = {0};
+static Generator_DA g_generators = {0};
+static Shader g_lightingShader = {0};
+static Shader g_blureShader = {0};
+static RenderTexture2D g_target = {0};
 
 
-	//engine->messeges = {0};
-	engine->messeges.count = 0;
-	engine->messeges.capacity = 0;
-	engine->messeges.items = NULL; 
-	Sprite_DA sprites = {0};
-	load_sprites(&sprites, "spriteJSON.json");
+void main_loop(void) {
+    if (WindowShouldClose()) {
+        // Cleanup when window closes
+        UnloadShader(g_lightingShader);
+        UnloadShader(g_blureShader);
+        UnloadRenderTexture(g_target);
+        CloseWindow();
+        //emscripten_cancel_main_loop();
+        return;
+    }
 
-	MESSAGE("Da li ovo radi ili ne");
-	DisableCursor();
-	Shader lightingShader = LoadShader("shaders/lighting.vs", "shaders/lighting.fs");
-    // Get shader locations for uniforms
-    lightingShader.locs[0] = GetShaderLocation(lightingShader, "viewPos");
-    int lightPosLoc = GetShaderLocation(lightingShader, "lightPos");
-	int ambientStrenghtLoc = GetShaderLocation(lightingShader, "ambientStrength"); 
-	int lightingOptionLoc = GetShaderLocation(lightingShader, "lightingOption");
-	SetShaderValue(lightingShader, ambientStrenghtLoc, &world.ambientStrenght, SHADER_UNIFORM_FLOAT);
-	
-	engine->model.materials[0].shader = lightingShader;
-	Shader blureShader = LoadShader(0, "shaders/blur.fs");
-		
-
-
-	RenderTexture2D target = LoadRenderTexture(engine->width, engine->height);
-	
-	//Draw distance 
-	engine->drawDistance = 50 - 1.0f / world.ambientStrenght;
-	if(engine->drawDistance < 10){
-		engine->drawDistance = 10;
-	}
-	
-	MESSAGE_F("Dist %d, Streng %f", engine->drawDistance, world.ambientStrenght);
-	//sleep(20);
-	//exit(-1);
-	// Game loop
-	while (!WindowShouldClose()) {
-		SetShaderValue(lightingShader, lightPosLoc, &engine->camera.position, SHADER_UNIFORM_VEC3);
-		SetShaderValue(lightingShader, lightingShader.locs[0], &engine->camera.position, SHADER_UNIFORM_VEC3);
-		SetShaderValue(lightingShader, ambientStrenghtLoc, &world.ambientStrenght, SHADER_UNIFORM_FLOAT);
-		//world.state[0].maxStamina = world.stats[0].cons;
-		if(engine->isTorchEqu == true){
+    // Update shader values
+    SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "lightPos"), &g_engine->camera.position, SHADER_UNIFORM_VEC3);
+    SetShaderValue(g_lightingShader, g_lightingShader.locs[0], &g_engine->camera.position, SHADER_UNIFORM_VEC3);
+    SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "ambientStrength"), &g_world->ambientStrenght, SHADER_UNIFORM_FLOAT);
+    
+    //int lightingOption = g_engine->isTorchEqu ? 3 : 0;
+    //SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "lightingOption"), &lightingOption, SHADER_UNIFORM_INT);
+    	if(g_engine->isTorchEqu == true){
 			int what = 3;
-			SetShaderValue(lightingShader, lightingOptionLoc, &what, SHADER_UNIFORM_INT);
+			SetShaderValue(g_lightingShader,  GetShaderLocation(g_lightingShader, "lightingOption"), &what, SHADER_UNIFORM_INT);
 		}
 		else{
 			int what = 0;
-			SetShaderValue(lightingShader, lightingOptionLoc, &what, SHADER_UNIFORM_INT);
-		}	
-		//UpdateLightValues(shader, lights);
-		//projectile_system(&world, engine);
-		//If rend inven disable
-		if(!engine->isRenderInventory && !engine->isRenderPickup && !engine->isRenderMap  && !engine->isRenderStats ){
-			if(engine->isGasRun){
-				gas_system(&world, engine);
-			}
-
-			health_system(&world, engine);
-			if(engine->isMoving == false && engine->isEntMoving == true) {
-				monster_change_state_system(&world, engine);			
-				monster_state_system(&world, engine);
-				
-				//perception_system(&world, engine);
-				if(engine->isTorch == false){
-					lighting_system(&world, engine);
-					engine->isTorch = true;
-				}
-				
-			//LOG("Move");
-			//engine->isMoving = false;
-			}
-			if(engine->isEntMoving == false && engine->isMoving == false){
-				reset_attack_input(&world, engine);
-				input_system(&world, engine);
-				player_door_system(&world, engine);
-				
-				engine->isTorch = false;
-			}
-
-		//health_system(&world);
-			projectile_system(&world, engine);
-			monster_attack_system(&world, engine);
-			update_player_position_system(&world, engine);
-			update_entity_position_system(&world, engine);
-
-		}	
-		
-		BeginTextureMode(target);       // Enable drawing to texture
-			ClearBackground(BLACK);	
-			BeginMode3D(engine->camera);
-		//LOG("model %s", engine->model);
-			//
-			
-			DrawModel(engine->model, engine->modelPosition, 1.0f, WHITE);
-			for(int i = 0; i < engine->water.count; i++)
-				DrawModel(engine->water.items[i].model, engine->modelPosition, 1.0f, WHITE);
-			render_system(&world, engine, &sprites);
-		
-			EndMode3D();
-		EndTextureMode();
-		
-		
-		BeginDrawing();
-		
-		
-#ifdef MAP_TESTING
-
-		render_map_testing(&world, engine);
-		render_event_messages(engine, 400, 0 , 800, 200);
-			
-#else
-
-		
-			
-		//Tbd relative to height
-		render_event_messages(engine, 400, 0 , 800, 200);
-			
-		if(engine->isRenderInventory){
-			render_inventory_system(&world, &world.inventory[0], engine);
+			SetShaderValue(g_lightingShader,  GetShaderLocation(g_lightingShader, "lightingOption"), &what, SHADER_UNIFORM_INT);
 		}
-		if(engine->isRenderPickup){
-			render_pickup_system(&world, &world.items, engine);
-			
-		}
-		if(engine->isRenderMap){
-			render_map(&world, engine);
-		}
-		if(engine->isRenderStats){
-			render_stats(&world, &world.inventory[0], engine);
-		}
-		
-		DrawFPS(10, 10);
-		//render_loop(&world, engine);
-#endif
-		EndDrawing();	
-		BeginShaderMode(blureShader);
-                DrawTextureRec(target.texture, (Rectangle){ 0, 0, (float)target.texture.width, (float)-target.texture.height }, (Vector2){ 0, 0 }, WHITE);
-        EndShaderMode();
-		}
+    // Game systems
+    if(!g_engine->isRenderInventory && !g_engine->isRenderPickup && !g_engine->isRenderMap  && !g_engine->isRenderStats ){
+        if(g_engine->isGasRun){
+            gas_system(g_world, g_engine);
+            water_system(g_world, g_engine);
+            fire_system(g_world, g_engine);
+            trap_system(g_world, &g_entDA, g_engine);
+            status_system(g_world, g_engine);
+        }
 
-	return 0;
-	}
+        health_system(g_world, &g_entDA, g_engine);
+        scroll_system(g_world, &g_entDA, g_engine);
+        potion_system(g_world, g_engine);
+        throw_system(g_world, g_engine);
+        
+        if(g_engine->isMoving == false && g_engine->isEntMoving == true) {
+            monster_change_state_system(g_world, g_engine);			
+            monster_state_system(g_world, g_engine, &g_entDA);
+            monster_attack_system(g_world, &g_entDA, g_engine);
+            
+            if(g_engine->isTorch == false){
+                lighting_system(g_world, g_engine);
+                g_engine->isTorch = true;
+            }
+        }
+        
+        if(g_engine->isEntMoving == false && g_engine->isMoving == false){
+            reset_attack_input(g_world, g_engine);
+            input_system(g_world, g_engine);
+            player_door_system(g_world, g_engine);
+            g_engine->isTorch = false;
+        }
+
+        projectile_system(g_world, g_engine);
+        update_player_position_system(g_world, g_engine);
+        update_entity_position_system(g_world, g_engine);
+    }	
+    
+    // Rendering
+    BeginTextureMode(g_target);
+        ClearBackground(BLACK);		
+        BeginMode3D(g_engine->camera);
+        
+        // Draw world model
+        DrawModel(g_engine->model, g_engine->modelPosition, 1.0f, WHITE);
+        
+        // Render entities with matrix stack management
+        rlPushMatrix();
+        render_system(g_world, g_engine, &g_sprites);
+        rlPopMatrix();
+        
+        EndMode3D();
+    EndTextureMode();
+    
+    // UI Rendering
+    BeginDrawing();
+       // ClearBackground(BLACK);
+        render_event_messages(g_engine, 400, 0, 800, 200);
+  
+        if(g_engine->isRenderInventory){
+            render_inventory_system(g_world, &g_world->inventory[0], g_engine);
+        }
+        if(g_engine->isRenderPickup){
+            render_pickup_system(g_world, &g_world->items, g_engine);
+        }
+        if(g_engine->isRenderMap){
+            render_map(g_world, g_engine);
+        }
+        if(g_engine->isRenderStats){
+            render_stats(g_world, &g_world->inventory[0], g_engine);
+        }
+        
+        DrawFPS(10, 10);
+        
+        // Apply post-processing shader
+       
+    EndDrawing();
+	 BeginShaderMode(g_blureShader);
+        DrawTextureRec(g_target.texture, 
+                      (Rectangle){ 0, 0, (float)g_target.texture.width, (float)-g_target.texture.height }, 
+                      (Vector2){ 0, 0 }, WHITE);
+	 EndShaderMode();
+}
+
+int main() {
+    // Initialize random seed
+    #ifdef __EMSCRIPTEN__
+    //srand(emscripten_get_now());
+    #else
+    srand(time(NULL));
+    #endif
+    
+    World world;
+    init_world(&world);
+    Global_Ent_DA entDA = {0};
+    Generator_DA generators = (Generator_DA){0};
+    
+    // Load game data
+    load_global_ent(&entDA, "entJSON.json");
+    load_global_generator(&generators, "genJSON.json");
+    print_all_generators(&generators);
+    
+    // Create player entity
+    int player = create_entity(&world);
+    add_component(&world, player, COMP_POSITION, &(Position){0, 0});
+    add_component(&world, player, COMP_HEALTH, &(Health){30, 30});
+    add_component(&world, player, COMP_STATS, &(Stats){12, 6, 10, 10, 0, 5, 5, 2, 1, 0});	
+    world.stats[0].stealth = 10;
+    add_tag(&world, player, COMP_PLAYER);
+    add_component(&world, player, COMP_INPUT, NULL);
+    add_component(&world, player, COMP_FIRE, &(Fire){0, 0});
+    add_component(&world, player, COMP_STATUS, &(StatusEffects){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    
+    // Initialize window
+    //SetConfigFlags(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
+//#ifndef __EMSCRIPTEN__
+//    SetConfigFlags(FLAG_FULLSCREEN_MODE);  
+//#endif    
+    InitWindow(1200, 700, "3D Roguelike");
+
+ //   int monitor = GetCurrentMonitor();
+ //   SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+
+    // Initialize world items and inventory
+    world.items = (Item_DA){0};
+    for(int i = 0; i < MAX_ENTITIES; i++){
+        world.inventory[i] = (Item_DA){0};
+    }
+    
+    // Generate level and initialize engine
+    generate_level(&world, 0, &generators, &entDA);
+    EngineData *engine = init_engine(&world, player, "assets/tex.png", "assets/wa.jpeg");
+    
+    if(engine == NULL) {
+        TraceLog(LOG_ERROR, "Failed to initialize engine");
+        CloseWindow();
+        return -1;
+    }
+    
+    // Add starter items
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Teleport, false, false);
+    add_item_to_inventory(Dagger, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, Potion_No, false, false);
+ //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
+ //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
+ //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
+    add_item_to_inventory(Bow, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Arrows, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Tourch, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_MagicMaping, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Calcific, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Fate, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Fate, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Teleport, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_EnchantW, false, false);
+    // add_item_to_inventory(Scroll, &world.inventory[player], Scroll_EnchantA, false, false);
+    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_SummonMonster, false, false);
+    add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, Potion_No, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Healing, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Str, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Int, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Size, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Str, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Att, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Def, false, false);
+    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Poison, false, false);
+    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Acid, false, false);
+    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Gas, false, false);
+    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
+    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
+
+  //  engine->width  = GetMonitorWidth(monitor);
+  //  engine->height = GetMonitorHeight(monitor);
+    engine->width = 1200;
+    engine->height = 700;
+    // Initialize messages and sprites
+    engine->messeges.count = 0;
+    engine->messeges.capacity = 0;
+    engine->messeges.items = NULL;
+    
+    Sprite_DA sprites = {0};
+    load_sprites(&sprites, "spriteJSON.json");
+    
+    MESSAGE("Game initialized");
+    
+    // For Emscripten, we can't disable cursor in the same way
+    #ifndef __EMSCRIPTEN__
+    DisableCursor();
+    #endif
+    //world.ambientStrenght = 0;
+   
+    g_lightingShader = LoadShader("shaders/lighting.vs", "shaders/lighting.fs");
+       
+    if (g_lightingShader.id == 0) {
+        TraceLog(LOG_WARNING, "Failed to load lighting shader, using default");
+    } else {
+        // Setup shader uniforms
+        g_lightingShader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(g_lightingShader, "viewPos");
+        SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "ambientStrength"), 
+                      &world.ambientStrenght, SHADER_UNIFORM_FLOAT);
+        
+        //if (engine->model.materialCount > 0) {
+            engine->model.materials[0].shader = g_lightingShader;
+        //}
+    }
+    
+   
+    g_blureShader = LoadShader(0, "shaders/blur.fs");
+   // #endif
+    
+    if (g_blureShader.id == 0) {
+        TraceLog(LOG_WARNING, "Failed to load blur shader");
+    }
+    
+    // Create render texture
+    g_target = LoadRenderTexture(engine->width, engine->height);
+    
+    // Calculate draw distance
+    engine->drawDistance = 50 - 1.0f / world.ambientStrenght;
+    if(engine->drawDistance < 10){
+        engine->drawDistance = 10;
+    }
+    
+    MESSAGE_F("Draw distance: %d, Ambient strength: %f", engine->drawDistance, world.ambientStrenght);
+    
+    // Store global pointers
+    g_world = &world;
+    g_engine = engine;
+    g_sprites = sprites;
+    g_entDA = entDA;
+    g_generators = generators;
+    
+    // Start game loop
+    #ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+    #else
+    while (!WindowShouldClose()) {
+        main_loop();
+    }
+    
+    // Cleanup
+    UnloadShader(g_lightingShader);
+    UnloadShader(g_blureShader);
+    UnloadRenderTexture(g_target);
+    CloseWindow();
+    #endif
+
+    return 0;
+}
+

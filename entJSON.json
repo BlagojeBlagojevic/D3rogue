@@ -8,8 +8,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 18, "dex": 12, "inte": 14, "cons": 16, "morale": 15, "perception": 10, "stealth": 5, "dmgmin": 5, "dmgmax": 12 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.4 },
+      "COMP_STATS": { "is": true, "str": 16, "dex": 14, "inte": 12, "cons": 15, "morale": 13, "perception": 11, "stealth": 8, "dmgmin": 4, "dmgmax": 10, "defence": 12 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.15, "chanceH": 0.75, "chanceW": 0.65, "chanceRe": 0.45, "chanceB": 0.55, "chanceRange": 0.35 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.5, "name": "Sword"},
@@ -25,8 +25,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 20, "dex": 6, "inte": 6, "cons": 20, "morale": 12, "perception": 8, "stealth": 2, "dmgmin": 7, "dmgmax": 15 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.7, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 18, "dex": 8, "inte": 5, "cons": 17, "morale": 10, "perception": 9, "stealth": 4, "dmgmin": 6, "dmgmax": 12, "defence": 15 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.60, "chanceW": 0.75, "chanceRe": 0.35, "chanceB": 0.65, "chanceRange": 0.15 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "RustySword"},
@@ -43,8 +43,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 12, "dex": 14, "inte": 6, "cons": 12, "morale": 8, "perception": 10, "stealth": 10, "dmgmin": 3, "dmgmax": 9 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.7, "chanceW": 0.7, "chanceRe": 0.01, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 15, "inte": 5, "cons": 11, "morale": 7, "perception": 12, "stealth": 11, "dmgmin": 2, "dmgmax": 7, "defence": 8 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.12, "chanceH": 0.70, "chanceW": 0.60, "chanceRe": 0.10, "chanceB": 0.50, "chanceRange": 0.10 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Dagger"},
@@ -59,8 +59,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 6, "dex": 12, "inte": 18, "cons": 8, "morale": 10, "perception": 12, "stealth": 15, "dmgmin": 2, "dmgmax": 7 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.1, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 7, "dex": 13, "inte": 16, "cons": 9, "morale": 11, "perception": 14, "stealth": 16, "dmgmin": 1, "dmgmax": 5, "defence": 6 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.20, "chanceW": 0.70, "chanceRe": 0.50, "chanceB": 0.50, "chanceRange": 0.10 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.8, "name": "FRobe"},
@@ -75,8 +75,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 8, "dex": 10, "inte": 20, "cons": 12, "morale": 12, "perception": 14, "stealth": 6, "dmgmin": 2, "dmgmax": 6 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.5, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.2 },
+      "COMP_STATS": { "is": true, "str": 9, "dex": 11, "inte": 18, "cons": 13, "morale": 11, "perception": 15, "stealth": 8, "dmgmin": 1, "dmgmax": 4, "defence": 9 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.12, "chanceH": 0.50, "chanceW": 0.75, "chanceRe": 0.55, "chanceB": 0.45, "chanceRange": 0.30 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Robe"},
@@ -95,8 +95,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 4, "dex": 2, "inte": 2, "cons": 25, "morale": 5, "perception": 4, "stealth": 0, "dmgmin": 1, "dmgmax": 3 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.01, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 5, "dex": 3, "inte": 3, "cons": 22, "morale": 6, "perception": 5, "stealth": 2, "dmgmin": 1, "dmgmax": 2, "defence": 18 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.05, "chanceW": 0.80, "chanceRe": 0.55, "chanceB": 0.45, "chanceRange": 0.0 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 1.0, "name": "Shovel"}
@@ -110,8 +110,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 14, "dex": 6, "inte": 4, "cons": 14, "morale": 6, "perception": 6, "stealth": 2, "dmgmin": 4, "dmgmax": 10 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 15, "dex": 7, "inte": 3, "cons": 13, "morale": 5, "perception": 7, "stealth": 3, "dmgmin": 3, "dmgmax": 8, "defence": 10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.80, "chanceW": 0.70, "chanceRe": 0.40, "chanceB": 0.60, "chanceRange": 0.0 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "RustySword"},
@@ -127,8 +127,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 10, "dex": 16, "inte": 8, "cons": 10, "morale": 8, "perception": 14, "stealth": 12, "dmgmin": 3, "dmgmax": 8 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.33, "chanceH": 0.5, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 11, "dex": 17, "inte": 9, "cons": 11, "morale": 9, "perception": 15, "stealth": 13, "dmgmin": 2, "dmgmax": 6, "defence": 8 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.30, "chanceH": 0.50, "chanceW": 0.60, "chanceRe": 0.50, "chanceB": 0.50, "chanceRange": 0.10 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Dagger"},
@@ -147,8 +147,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 10, "dex": 18, "inte": 10, "cons": 10, "morale": 8, "perception": 16, "stealth": 8, "dmgmin": 3, "dmgmax": 9 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.90, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.7 },
+      "COMP_STATS": { "is": true, "str": 11, "dex": 18, "inte": 11, "cons": 11, "morale": 9, "perception": 17, "stealth": 9, "dmgmin": 2, "dmgmax": 7, "defence": 7 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.80, "chanceH": 0.80, "chanceW": 0.60, "chanceRe": 0.40, "chanceB": 0.60, "chanceRange": 0.70 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Robe"},
@@ -166,8 +166,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 16, "dex": 10, "inte": 8, "cons": 14, "morale": 10, "perception": 10, "stealth": 5, "dmgmin": 5, "dmgmax": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 17, "dex": 11, "inte": 9, "cons": 15, "morale": 11, "perception": 11, "stealth": 6, "dmgmin": 4, "dmgmax": 9, "defence": 12 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.10, "chanceH": 0.80, "chanceW": 0.75, "chanceRe": 0.55, "chanceB": 0.45, "chanceRange": 0.10 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Sword"},
@@ -185,8 +185,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 12, "dex": 18, "inte": 10, "cons": 12, "morale": 12, "perception": 16, "stealth": 14, "dmgmin": 4, "dmgmax": 10 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.01, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 18, "inte": 11, "cons": 13, "morale": 13, "perception": 17, "stealth": 15, "dmgmin": 3, "dmgmax": 8, "defence": 10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.80, "chanceW": 0.70, "chanceRe": 0.50, "chanceB": 0.50, "chanceRange": 0.10 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "AwlPike"},
@@ -204,8 +204,8 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 12, "dex": 20, "inte": 12, "cons": 12, "morale": 12, "perception": 18, "stealth": 10, "dmgmin": 4, "dmgmax": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.9, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.5, "chanceB": 0.5, "chanceRange": 0.9 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 19, "inte": 13, "cons": 13, "morale": 13, "perception": 18, "stealth": 11, "dmgmin": 3, "dmgmax": 9, "defence": 9 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.85, "chanceH": 0.80, "chanceW": 0.60, "chanceRe": 0.40, "chanceB": 0.60, "chanceRange": 0.80 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.5, "name": "MainGauche"},
@@ -213,7 +213,6 @@
         {"chance": 1.0, "name": "Arrows"},
         {"chance": 0.5, "name": "LetherBoots"},
         {"chance": 0.2, "name":  "PaddedHood"}
-        
       ]
     },
     {
@@ -224,14 +223,780 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 20, "dex": 12, "inte": 10, "cons": 18, "morale": 14, "perception": 12, "stealth": 6, "dmgmin": 6, "dmgmax": 13 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.01, "chanceH": 0.9, "chanceW": 0.7, "chanceRe": 0.9, "chanceB": 0.5, "chanceRange": 0.0 },
+      "COMP_STATS": { "is": true, "str": 18, "dex": 13, "inte": 11, "cons": 17, "morale": 15, "perception": 13, "stealth": 7, "dmgmin": 5, "dmgmax": 11, "defence": 14 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "Rapier"},
         {"chance": 0.3, "name": "ChainMail"},
         {"chance": 0.1, "name": "LetherBoots"},
         {"chance": 0.2, "name": "PaddedHood"}
+      ]
+    },
+    
+       {
+      "name": "SecrifiedPit",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 13 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 18, "dex": 13, "inte": 18, "cons": 17, "morale": 15, "perception": 13, "stealth": 7, "dmgmin": 2, "dmgmax": 3, "defence": 14 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+
+       {
+      "name": "Spider",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 14 },
+      "COMP_HEALTH": { "is": true, "health": 6, "maxhealth": 6 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, 
+                      "str": 6, 
+                      "dex": 6, 
+                      "inte": 3, 
+                      "cons": 1, 
+                      "morale": 8, 
+                      "perception": 5, 
+                      "stealth": 12, 
+                      "dmgmin": 1, 
+                      "dmgmax": 5, 
+                      "defence": 0 
+                    },
+      "COMP_STATE": { "is": true, 
+                      "current": 0, 
+                      "chanceR": 0.08, 
+                      "chanceH": 0.85, 
+                      "chanceW": 0.70, 
+                      "chanceRe": 0.00, 
+                      "chanceB": 0.50, 
+                      "chanceRange": 0.00 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.1, "name": "Spear"}
+       
+      ]
+    },
+
+       {
+      "name": "SpiderMage",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 15 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 10, "dex": 14, "inte": 16, "cons": 11, "morale": 12, "perception": 15, "stealth": 10, "dmgmin": 2, "dmgmax": 3, "defence": 8 },
+      "COMP_STATE": { 
+        "is": true, 
+        "current": 0, 
+        "chanceR": 0.08, 
+        "chanceH": 0.85, 
+        "chanceW": 0.70, 
+        "chanceRe": 0.80, 
+        "chanceB": 0.50, 
+        "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+        {"chance": 0.1, "name": "Spear"},
+        {"chance": 0.9, "name": "Tourch"},
+        {"chance": 0.5, "name": "PaddedHood"},
+        {"chance": 0.6, "name": "Robe"}
+       
+      ]
+    },
+       {
+      "name": "Wolf",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 16 },
+      "COMP_HEALTH": { "is": true, "health": 8, "maxhealth": 8 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, 
+                      "str": 12, 
+                      "dex": 6, 
+                      "inte": 4, 
+                      "cons": 8, 
+                      "morale": 10, 
+                      "perception": 14, 
+                      "stealth": 12, 
+                      "dmgmin": 2, 
+                      "dmgmax": 7, 
+                      "defence": 0 
+    },
+      "COMP_STATE": { "is": true, "current": 0, 
+                    "chanceR": 0.08, 
+                    "chanceH": 0.85, 
+                    "chanceW": 0.70, 
+                    "chanceRe": 0.00, 
+                    "chanceB": 0.50, 
+                    "chanceRange": 0.10 
+  },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+      {
+      "name": "Gargoyle",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 17 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 17, "dex": 10, "inte": 8, "cons": 18, "morale": 14, "perception": 11, "stealth": 8, "dmgmin": 3, "dmgmax": 5, "defence": 15 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Bat",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 18 },
+      "COMP_HEALTH": { "is": true, "health": 6, "maxhealth": 6 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, 
+                      "str": 10, 
+                      "dex": 8, 
+                      "inte": 3,
+                      "cons": 1, 
+                      "morale": 6, 
+                      "perception": 15, 
+                      "stealth": 16, 
+                      "dmgmin": 1, 
+                      "dmgmax": 2, 
+                      "defence": 1 },
+      "COMP_STATE": { "is": true, 
+                      "current": 0, 
+                      "chanceR": 0.1, 
+                      "chanceH": 0.5, 
+                      "chanceW": 0.50, 
+                      "chanceB": 0.50, 
+                      "chanceRange": 0.00 
+                    },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+         {"chance": 0.05, "name": "BrokenDagger"}
+       
+      ]
+    },
+    {
+      "name": "BatLord",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 19 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 11, "dex": 18, "inte": 12, "cons": 12, "morale": 13, "perception": 16, "stealth": 17, "dmgmin": 2, "dmgmax": 4, "defence": 8 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Bloat",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 20 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 16, "dex": 8, "inte": 5, "cons": 18, "morale": 9, "perception": 10, "stealth": 5, "dmgmin": 3, "dmgmax": 5, "defence": 14 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Obsydian statue",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 21 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 19, "dex": 6, "inte": 7, "cons": 20, "morale": 18, "perception": 10, "stealth": 3, "dmgmin": 4, "dmgmax": 6, "defence": 17 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Anubis",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 22 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 17, "dex": 14, "inte": 16, "cons": 16, "morale": 17, "perception": 15, "stealth": 11, "dmgmin": 3, "dmgmax": 5, "defence": 13 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "OrcWarrior",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 23 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 16, "dex": 11, "inte": 8, "cons": 15, "morale": 12, "perception": 10, "stealth": 7, "dmgmin": 3, "dmgmax": 6, "defence": 12 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "OrcRaider",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 24 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 15, "dex": 14, "inte": 9, "cons": 14, "morale": 13, "perception": 12, "stealth": 10, "dmgmin": 3, "dmgmax": 5, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "OrcShaman",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 25 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 12, "dex": 10, "inte": 16, "cons": 13, "morale": 14, "perception": 14, "stealth": 8, "dmgmin": 2, "dmgmax": 4, "defence": 10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "OrcWarloc",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 26 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 14, "dex": 12, "inte": 17, "cons": 15, "morale": 16, "perception": 15, "stealth": 9, "dmgmin": 3, "dmgmax": 5, "defence": 12 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+
+    {
+      "name": "RedOrc",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 27 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 17, "dex": 13, "inte": 10, "cons": 16, "morale": 15, "perception": 12, "stealth": 8, "dmgmin": 4, "dmgmax": 6, "defence": 13 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "OrcBrute",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 28 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 19, "dex": 9, "inte": 7, "cons": 18, "morale": 16, "perception": 10, "stealth": 5, "dmgmin": 5, "dmgmax": 8, "defence": 15 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "OrcSamurai",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 29 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 16, "dex": 15, "inte": 12, "cons": 15, "morale": 17, "perception": 13, "stealth": 11, "dmgmin": 4, "dmgmax": 7, "defence": 12 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "OrcWarchief",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 30 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 18, "dex": 14, "inte": 14, "cons": 17, "morale": 18, "perception": 15, "stealth": 12, "dmgmin": 5, "dmgmax": 9, "defence": 14 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+
+    {
+      "name": "OrcScout",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 31 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 16, "inte": 10, "cons": 13, "morale": 12, "perception": 16, "stealth": 15, "dmgmin": 2, "dmgmax": 5, "defence": 10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+
+        {
+      "name": "GoblinWarrior",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 32 },
+      "COMP_HEALTH": { "is": true, "health": 15, "maxhealth": 15 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, 
+                      "str": 8, 
+                      "dex": 4, 
+                      "inte": 8, 
+                      "cons": 6, 
+                      "morale": 10, 
+                      "perception": 8, 
+                      "stealth": 9, 
+                      "dmgmin": 2, 
+                      "dmgmax": 6, 
+                      "defence": 0 
+                    },
+      "COMP_STATE": { "is": true, 
+                      "current": 0, 
+                      "chanceR": 0.1, 
+                      "chanceH": 0.6,
+                      "chanceW": 0.70, 
+                      "chanceB": 0.50, 
+                      "chanceRange": 0.0 },
+                      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+         {"chance": 0.85, "name": "Dagger"},
+         {"chance": 0.85, "name": "Robe"}
+       
+      ]
+    },
+    {
+      "name": "GoblinArcher",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 33 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, 
+                      "str": 8, 
+                      "dex": 4, 
+                      "inte": 8, 
+                      "cons": 1, 
+                      "morale": 10, 
+                      "perception": 8, 
+                      "stealth": 9, 
+                      "dmgmin": 3, 
+                      "dmgmax": 6, 
+                      "defence": 0 
+                    },
+      "COMP_STATE": { "is": true, 
+                      "current": 0, 
+                      "chanceR": 0.1, 
+                      "chanceH": 0.6,
+                      "chanceW": 0.70, 
+                      "chanceB": 0.50, 
+                      "chanceRange": 0.99 },
+                      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+         {"chance": 0.99, "name": "Bow"},
+         {"chance": 0.99, "name": "Arrows"},
+         {"chance": 0.85, "name": "Robe"}
+       
+      ]
+    },
+    {
+      "name": "GoblinWarlord",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 34 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 15, "dex": 15, "inte": 12, "cons": 14, "morale": 16, "perception": 14, "stealth": 13, "dmgmin": 3, "dmgmax": 6, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "GoblinBarrack",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 35 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 18, "dex": 6, "inte": 5, "cons": 20, "morale": 18, "perception": 8, "stealth": 2, "dmgmin": 3, "dmgmax": 5, "defence": 16 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "GiantRat",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 36 },
+      "COMP_HEALTH": { "is": true, "health": 8, "maxhealth": 8 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { 
+        "is": true, 
+        "str": 10, 
+        "dex": 6, 
+        "inte": 4,
+        "cons": 2, 
+        "morale": 8, 
+        "perception": 6, 
+        "stealth": 14, 
+        "dmgmin": 1, 
+        "dmgmax": 6, 
+        "defence": 1 },
+      "COMP_STATE": { 
+        "is": true, 
+        "current": 0, 
+        "chanceR": 0.28, 
+        "chanceH": 0.6, 
+        "chanceW": 0.70, 
+        "chanceB": 0.50, 
+        "chanceRange": 0.00 
+      },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+          {"chance": 0.05, "name": "DragonboneHelm"}
+         
+      ]
+    },
+    {
+      "name": "PinkJelly",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 37 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 14, "dex": 8, "inte": 3, "cons": 16, "morale": 6, "perception": 10, "stealth": 5, "dmgmin": 2, "dmgmax": 4, "defence": 12 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "GreenJelly",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 38 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 15, "dex": 7, "inte": 4, "cons": 17, "morale": 7, "perception": 9, "stealth": 4, "dmgmin": 2, "dmgmax": 5, "defence": 13 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "BlueJelly",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 39 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+     {
+      "name": "Toad",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 40 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Imp",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 41 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+     {
+      "name": "MindFlayer",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 42 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+     {
+      "name": "Phantom",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 43 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Lich",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 44 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Succubus",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 45 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "BeholderKin",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 46 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "SoulReaper",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 47 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Manes",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 48 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "FlashDemon",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 49 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "FireDemon",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 50 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "Kraken",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 51 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
+      ]
+    },
+    {
+      "name": "WaterDemon",
+      "COMP_POSITION": { "is": true },
+      "COMP_RENDER": { "is": true, "type": 52 },
+      "COMP_HEALTH": { "is": true, "health": 5, "maxhealth": 5 },
+      "COMP_MONSTER": { "is": true },
+      "COMP_PLAYER": { "is": false },
+      "COMP_INPUT": { "is": false, "aqua": 0 },
+      "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_OPEN": { "is": false },
+      "ITEMS": [
+      
+       
       ]
     }
   ]

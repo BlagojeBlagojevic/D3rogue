@@ -150,6 +150,8 @@ typedef enum{
 	Bow,
 	Arrows, 
 	Tourch,
+	Scroll,
+	Potion,
 	Item_Num
 }Item_Type;
 
@@ -271,11 +273,78 @@ static const char* ITEM_NAMES[] = {
     /* Ostalo */
     "Bow",
     "Arrows", 
-    "Tourch"
+    "Tourch",
+	"Scroll",
+	"Potion"
 };
 
 
- 
+typedef enum{
+	Scroll_No = 0,
+	Scroll_Teleport,
+	Scroll_Identif,
+	Scroll_EnchantW,
+	Scroll_EnchantA, //Just enchants equ wep or armor othe stuff are alredy set 
+	Scroll_SummonMonster,
+	Scroll_Acq,
+	Scroll_Stun,
+	Scroll_Scare,
+	Scroll_Hunt,
+	Scroll_Confuse,
+	Scroll_Levitation,
+	Scroll_Telepaty, 
+	Scroll_Water,  //Summons water around you
+	Scroll_Negation,
+	Scroll_Incinarat,
+	Scroll_MagicMaping,
+	Scroll_Recharging,
+	Scroll_Sacrifice,
+	Scroll_Fate,
+	Scroll_Amnesia,
+	Scroll_Gambler,
+	Scroll_Calcific,
+	Scroll_Bprince,
+	Scroll_RemoveCurse,
+	//Scroll_Chasm,
+
+	//Scroll of best
+	//Scroll of the Bazaar
+	//Scroll of Fate
+	//Scroll of Amnesia
+	//Scroll of the Gambler
+	//Scroll of Last Resort
+	//Scroll of Chasms
+	//Scroll of Calcification
+	//Scroll of Blood Price
+	//Scroll of the Glutton
+	//Scroll of the Living Chest
+	//Scroll of Metamorphosis
+	//Scroll of the Soul Jar
+	//Scroll of Soul Binding:
+
+	Scroll_Num
+}Scroll_Type;
+
+
+typedef enum{
+	Potion_No,
+	Potion_Str,
+	Potion_Int,  //This shoud be temporaly BUT PROBOBLY IF BLESSED THEN PERMAMENT FOR NOW IS PERAMMANT
+	Potion_Size,
+	Potion_Healing,
+	Potion_Att,
+	Potion_Def,
+	Potion_Poison,
+	Potion_Gas,
+	Potion_Acid,
+	Potion_HealingGas,
+	//Potion_Random may somthing other
+
+	Potion_Num
+}Potion_Type;
+
+
+
 
 typedef struct{
 	Stats          stats;
@@ -287,6 +356,14 @@ typedef struct{
 	Item_Type      fire;
 	Item_Equipted  to;
 	int            isEqu;
+	int            strReq;
+	int            isIdent;
+	int            isCursed;
+	Scroll_Type    scroll;
+	Potion_Type    potion;
+	float          itemChance;
+
+
 }Item;
 
 typedef struct{
@@ -308,10 +385,13 @@ typedef struct{
 
 
 //Items
-void add_item_to_inventory(Item_Type type, Item_DA* inventory, int isEqu);
-void equipt_item(Item_DA* inventory, int whatItem);
+void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scroll, Potion_Type potion, int isEqu, int isIdentScrool);
+int equipt_item(Item_DA* inventory, int whatItem);
 int  is_item_of_type_equ(Item_DA* inventory, Item_Equipted equ);
 void add_items_from_list(ChanceItem_DA* list, Item_DA* inventory);
+void free_item(Item_DA* inventory, int item);
+void random_item_generator(Item_DA* inventory, Position pos);
+
 
 
 #endif

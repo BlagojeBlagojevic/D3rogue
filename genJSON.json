@@ -1,0 +1,48 @@
+{
+ "Generators":
+ [
+    {
+        "Name": "Wolf",
+        "Depths":  {"start": 0, "end":3, "nMonster": 2},
+        "Chances": [0.1, 0.2, 0.3],
+        "MonsterGenerator": [{"Monstername": "Wolf", "chance": 1.0}]
+
+    },
+    
+    {
+        "Name": "Spider",
+        "Depths":  {"start": 0, "end":3, "nMonster": 1},
+        "Chances": [0.9, 0.1, 0.5],
+        "MonsterGenerator": [{"Monstername": "Spider", "chance": 1.0}]
+
+    },
+    {
+        "Name": "Bat",
+        "Depths":  {"start": 0, "end":3, "nMonster": 1},
+        "Chances": [0.9, 0.1, 0.5],
+        "MonsterGenerator": [{"Monstername": "Bat", "chance": 1.0}]
+
+    },
+    {
+        "Name": "GiantRat",
+        "Depths":  {"start": 0, "end":3, "nMonster": 1},
+        "Chances": [0.9, 0.1, 0.5],
+        "MonsterGenerator": [{"Monstername": "GiantRat", "chance": 1.0}]
+
+    },
+    {
+        "Name": "Goblins ",
+        "Depths":  {"start": 0, "end":3, "nMonster": 1},
+        "Chances": [0.01, 0.05, 0.1],
+        "MonsterGenerator": [{"Monstername": "GoblinWarrior", "chance": 0.5}, {"Monstername": "GoblinArcher", "chance": 0.5}, 
+                             {"Monstername": "GoblinBarrack", "chance": 0.01}
+                            ]
+
+    }
+
+    
+
+
+
+ ]   
+}
