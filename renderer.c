@@ -19,8 +19,11 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	//We see
 	engine->tempItemList = (Num){0};
 	engine->whatItem = 0;
+	engine->itemThrowId = -1;
 	
-	world->items = (Item_DA){0};
+	//Zbog kog kurc ovo ne radi
+	//free(world->items.items);
+	
 	Image map_image;
 	map_image.width  = world->map.w;
 	map_image.height = world->map.h;
@@ -52,7 +55,7 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	engine->camera.up = (Vector3) {
 		0.01f, 1.0f, 0.01f
 		};
-	engine->camera.fovy = 45.0f;
+	engine->camera.fovy = 60.0f;
 	engine->camera.projection = CAMERA_PERSPECTIVE;
 
 	engine->mesh = GenMeshCubicmap(map_image, (Vector3) {
@@ -78,24 +81,12 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	engine->isEntMoving = false;
 	engine->isMoving = false;
 	engine->isGasRun = false;
-	Texture textureW_matirial = LoadTexture(water_atlas);	
 	//Water stuffs
 	//C img
 	bool isFirst = false;
-	engine->water = (ModelMesh_DA){0};
-	for(int y = 0; y < world->map.h; y++){
-		for(int x = 0; x < world->map.w; x++){
-			if(world->map.walling[y][x] == '~'){
-				ModelMesh m;
-				m.mesh = GenMeshPlane(1.0, 1.0, 1.0, 1.0);
-				m.model = LoadModelFromMesh(m.mesh);
-				m.model.materials[0].maps->texture = textureW_matirial;
-				m.model.transform = MatrixTranslate((float)x, 0.001f, (float)y); 
-				da_append(&engine->water, m);
-			}
-		}
-	}
-	
+	engine->water =  LoadTexture(water_atlas);
+	engine->fire  = LoadTexture("assets/la.jpeg"); 
+
 	//engine->modelW = LoadModelFromMesh(engine->mesh);
 	//Texture textureW_matirial = LoadTexture(water_atlas); ;
 	//engine->modelW.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textureW_matirial;
@@ -110,11 +101,11 @@ void render_loop(World *world, EngineData *engine) {
 
 	ClearBackground(RAYWHITE);
 
-	BeginMode3D(engine->camera);
+	//BeginMode3D(engine->camera);
 	//LOG("model %s", engine->model);
 	DrawModel(engine->model, engine->modelPosition, 1.0f, WHITE);
 	//DrawCube((Vector3){0, 0, 0}, 10, 10, 10, GREEN);
-	EndMode3D();
+	//EndMode3D();
 
 	DrawFPS(10, 10);
 
@@ -127,9 +118,11 @@ void render_map(World *world, EngineData *engine){
 	//ENTIRE MAP
 	const int sizeX = engine->width  / 150;
 	const int sizeY = engine->height / 150;
-	const Color colorBacg = {18, 18, 18, 255};
-	Color c = WHITE;
-	c.a = 128;
+	const Color colorBacg = {0x18, 0x18, 0x18, 255};
+	///Color c = WHITE;
+	///c.a = 255;
+	Color c = {0x18, 0x18, 0x18, 255};
+	
 	//MAP
 	DrawRectangle(0, 0, engine->width, engine->height, c);
 	for(int y = 0; y < world->map.h; y++){
@@ -151,8 +144,32 @@ void render_map(World *world, EngineData *engine){
 				DrawText("~", x*sizeX, y*sizeY , 10, BLUE);
 			
 			}
+
+			if((world->map.walling[y][x] == Tile_Dwater) && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLUE);
+				DrawText("~", x*sizeX, y*sizeY , 10, BLUE);
+			
+			}
+
+			if((world->map.walling[y][x] == Tile_Lava) && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, ORANGE);
+				//DrawText("", x*sizeX, y*sizeY , 10, RED);
+			
+			}
+			if((world->map.walling[y][x] == Tile_Fire) && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);
+				DrawText("^", x*sizeX, y*sizeY , 10, ORANGE);
+			}
+			if((world->map.walling[y][x] == Tile_Caz) && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BROWN);
+				DrawText(";", x*sizeX, y*sizeY , 10, WHITE);
+			
+			}
+			
+			
+			
 				
-			if((world->map.walling[y][x] == '\"') && world->isExpMap[y][x]){
+			if((world->map.walling[y][x] == '\"' || world->map.walling[y][x] == Tile_BGrass) && world->isExpMap[y][x]){
 				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);
 				DrawText("\"", x*sizeX, y*sizeY , 10, GREEN);
 				
@@ -161,7 +178,16 @@ void render_map(World *world, EngineData *engine){
 			//DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);		
 		}
 	}
-	 CompMask mask = COMP_POSITION | COMP_RENDER;
+
+	//Render monsters
+	 CompMask mask = COMP_POSITION | COMP_RENDER | COMP_MONSTER;
+	if(world->status[0].telepatyTurn > 0)
+	for(int i = 0; i < MAX_ENTITIES; i++){
+		if((world->masks[i] & mask) == mask){
+		DrawText("M", world->position[i].x * sizeX, world->position[i].y * sizeY, 10,  RED);		
+		}
+	}
+	
 	 DrawText("@", world->position[0].x * sizeX, world->position[0].y * sizeY, 10,  GREEN);
 	//for(int i = 1; i < MAX_ENTITIES; i++){
 	//	if ((world->masks[i] & mask) == mask){
@@ -242,6 +268,7 @@ void load_sprites(Sprite_DA *sprites, const char* name){
 	DROP(size);
 	LOG("%s\n", content);
 	cJSON *json = cJSON_Parse(content);
+	
 	ERR_JSON(json);
 	cJSON *s = cJSON_GetObjectItemCaseSensitive(json, "Sprite");
 	ERR_JSON(s);
@@ -283,7 +310,7 @@ void load_sprites(Sprite_DA *sprites, const char* name){
 	sp.scale = 1;
 	sp.texture = LoadTextureFromImage(map_image);
 	da_append(sprites, sp);
-					
+				
 	//
 
 
@@ -334,6 +361,9 @@ void render_stats(World* world, Item_DA* inventory, EngineData* engine){
 
 
 
+
+
+
 //Tbd Rename to inventory system
 void render_inventory_system(World* world, Item_DA* inventory, EngineData* engine){
 
@@ -344,21 +374,41 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 		
 		memset(itemStr, 0, STR_SIZE);
 		memset(tempStr, 0, STR_SIZE);
+		if(inventory->items[i].type == Scroll 
+			&& world->identScrools[inventory->items[i].scroll] == false){
+			if(strcpy(itemStr, "Scroll of unown origin") == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		else if(inventory->items[i].type == Potion 
+			&& world->identPotions[inventory->items[i].potion] == false){
+			if(strcpy(itemStr, "Potion of unown origin") == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		else
 		if(strcpy(itemStr, inventory->items[i].name) == NULL){
 			ASSERT("String overflow");
 		}
 		if(strcat(itemStr, "               ") == NULL){
 			ASSERT("String overflow");
 		}
-		snprintf(tempStr, STR_SIZE, "D%d_", inventory->items[i].nDice);		
-		if(strcat(itemStr, tempStr) == NULL){
-			ASSERT("String overflow");
+		//Render dice if no scroll
+		if(inventory->items[i].type != Scroll && inventory->items[i].type != Potion){
+
+			snprintf(tempStr, STR_SIZE, "D%d_", inventory->items[i].nDice);		
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+			snprintf(tempStr, STR_SIZE, "%d  ", inventory->items[i].value);		
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
 		}
-		snprintf(tempStr, STR_SIZE, "%d  ", inventory->items[i].value);		
-		if(strcat(itemStr, tempStr) == NULL){
-			ASSERT("String overflow");
 		}
 		//If change max amount of stats for items change hear
+		//Stats are renderd only if ident
+		if(inventory->items[i].isIdent){
+			
 		if(inventory->items[i].stats.cons != 0){
 			memset(tempStr, 0, STR_SIZE);
 			snprintf(tempStr, STR_SIZE, "Cons %d, ", inventory->items[i].stats.cons);
@@ -390,6 +440,15 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 				ASSERT("String overflow");
 			}
 		}
+		if(inventory->items[i].isCursed == true){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "curesed");
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		}
+
 		if(inventory->items[i].isEqu == true){
 			if(inventory->items[i].to == EQUIPTED_WEPON){
 				if(strcat(itemStr, "Wielded") == NULL){
@@ -401,6 +460,7 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 					ASSERT("String overflow");
 				}
 			}
+			
 			else{
 				if(strcat(itemStr, "Equipted") == NULL){
 					ASSERT("String overflow");
@@ -441,6 +501,16 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 			engine->tempStr.count = 0;
 			engine->whatItem = 0;
 		}
+	if(IsKeyPressed(KEY_T)){
+			engine->itemThrowId = engine->whatItem;
+			engine->whatAction = EQUIPTED_ARMOR;
+			engine->isRenderInventory = (engine->isRenderInventory) ? 0 : 1;
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->tempStr.count = 0;
+			engine->whatItem = 0;
+		}	
 	if(IsKeyPressed(KEY_UP)){
 		if(engine->whatItem > 0){
 			engine->whatItem--;			
@@ -461,7 +531,10 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 	if(IsKeyPressed(KEY_RIGHT)){
 		if(inventory->items[engine->whatItem].to >= EQUIPTED_ARMOR 
 			&& inventory->items[engine->whatItem].to <= EQUIPTED_HEAD){
-			equipt_item(&world->inventory[0], engine->whatItem);
+			int isCursed = equipt_item(&world->inventory[0], engine->whatItem);
+			if(isCursed == true){
+				MESSAGE("Not posible to remove cuss it is cursed");
+			}
 			for(int i = 0; i < engine->tempStr.count; i++){
 				free(engine->tempStr.items[i]);
 			}
@@ -469,8 +542,15 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 			//exit(-1);
 		}
 		else{
-			engine->whatAction = inventory->items[engine->whatAction].to; //Dispach systems
-		
+			engine->whatAction = inventory->items[engine->whatItem].to; //Dispach systems
+			engine->isRenderInventory = (engine->isRenderInventory) ? 0 : 1;
+			engine->itemAction = engine->whatItem;
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->tempStr.count = 0;
+			engine->whatItem = 0;
+			
 		}
 		
 	}
@@ -478,8 +558,11 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 
 void setup_item_system(World* world, EngineData* engine){
 	engine->tempItemList.count = 0;
+	//MESSAGE_F("Items count %d", world->items.count);
 	for(int i = 0; i < world->items.count; i++){
-		if(world->position[0].x == world->items.items[i].pos.x &&  world->position[0].y == world->items.items[i].pos.y){
+		const float dist = Vector2Distance(world->position[0], world->items.items[i].pos);
+		//if(world->position[0].x == world->items.items[i].pos.x &&  world->position[0].y == world->items.items[i].pos.y)
+		if(dist <= 1.1f){
 			da_append(&engine->tempItemList, i);
 			//exit(-1);
 		}
@@ -487,9 +570,8 @@ void setup_item_system(World* world, EngineData* engine){
 }
 
 
-
 void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
-	
+	setup_item_system(world, engine);
 	if(engine->tempItemList.count != 0 && engine->tempStr.count == 0)
 	for(int i = 0; i < engine->tempItemList.count; i++){
 		//exit(-1);
@@ -499,12 +581,28 @@ void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
 		int what = engine->tempItemList.items[i];
 		memset(itemStr, 0, STR_SIZE);
 		memset(tempStr, 0, STR_SIZE);
-		if(strcpy(itemStr, inventory->items[what].name) == NULL){
+		if(inventory->items[what].type == Scroll 
+			&& world->identScrools[inventory->items[what].scroll] == false){
+			if(strcpy(itemStr, "Scroll of unown origin") == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		else if(inventory->items[what].type == Potion 
+			&& world->identPotions[inventory->items[what].potion] == false){
+			if(strcpy(itemStr, "Potion of unown origin") == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		else if(strcpy(itemStr, inventory->items[what].name) == NULL){
 			ASSERT("String overflow");
 		}
+		//if(strcpy(itemStr, inventory->items[what].name) == NULL){
+		//	ASSERT("String overflow");
+	//	}
 		if(strcat(itemStr, "               ") == NULL){
 			ASSERT("String overflow");
 		}
+		if(inventory->items[what].type != Scroll){
 		snprintf(tempStr, STR_SIZE, "D%d_", inventory->items[what].nDice);		
 		if(strcat(itemStr, tempStr) == NULL){
 			ASSERT("String overflow");
@@ -514,39 +612,8 @@ void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
 		if(strcat(itemStr, tempStr) == NULL){
 			ASSERT("String overflow");
 		}
-		
-		//If change max amount of stats for items change hear
-		if(inventory->items[what].stats.cons != 0){
-			memset(tempStr, 0, STR_SIZE);
-			snprintf(tempStr, STR_SIZE, "Cons %d, ", inventory->items[what].stats.cons);
-			if(strcat(itemStr, tempStr) == NULL){
-				ASSERT("String overflow");
-			}
-			}
-		
-		if(inventory->items[what].stats.dex != 0){
-			memset(tempStr, 0, STR_SIZE);
-			snprintf(tempStr, STR_SIZE, "Dex %d, ", inventory->items[what].stats.dex);
-			if(strcat(itemStr, tempStr) == NULL){
-				ASSERT("String overflow");
-			}
-		}	
-		
-		if(inventory->items[what].stats.inte != 0){
-			memset(tempStr, 0, STR_SIZE);
-			snprintf(tempStr, STR_SIZE, "Inte %d, ", inventory->items[what].stats.inte);
-			if(strcat(itemStr, tempStr) == NULL){
-				ASSERT("String overflow");
-			}
 		}
-		
-		if(inventory->items[what].stats.str != 0){
-			memset(tempStr, 0, STR_SIZE);
-			snprintf(tempStr, STR_SIZE, "Str %d, ", inventory->items[what].stats.str);
-			if(strcat(itemStr, tempStr) == NULL){
-				ASSERT("String overflow");
-			}
-		}
+	
 		if(inventory->items[what].isEqu == true){
 			if(inventory->items[what].to == EQUIPTED_WEPON){
 				if(strcat(itemStr, "Wielded") == NULL){
@@ -624,6 +691,7 @@ void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
 		}	
 
 		da_remove_unordered(&world->items, n);
+		//free_item(&world->items, n);
 		da_remove_unordered(&engine->tempItemList, engine->whatItem);
 		
 		//for(int i = 0; i < engine->tempStr.count; i++){
@@ -634,12 +702,15 @@ void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
 		setup_item_system(world, engine);
 		//setup_item_system(world, engine);
 		//Remove rendering item from world
+	
 		for(int i = 1; i < MAX_ENTITIES; i++){
+			if((world->masks[i] & COMP_RENDER) == COMP_RENDER)
 			if(what.type == (world->renderable[i].type - S_Sword)){
-				if(world->position[i].x == world->position[0].x && world->position[i].y == world->position[0].y){
+				const float distance = Vector2Distance(world->position[0], world->position[i]);
+				if(distance <= 1.1f){
 					destroy_entity(world, i);
 					//exit(-1);
-					//break;
+					break;
 				}
 
 			}
@@ -647,3 +718,6 @@ void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
 	}
 
 }
+
+
+//void render_trow_system(World *world, EngineData* engine);

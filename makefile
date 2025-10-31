@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -I./cJSON/ -static-libasan
-DEBUG_CFLAGS = -Og -fsanitize=address -static-libasan
+CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -I./cJSON/
+DEBUG_CFLAGS = -Og -fsanitize=address -static-libasan -ggdb
 
-LIBS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 
+LIBS = -Iraylib/include -Lraylib/lib  -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 
 
 SRCS = ecs.c system.c renderer.c Map/Map.c items.c main.c cJSON/cJSON.c 
 DEPS = $(SRCS:.c=.d)
@@ -27,15 +27,12 @@ $(BUILD_FOLDER):
 $(TARGET): $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LIBS)
 
-# General compilation rule for all source files, including those in subdirectories
 $(BUILD_FOLDER)/%.o: %.c | $(BUILD_FOLDER)
 	$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP
 
-# Specific rule for Map/Map.c
 $(BUILD_FOLDER)/Map.o: Map/Map.c | $(BUILD_FOLDER)
-	$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP
+	$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP 
 
-# Specific rule for cJSON/cJSON.c
 $(BUILD_FOLDER)/cJSON.o: cJSON/cJSON.c | $(BUILD_FOLDER)
 	$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP
 
@@ -48,3 +45,17 @@ clean:
 	rm -rf $(BUILD_FOLDER)
 	rm -f $(TARGET)
 	rm -f $(TARGETA)
+
+# Refacrtor maybe
+#SHADERS 300 OR 100 OR somthing webgl compatible
+emcc:
+	emcc -O3 -std=c99 -s ASYNCIFY -s ALLOW_MEMORY_GROWTH=1 -s USE_GLFW=3 -s USE_WEBGL2=1 -s FULL_ES3=1 \
+	--preload-file assets@assets --preload-file entJSON.json --preload-file nonEntJSON.json --preload-file genJSON.json --preload-file spriteJSON.json \
+	--preload-file shaders@shaders --use-preload-plugins \
+	ecs.c system.c renderer.c Map/Map.c items.c main.c cJSON/cJSON.c  -Iraylib/include -Lraylib/install/lib -lraylib_wasm -o Web/game.html
+
+serve:
+	emrun --no_browser --port 8080 game.html
+
+cleanemcc:
+	rm -f Web/game.html Web/game.js Web/game.wasm Web/game.data

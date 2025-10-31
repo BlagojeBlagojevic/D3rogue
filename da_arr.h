@@ -22,7 +22,7 @@
 #define da_append(da, item)                                                            \
 	do {                                                                                 \
 		if ((da)->count >= (da)->capacity) {                                               \
-			(da)->capacity = (da)->capacity == 0 ? DA_SIZE : (da)->capacity*2;               \
+			(da)->capacity = (da)->capacity == 0 ? DA_SIZE : (da)->capacity*3;               \
 			(da)->items = realloc((da)->items, (da)->capacity*sizeof(*(da)->items));         \
 			assert((da)->items != NULL && "Realloc fail !!!");                               \
 			}                                                                                \
@@ -46,10 +46,10 @@
 #define rand_f32() ((float)rand()/(float)RAND_MAX)
 
 #define CHANCE_NOSEE     0.33f
-#define CHANCE_BIGPLANT  0.1f
+#define CHANCE_BIGPLANT  0.33f
 #define CHANCE_STOP_RUN  0.25f 
 
-#define MAX_SIZE_OF_JSON 20000
+#define MAX_SIZE_OF_JSON 200000
 
 
 

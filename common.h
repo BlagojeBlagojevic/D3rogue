@@ -4,8 +4,11 @@
 #include "stdlib.h"
 #include "stdint.h"
 #include "raylib.h"
+#include "rlgl.h"
+//#include "item.h"
 
-#define MAX_ENTITIES 1024
+
+#define MAX_ENTITIES 6000
 #define MAX_COMPONENTS 32
 
 // Component type bitmask
@@ -29,7 +32,9 @@ typedef enum {
 	COMP_OPEN     = 1 << 8,
 	COMP_PROJEC   = 1 << 9,	
 	COMP_GAS      = 1 << 10,
-
+	COMP_SPELL    = 1 << 11, 
+	COMP_FIRE     = 1 << 12,
+	COMP_STATUS   = 1 << 13 
 	} CompType;
 
 
@@ -57,9 +62,127 @@ typedef enum{
 	AcolyteD,
 	AcolyteDB, 
 	AcolyteDW,
+	SPit,
+
+	Spider,
+	SpiderMage,
+
+	Wolf,
+	
+
+	Garg,
+	Bat,
+	Vampire,
+
+	Bloat,
+
+	ObsidanStatue,
+	Anubis,
+	OrcWarrior,
+	OrcRaider,
+	OrcShaman,
+	OrcWarloc,
+	RedOrc,
+	OrcBrute,
+	OrcSamurai,
+	OrcWarchief,
+	OrcScout,
+
+	GoblinWarrior,
+	GoblinArcher,
+	GoblinWarlord,
+	GoblinBarrack,
+
+	GiantRat,
+	PinkJelly,
+	GreenJelly,
+	BlueJelly,
+	Toad,
+
+	Imp,
+	MindFlayer,
+	Phantom,
+	Lich,
+	Succubus,
+	BeholderKin,
+	SoulReaper,
+	Manes,
+	FlashDemon,
+	FireDemon,
+	Kraken,
+	WaterDemon,
+
 	Monster_Num
 
 }Monster_Type;
+
+
+static const char* Monster_Names[] = {
+	"Artas",
+	"Abomination",
+	"Ghoul",
+	"Banshee",
+	"Necromancer",
+	"Wagon",
+	"Zombie",
+	"Acolyte",
+	"AcolyteB",
+	"AcolyteS",
+	"AcolyteD",
+	"AcolyteDB", 
+	"AcolyteDW",
+	"SPit",
+
+	"Spider", //1
+	"SpiderMage",
+
+	"Wolf",  //1
+	
+
+	"Garg",
+	"Bat",  //1
+	"Vampire",
+
+	"Bloat",
+
+	"ObsidanStatue",
+	"Anubis",
+	"OrcWarrior",
+	"OrcRaider",
+	"OrcShaman",
+	"OrcWarloc",
+	"RedOrc",
+	"OrcBrute",
+	"OrcSamurai",
+	"OrcWarchief",
+	"OrcScout",
+
+	"GoblinWarrior", //1   
+	"GoblinArcher",  //1
+	"GoblinWarlord", 
+	"GoblinBarrack",
+
+	"GiantRat",//1
+	"PinkJelly",
+	"GreenJelly",
+	"BlueJelly",
+	"Toad",
+
+	"Imp",
+	"MindFlayer",
+	"Phantom",
+	"Lich",
+	"Succubus",
+	"BeholderKin",
+	"SoulReaper",
+	"Manes",
+	"FlashDemon",
+	"FireDemon",
+	"Kraken",
+	"WaterDemon",
+
+}; 
+
 
 
 //Order is important
@@ -79,11 +202,59 @@ typedef enum{
 	S_AcolyteD,
 	S_AcolyteDB,
 	S_AcolyteDW,
+	S_SPit,
+	
+	S_Spider,
+	S_SpiderMage,
 
+	S_Wolf,
 
+	S_Garg,
+	S_Bat,
+	S_Vampire,
 
+	S_Bloat,
 
+	S_ObsidanStatue,
+	S_Anubis,
 
+	S_OrcWarrior,
+	S_OrcRaider,
+	S_OrcShaman,
+	S_OrcWarloc,
+	S_RedOrc,
+	S_OrcBrute,	
+	S_OrcSamurai,
+	S_OrcWarchief,
+	S_OrcScout,
+
+	S_GoblinWarrior,
+	S_GoblinArcher,
+	S_GoblinWarlord,
+	S_GoblinBarrack,
+
+	S_GiantRat,
+	S_PinkJelly,
+	S_GreenJelly,
+	S_BlueJelly,
+	S_Toad,
+
+	S_Imp,
+	S_MindFlayer,
+	S_Phantom,
+	S_Lich,
+	S_Succubus,
+	S_BeholderKin,
+	S_SoulReaper,
+	S_Manes,
+	S_FlashDemon,
+	S_FireDemon,
+	S_Kraken,
+	
+	//Do not change
+	S_WaterDemon,
+
+	//
 	S_OpenDoor,
 	S_ClosedDoor,
 	//Items
@@ -201,6 +372,8 @@ typedef enum{
 	S_Bow,
 	S_Arrow,
 	S_Tourch,
+	S_Scroll,
+	S_Potion,
 	//S_Pile,
 	//S_asd,
 	
@@ -210,7 +383,7 @@ typedef enum{
 	 
 
 	//Generated sprites for gas
-	S_BasicGas,
+	//S_BasicGas,
 	//S_
 
 	S_Sprite_Num
@@ -265,9 +438,27 @@ typedef struct {
 
 	int dmgMax;
 	int dmgMin;
+	int defence;
 
 
 }Stats;
+
+typedef struct{
+	int str;    
+	int dex;   
+	int inte; 
+	int cons;
+	int turns;
+}TempStats;
+
+typedef struct 
+{
+	int count;
+	int capacity;
+	TempStats *items;
+}TempStats_DA;
+
+
 
 typedef struct {
 	uint8_t isOpen;
@@ -285,17 +476,16 @@ typedef struct {
 typedef enum {
 	STATE_WANDERING,
 	STATE_RUNING,
-//	STATE_MOVING_AWAY_RANGE,
 	STATE_HUNTING,
-	
 	STATE_RESTING,   //Sleep 
-	STATE_BESERK,
+	STATE_BERSERK,
 	STATE_RANGE,
 	STATE_ALERTED, 
 	STATE_SEARCHING,
-//	STATE_RESURECT,
-//	STATE_SUMMON,
-//	STATE_SPELL,
+	STATE_STALKING,
+	STATE_TERRITORIAL,
+	STATE_STUN,
+	STATE_SPELL,
 	STATE_NUM
 	} State_Monster;
 
@@ -307,10 +497,14 @@ typedef struct {
 	float chancesRe;
 	float chancesB;
 	float chanceRange;	
-	float fear;
-	int   lastSeenX;
-	int   lastSeenY;
-	int   memoryTimer;
+	float 	 fear;
+	int   	 lastSeenX;
+	int   	 lastSeenY;
+	int   	 memoryTimer;
+	int   	 territoryRadius;
+	Position home;
+	int      stunTurn;
+
 }State;
 
 /*
@@ -346,12 +540,12 @@ static const char* itemActions[] = {
 
 
 
-#define MAP_WIDTH  100
+#define MAP_WIDTH  80
 #define MAP_HEIGHT 30
 
 
 
-#define STR_SIZE 128
+#define STR_SIZE 256
 
 typedef struct{
 	int count;
@@ -374,10 +568,27 @@ typedef struct{
 
 
 typedef enum{
-	gasNo = -1,
-	gasBasic = 0,
+	gasNo,
+	gasBasic = 1,
+	gasHealing,
+	gasSwamp, 
+	gasPoison,
+	gasAcid,
+	gasStun,
 	gasNum
 }GasType;
+
+static const Color gasColor[] = {
+	(Color){0, 0, 0, 0},
+	(Color){139, 4, 10, 50},
+	(Color){30, 203, 225, 50},
+	(Color){115, 63, 8, 50},
+	(Color){16, 248, 7, 50},
+	(Color){248, 7, 87, 50},
+	(Color){10, 0, 4, 50},
+	(Color){0, 0, 0, 0}
+}; 
+
 
 typedef struct{
 	GasType type;
@@ -387,6 +598,122 @@ typedef struct{
 	//Tbd otherStufss
 }Gas;
 
+
+
+//Spells
+typedef enum{
+    Spell_Summon,
+    Spell_Stun,
+    Spell_Blink,
+    Spell_Explode,
+    Spell_Dmg,
+    //Spell_Buff,
+    Spell_Teleport,
+    Spell_Shout,
+	Spell_Hook,
+	Spell_Web,
+	Spell_Obsidian, //Buffs
+	Spell_Anubis,
+	Spell_OrcScout,
+	Spell_Sacrifice,
+	Spell_Mirror,
+	Spell_WarCray,
+	Spell_GoblinBarrack,
+	Spell_Confusion,
+	Spell_ReduceStr,
+	Spell_No,
+	
+
+	Spell_Num
+}SpellType;
+
+enum {DMG, HEAL}; //For obsidan
+
+typedef struct {
+    SpellType type;
+    int value; // 
+    int cooldown;
+    int passTurn;
+}Spell;
+
+
+typedef enum{
+	Tile_Dirt   = ' ',
+	TIle_Grass  = '"',
+	Tile_BGrass = '\'',
+	Tile_CDoor  = '+',
+	Tile_ODoor  = '-',
+	Tile_Water  = '~',
+	Tile_Dwater = '(',
+	Tile_Fire   = '^',
+	Tile_Lava   = '%',
+	Tile_Caz    = ':',
+	Tile_Wall   = '#',
+	
+
+}Tiles;
+
+
+typedef struct{
+	int imuneToFire;
+	int isOnFire;
+}Fire;
+
+
+typedef enum{
+	TRAP_NO,
+	TRAP_POISON, 
+	TRAP_ACID, 
+	TRAP_FIRE,
+	TRAP_STUN,
+	TRAP_TELEPORT,
+	TRAP_BEAR,
+	TRAP_SUMMON,
+	TRAP_NUM
+
+}Trap_Types;
+
+typedef struct{
+	Trap_Types trap;
+	int value;
+}Trap;
+
+//Tbd refactor fire and stun in this
+typedef struct{
+	int poison;
+	int poisonTurn;
+	int poisonImune;
+
+	int hallucination;
+	int hallucinationTurn;
+	int hallucinationImune;
+
+	int confusion;
+	int confusionTurn;
+	int confusionImune;
+
+	int levitation;
+	int levitationTurn;
+	int levitationImune;
+	
+	int telepaty;
+	int telepatyTurn;
+	int telepatyImune;
+	
+
+
+}StatusEffects;
+
+//Need to add its junk but
+typedef enum{
+	P_Arrow 	= S_Arrow,
+	P_Potion 	= S_Potion, 
+}ProjeciteType;
+
+typedef struct{
+	ProjeciteType type;
+	int itemID;
+}Projectile;
 
 
 

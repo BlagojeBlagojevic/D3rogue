@@ -46,6 +46,7 @@ typedef struct{
 	float    targetYaw;
 	uint8_t  isMoving;
 	int      isRotation; 
+	uint8_t  isAnyMoving;
 	uint8_t  isEntMoving;
 	uint8_t  isGasRun;
 	float    moveLerpAlpha;
@@ -56,10 +57,13 @@ typedef struct{
 	int      whatItem; 
 	//Tbd we will see if this 	
 	Item_Equipted   whatAction;
+	int             itemAction;
 	int      systemAction;
 	Str      tempStr;
 
 	int      isRenderMap;
+	Texture2D water;
+	Texture2D fire;
 	
 	//Items temp 
 	int      isRenderPickup;
@@ -69,12 +73,15 @@ typedef struct{
 	//Water model mesh
 	//Model    modelW;
 	//Mesh     meshW;
-	ModelMesh_DA water;
+//	ModelMesh_DA water;
 	//Vector3  modelPositionW;
 	int drawDistance;
 	int isTorch;
 	int isTorchEqu;
-	//int oldStealthScore;
+	int depth;
+	int itemThrowId;
+
+
 }EngineData;
 
 typedef struct{

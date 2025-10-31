@@ -635,18 +635,18 @@ typedef struct {
 Module create_example_module(int id) {
     if (id == 0) { // Small room
         Module m = {toss(char*, 5), 5, 5};
-        m.pattern[0] = strdup("#####");
-        m.pattern[1] = strdup("#   #");
-        m.pattern[2] = strdup("#   #");
-        m.pattern[3] = strdup("#   #");
-        m.pattern[4] = strdup("#####");
+      //  m.pattern[0] = strdup("#####");
+      //  m.pattern[1] = strdup("#   #");
+      //  m.pattern[2] = strdup("#   #");
+      //  m.pattern[3] = strdup("#   #");
+      //  m.pattern[4] = strdup("#####");
         return m;
     } else if (id == 1) { // L-corridor
         Module m = {toss(char*, 4), 4, 4};
-        m.pattern[0] = strdup("# # ");
-        m.pattern[1] = strdup("# # ");
-        m.pattern[2] = strdup("# # ");
-        m.pattern[3] = strdup("### ");
+       // m.pattern[0] = strdup("# # ");
+       // m.pattern[1] = strdup("# # ");
+       // m.pattern[2] = strdup("# # ");
+       // m.pattern[3] = strdup("### ");
         return m;
     }
     
@@ -1314,7 +1314,7 @@ Map xmgen_maze(const int wR, const int hR, const int w, const int h) {
     if (maze_h < 3) maze_h = 3;
 
     srand((unsigned)time(0));
-    Map map = mnew(wR, hR);
+    Map map = mnew(hR, wR);
 
     int* stack_x = toss(int, maze_w * maze_h);
     int* stack_y = toss(int, maze_w * maze_h);
@@ -1370,7 +1370,7 @@ Map xmgen_maze(const int wR, const int hR, const int w, const int h) {
 
     map.walling[1][0] = ' ';
     map.walling[maze_h - 2][maze_w - 1] = ' ';
-
+    printf("Map");
     free(stack_x);
     free(stack_y);
 
@@ -1383,8 +1383,8 @@ Map xmgen_room_maze(const int wR, const int hR, const int w, const int h, const 
     int maze_h = (h % 2 == 0) ? h + 1 : h;
     if (maze_h < 15) maze_h = 15;
 
-    srand((unsigned)time(0));
-    Map map = mnew(wR, hR);
+    //srand((unsigned)time(0));
+    Map map = mnew(hR, wR);
 
     Rect* rooms = toss(Rect, num_rooms_to_try);
     int room_count_local = 0;
@@ -1596,7 +1596,8 @@ void xmgen_add_lake(Map* map, char tile, int x, int y,  int w, int h, float lake
                 if(yM == 0){
                     yM = 1;
                 }
-                map->walling[yM][xM] = tile;
+                if(map->walling[yM][xM] == '#')
+                    map->walling[yM][xM] = tile;
             }
         }
     }
@@ -1819,17 +1820,17 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
         return xmgen_brogue(w, h, max_rooms, min_size, max_size);
     }
 
-    xmgen_add_enviroment(&map, '\"', 0, 0, w, h, 0.6f);
-    bool isLake = false;
-    while(!isLake){
-        int x = rand()%w;
-        int y = rand()%h;
-        if(map.walling[y][x] == ' '){
+   // xmgen_add_enviroment(&map, '\"', 0, 0, w, h, 0.6f);
+    //bool isLake = false;
+    //while(!isLake){
+    //    int x = rand()%w;
+    //    int y = rand()%h;
+    //    if(map.walling[y][x] == ' '){
              //add_lake(&map, '~', x, y, 30, 30, 0.5f);
             // add_enviroment(&map, '~',  x, y, 20, 20, 0.5f);
-            isLake = true;
-        }
-    }
+      //      isLake = true;
+      //  }
+   // }
 
     connect_rooms(map, rooms, room_count_local);
 
