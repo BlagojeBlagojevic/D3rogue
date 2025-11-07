@@ -1,8 +1,9 @@
 # D3rogue
-Game like rogue in 3d 
+Game like rogue
 
 
 <img width="1128" height="766" alt="Screenshot from 2025-09-30 15-02-59" src="https://github.com/user-attachments/assets/ae2f7ca3-40b4-49c1-a7de-57a9b14e238b" />
+<img width="1200" height="700" alt="screenshot002" src="https://github.com/user-attachments/assets/83615348-b7d6-4a9a-900f-c9457a741f8b" />
 
 
 
