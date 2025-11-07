@@ -278,7 +278,7 @@ static const char* ITEM_NAMES[] = {
 	"Potion"
 };
 
-
+//Tbd destroy wepon, armor,
 typedef enum{
 	Scroll_No = 0,
 	Scroll_Teleport,

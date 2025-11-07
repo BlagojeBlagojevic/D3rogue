@@ -8,14 +8,17 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
+// Increase matrix stack size for WebGL/raylib compatibility
+
+#define RL_MAX_MATRIX_STACK_SIZE 64
 #endif
 
 #define MAP_TESTING
 
-// Increase matrix stack size for WebGL/raylib compatibility
-#define RL_MAX_MATRIX_STACK_SIZE 64
 
-// Global variables for Emscripten main loop
+
+
+
 static World* g_world = NULL;
 static EngineData* g_engine = NULL;
 static Sprite_DA g_sprites = {0};
@@ -28,7 +31,6 @@ static RenderTexture2D g_target = {0};
 
 void main_loop(void) {
     if (WindowShouldClose()) {
-        // Cleanup when window closes
         UnloadShader(g_lightingShader);
         UnloadShader(g_blureShader);
         UnloadRenderTexture(g_target);
@@ -37,13 +39,13 @@ void main_loop(void) {
         return;
     }
 
-    // Update shader values
+    // shader 
     SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "lightPos"), &g_engine->camera.position, SHADER_UNIFORM_VEC3);
     SetShaderValue(g_lightingShader, g_lightingShader.locs[0], &g_engine->camera.position, SHADER_UNIFORM_VEC3);
     SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "ambientStrength"), &g_world->ambientStrenght, SHADER_UNIFORM_FLOAT);
     
-    //int lightingOption = g_engine->isTorchEqu ? 3 : 0;
-    //SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "lightingOption"), &lightingOption, SHADER_UNIFORM_INT);
+    const int lightingOption = g_engine->isTorchEqu ? 3 : 0;
+    SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "lightingOption"), &lightingOption, SHADER_UNIFORM_INT);
     	if(g_engine->isTorchEqu == true){
 			int what = 3;
 			SetShaderValue(g_lightingShader,  GetShaderLocation(g_lightingShader, "lightingOption"), &what, SHADER_UNIFORM_INT);
@@ -52,20 +54,25 @@ void main_loop(void) {
 			int what = 0;
 			SetShaderValue(g_lightingShader,  GetShaderLocation(g_lightingShader, "lightingOption"), &what, SHADER_UNIFORM_INT);
 		}
-    // Game systems
+    // Game 
     if(!g_engine->isRenderInventory && !g_engine->isRenderPickup && !g_engine->isRenderMap  && !g_engine->isRenderStats ){
+        //rUN ONCE
         if(g_engine->isGasRun){
+            printf("Gasss run\n");
             gas_system(g_world, g_engine);
             water_system(g_world, g_engine);
             fire_system(g_world, g_engine);
             trap_system(g_world, &g_entDA, g_engine);
             status_system(g_world, g_engine);
+            regen_system(g_world);
+            g_engine->isGasRun = false;
         }
-
+        //rUN ALL 
         health_system(g_world, &g_entDA, g_engine);
         scroll_system(g_world, &g_entDA, g_engine);
         potion_system(g_world, g_engine);
         throw_system(g_world, g_engine);
+        level_system(g_world, &g_generators, &g_entDA, g_engine);
         
         if(g_engine->isMoving == false && g_engine->isEntMoving == true) {
             monster_change_state_system(g_world, g_engine);			
@@ -80,7 +87,12 @@ void main_loop(void) {
         
         if(g_engine->isEntMoving == false && g_engine->isMoving == false){
             reset_attack_input(g_world, g_engine);
-            input_system(g_world, g_engine);
+            
+            if(g_engine->is2d)
+                input_system2d(g_world, g_engine);
+            else 
+                input_system(g_world, g_engine);
+            
             player_door_system(g_world, g_engine);
             g_engine->isTorch = false;
         }
@@ -95,21 +107,26 @@ void main_loop(void) {
         ClearBackground(BLACK);		
         BeginMode3D(g_engine->camera);
         
-        // Draw world model
-        DrawModel(g_engine->model, g_engine->modelPosition, 1.0f, WHITE);
-        
-        // Render entities with matrix stack management
-        rlPushMatrix();
-        render_system(g_world, g_engine, &g_sprites);
-        rlPopMatrix();
-        
-        EndMode3D();
+        if(g_engine->is2d == false){
+            DrawModel(g_engine->model, g_engine->modelPosition, 1.0f, WHITE);
+          //    Emsc
+            rlPushMatrix();
+            //render_system2d(g_world, g_engine, &g_sprites);
+            render_system(g_world, g_engine, &g_sprites);
+            rlPopMatrix();
+           
+        }
+    EndMode3D();
     EndTextureMode();
     
     // UI Rendering
     BeginDrawing();
-       // ClearBackground(BLACK);
-        render_event_messages(g_engine, 400, 0, 800, 200);
+       //2D map render
+       if(g_engine->is2d)
+        render_system2d(g_world, g_engine, &g_sprites);
+        render_event_messages(g_engine, 100, 0, 600, 200);
+        render_stats_(g_world, 800, 000, 1000, 300);
+        
   
         if(g_engine->isRenderInventory){
             render_inventory_system(g_world, &g_world->inventory[0], g_engine);
@@ -118,10 +135,13 @@ void main_loop(void) {
             render_pickup_system(g_world, &g_world->items, g_engine);
         }
         if(g_engine->isRenderMap){
+            //render_system2d(g_world, g_engine, &g_sprites);
             render_map(g_world, g_engine);
         }
         if(g_engine->isRenderStats){
-            render_stats(g_world, &g_world->inventory[0], g_engine);
+            //render_stats(g_world, &g_world->inventory[0], g_engine);
+            render_stats_update(g_world, g_engine);
+            //TBD UPDATE STATS
         }
         
         DrawFPS(10, 10);
@@ -182,7 +202,8 @@ int main() {
     }
     
     // Generate level and initialize engine
-    generate_level(&world, 0, &generators, &entDA);
+    world.level = 0;
+    generate_level(&world, world.level, &generators, &entDA);
     EngineData *engine = init_engine(&world, player, "assets/tex.png", "assets/wa.jpeg");
     
     if(engine == NULL) {
@@ -193,13 +214,13 @@ int main() {
     
     // Add starter items
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Teleport, false, false);
-    add_item_to_inventory(Dagger, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Sword, &world.inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, Potion_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
-    add_item_to_inventory(Bow, &world.inventory[player], Scroll_No, Potion_No, false, false);
-    add_item_to_inventory(Arrows, &world.inventory[player], Scroll_No, Potion_No, false, false);
+ //   add_item_to_inventory(Bow, &world.inventory[player], Scroll_No, Potion_No, false, false);
+ //   add_item_to_inventory(Arrows, &world.inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Tourch, &world.inventory[player], Scroll_No, Potion_No, false, false);
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, false, false);
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_MagicMaping, false, false);
@@ -220,10 +241,10 @@ int main() {
     //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Att, false, false);
     //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Def, false, false);
     //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Poison, false, false);
-    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Acid, false, false);
-    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Gas, false, false);
-    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
-    add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
+   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Acid, false, false);
+   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Gas, false, false);
+   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
+   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
 
   //  engine->width  = GetMonitorWidth(monitor);
   //  engine->height = GetMonitorHeight(monitor);

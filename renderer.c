@@ -14,6 +14,7 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	engine->isRenderPickup    = false;
 	engine->isRenderMap       = false;
 	engine->isRenderStats     = false;
+	engine->is2d              = true;
 	//engine->tempStr = (Str){0};
 	memset(&engine->tempStr, 0, sizeof(Str));
 	//We see
@@ -23,7 +24,9 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	
 	//Zbog kog kurc ovo ne radi
 	//free(world->items.items);
-	
+	//xmprint(world->map);
+
+
 	Image map_image;
 	map_image.width  = world->map.w;
 	map_image.height = world->map.h;
@@ -37,7 +40,122 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 			else {
 				data[y* world->map.w+x] = 0; //FLOOR
 				}
+				world->dikstra[y][x] = 0;
+				world->isExpMap[y][x] = false;
+				world->visibe[y][x] = 0;
+		        world->gasMap[y][x] = (Gas){0};
+		        world->trapMap[y][x] =  (Trap){0};;
+		       // world->fire[y][x] = (Fire){0};
 			}
+			
+		}
+	map_image.data = data;
+	//Unloaded at the end
+
+	//engine->texture = LoadTextureFromImage(map_image);
+
+
+
+	engine->camera.position = (Vector3) {
+		(float)p.x, 0.6f, (float)p.y
+		};
+	engine->camera.target = (Vector3) {
+		0.185f, 0.6f, 0.0f
+		};
+	engine->camera.up = (Vector3) {
+		0.01f, 1.0f, 0.01f
+		};
+	engine->camera.fovy = 60.0f;
+	engine->camera.projection = CAMERA_PERSPECTIVE;
+	  
+
+	engine->mesh = GenMeshCubicmap(map_image, (Vector3) {
+		1.0f, 1.0f, 1.0f
+		});
+	engine->model = LoadModelFromMesh(engine->mesh);
+	
+	engine->nextPosition = engine->camera.position;
+	engine->playerYaw = 0.0f;
+	engine->targetYaw = 0.0f;
+	engine->isMoving = false;
+	engine->drawDistance = 100;
+
+	Texture texture_matirial = LoadTexture(name_atlas); ;
+	engine->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture_matirial;
+
+	engine->modelPosition = (Vector3) {
+		0.0f, 0.0f, 0.0f
+		};
+
+	UnloadImage(map_image);
+	#ifdef __EMSCRIPTEN__
+	SetTargetFPS(60);
+	#else
+	SetTargetFPS(60);
+	#endif
+	engine->isEntMoving = false;
+	engine->isMoving = false;
+	engine->isGasRun = false;
+	//Water stuffs
+	//C img
+	bool isFirst = false;
+	engine->water =  LoadTexture(water_atlas);
+	engine->fire  = LoadTexture("assets/la.jpeg"); 
+
+	//engine->modelW = LoadModelFromMesh(engine->mesh);
+	//Texture textureW_matirial = LoadTexture(water_atlas); ;
+	//engine->modelW.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textureW_matirial;
+	//UnloadImage(waterImage);
+	return engine;
+	}
+
+
+
+EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *engine) {
+	const Position p =  world->position[player_entity_id];
+
+
+
+	//Tbd from map file
+
+	
+	engine->isRenderInventory = false;
+	engine->isRenderPickup    = false;
+	engine->isRenderMap       = false;
+	engine->isRenderStats     = false;
+	//engine->tempStr = (Str){0};
+	memset(&engine->tempStr, 0, sizeof(Str));
+	//We see
+	engine->tempItemList = (Num){0};
+	engine->whatItem = 0;
+	engine->itemThrowId = -1;
+	
+	//Zbog kog kurc ovo ne radi
+	//free(world->items.items);
+	//xmprint(world->map);
+
+
+	Image map_image;
+	map_image.width  = world->map.w;
+	map_image.height = world->map.h;
+	map_image.format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
+	uint8_t *data = malloc(map_image.width * map_image.height);
+	for(int y = 0; y < world->map.h; y++ ) {
+		for(int x = 0; x < world->map.w; x++ ) {
+			if(world->map.walling[y][x] == '#') {
+				data[y*world->map.w+x] = 255; //WALL
+				}
+			else {
+				data[y* world->map.w+x] = 0; //FLOOR
+				}
+				world->dikstra[y][x] = 0;
+				world->isExpMap[y][x] = false;
+				world->visibe[y][x] = 0;
+		        world->gasMap[y][x] = (Gas){0};
+		        world->trapMap[y][x] =  (Trap){0};;
+		       // world->fire[y][x] = (Fire){0};
+			}
+			
 		}
 	map_image.data = data;
 	//Unloaded at the end
@@ -67,9 +185,29 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	engine->playerYaw = 0.0f;
 	engine->targetYaw = 0.0f;
 	engine->isMoving = false;
+	if(world->ambientStrenght != 0)
+		engine->drawDistance = 50 - 1.0f / world->ambientStrenght;
+    else	
+		engine->drawDistance = 10;
+	if(engine->drawDistance < 10){
+        engine->drawDistance = 10;
+    }
+
+
+	
+
+	engine->mesh = GenMeshCubicmap(map_image, (Vector3) {
+		1.0f, 1.0f, 1.0f
+		});
+	engine->model = LoadModelFromMesh(engine->mesh);
+	
+	engine->nextPosition = engine->camera.position;
+	engine->playerYaw = 0.0f;
+	engine->targetYaw = 0.0f;
+	engine->isMoving = false;
 	engine->drawDistance = 100;
 
-	Texture texture_matirial = LoadTexture(name_atlas); ;
+	Texture texture_matirial = LoadTexture("assets/tex.png"); ;
 	engine->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture_matirial;
 
 	engine->modelPosition = (Vector3) {
@@ -78,7 +216,7 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 
 	UnloadImage(map_image);
 	#ifdef __EMSCRIPTEN__
-	SetTargetFPS(30);
+	SetTargetFPS(60);
 	#else
 	SetTargetFPS(60);
 	#endif
@@ -88,9 +226,18 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	//Water stuffs
 	//C img
 	bool isFirst = false;
-	engine->water =  LoadTexture(water_atlas);
-	engine->fire  = LoadTexture("assets/la.jpeg"); 
-
+	
+	//engine->width = 1200;
+    //engine->height = 700;
+    // Initialize messages and sprites
+    //engine->messeges.count = 0;
+    //engine->messeges.capacity = 0;
+    //engine->messeges.items = NULL;
+    //engine->drawDistance = 50 - 1.0f / world->ambientStrenght;
+    //if(engine->drawDistance < 10){
+    //    engine->drawDistance = 10;
+    //}
+	
 	//engine->modelW = LoadModelFromMesh(engine->mesh);
 	//Texture textureW_matirial = LoadTexture(water_atlas); ;
 	//engine->modelW.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textureW_matirial;
@@ -98,6 +245,18 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	return engine;
 	}
 
+	
+
+
+//Tbd move water fire into a sprite_Da	
+void free_engine(EngineData *engine){
+	//UnloadTexture(engine->water);
+	//UnloadTexture(engine->fire);
+	//UnloadTexture(engine->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture);
+	//free(engine);
+	//UnloadMesh(engine->mesh);
+	UnloadModel(engine->model);
+}
 
 
 void render_loop(World *world, EngineData *engine) {
@@ -169,8 +328,16 @@ void render_map(World *world, EngineData *engine){
 				DrawText(";", x*sizeX, y*sizeY , 10, WHITE);
 			
 			}
+			if((world->map.walling[y][x] == Tile_DownS) && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, WHITE);
+				DrawText("<", x*sizeX, y*sizeY , 20, WHITE);
 			
+			}
+			if((world->map.walling[y][x] == Tile_UpS) && world->isExpMap[y][x]){
+				DrawRectangle(x*sizeX, y*sizeY, sizeX, sizeY, BLACK);
+				DrawText(">", x*sizeX, y*sizeY , 20, WHITE);
 			
+			}
 			
 				
 			if((world->map.walling[y][x] == '\"' || world->map.walling[y][x] == Tile_BGrass) && world->isExpMap[y][x]){
@@ -232,6 +399,55 @@ void render_map_testing(World *world, EngineData *engine){
 	}
 	
 }
+
+
+void render_stats_(World* world, const int x, int y, int w, int h){
+	DrawRectangle(x, y, w, h, (Color){0X18, 0X18, 0X18, 128});
+	char* tempStr = malloc(STR_SIZE);
+	snprintf(tempStr, STR_SIZE, "Health: %d/%d", world->health[0].current, world->health[0].max);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);y+=30;
+
+	snprintf(tempStr, STR_SIZE, "Dmg: %d - %d", world->stats[0].dmgMin,  world->stats[0].dmgMax);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Def: %d", world->stats[0].defence);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);y+=30;
+
+	
+	snprintf(tempStr, STR_SIZE, "Str: %d", world->stats[0].str);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Dex: %d", world->stats[0].dex);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+
+	snprintf(tempStr, STR_SIZE, "Int: %d", world->stats[0].inte);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Cons: %d", world->stats[0].cons);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Stealth: %d", world->stats[0].stealth);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+	
+	snprintf(tempStr, STR_SIZE, "Exp: %d", world->expPlayer);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+
+	
+	free(tempStr);
+	
+}
+
 
 //Tet for now be able to be set up
 void render_event_messages(EngineData *engine, const int x, const int y, const int w, const int h){
@@ -336,28 +552,164 @@ void render_droped_items(World *world, EngineData *engine, Sprite_DA* sprites){
 	}
 }
 */
-void render_stats(World* world, Item_DA* inventory, EngineData* engine){
-	
-	DROP(inventory);
-
+void render_stats_update(World* world, EngineData *engine){
+	DrawRectangle(0, 0, engine->width, engine->height, (Color){0x18, 0x18, 0x18, 255});
+	//Stats 
+	DrawRectangle(50, 100 + 50*engine->whatItem, engine->width, 20, RED );
+	int x = 50, y = 50;
+	//DrawRectangle(50, 50, engine->width, engine->height, (Color){0X18, 0X18, 0X18, 128});
 	char* tempStr = malloc(STR_SIZE);
-	memset(tempStr, '\0', sizeof(char)*STR_SIZE);
-	const Color tBLACK = (Color){0, 0, 0, 220};
-	const int fontWidth = 20;
-	DrawRectangle(0, 0, engine->width, engine->height, tBLACK); 
-	int y = 0, x = 50;
-	DrawText("Stats:", (x+=20), (y+=50), 20, WHITE);
-	
 	snprintf(tempStr, STR_SIZE, "Health: %d/%d", world->health[0].current, world->health[0].max);
 	DrawText(tempStr, x, y+=50, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
 
+	snprintf(tempStr, STR_SIZE, "Dmg: %d - %d", world->stats[0].dmgMin,  world->stats[0].dmgMax);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Def: %d", world->stats[0].defence);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	
+	snprintf(tempStr, STR_SIZE, "Str: %d", world->stats[0].str);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Dex: %d", world->stats[0].dex);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+
+	snprintf(tempStr, STR_SIZE, "Int: %d", world->stats[0].inte);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Cons: %d", world->stats[0].cons);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Stealth: %d", world->stats[0].stealth);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+	
+	snprintf(tempStr, STR_SIZE, "Exp: %d", world->expPlayer);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+	
+
+
 	if(IsKeyPressed(KEY_C)){
-			engine->isRenderStats = (engine->isRenderStats) ? 0 : 1;
+		engine->whatItem = 0;
+		engine->isRenderStats = false;
+	}
+	if(IsKeyPressed(KEY_UP)){
+		if(engine->whatItem > 0){
+			engine->whatItem--;			
+		}
+		else{
+			engine->whatItem = 8;
+		}
+	}
+	
+	if(IsKeyPressed(KEY_DOWN)){
+		if(8 > engine->whatItem ){
+			engine->whatItem++;			
+		}
+		else{
+			engine->whatItem = 0;
+		}
+	}	
+	if(IsKeyPressed(KEY_RIGHT)){
+		switch (engine->whatItem){
+		//HEALTH
+		case 0:{
+			if(world->expPlayer - 100 > 0){
+				world->health[0].max+=1;
+				world->expPlayer -= 100;
+			}
+			break;
+		}
+		//DMG
+		case 1:{
+			if(world->expPlayer - 1000 > 0){
+				if(world->stats[0].dmgMax > world->stats[0].dmgMin + 2){
+					if(rand_f32() < 0.5)
+						world->stats[0].dmgMax+=1;
+					else 
+						world->stats[0].dmgMin+=1;
+				}
+				else{
+					world->stats[0].dmgMax+=1;
+				}
+			world->expPlayer-=1000;	
+			}
+				
+			break;
+		}	
+		//DEF
+		case 2:{
+			if(world->expPlayer - 1000 > 0){
+				world->stats[0].defence+=1;
+				world->expPlayer-=1000;	
+			}
+
+				break;
+		}	
+		//STR
+		case 3:{
+			if(world->expPlayer - 1000 > 0){
+				world->stats[0].str+=1;
+				world->expPlayer-=1000;	
+			}
+
+				break;
+		}
+		//DEX
+		case 4:{
+			if(world->expPlayer - 1000 > 0){
+				world->stats[0].dex+=1;
+				world->expPlayer-=1000;	
+			}
+
+				break;
+		}
+		//INT
+		case 5:{
+			if(world->expPlayer - 1000 > 0){
+				world->stats[0].inte+=1;
+				world->expPlayer-=1000;	
+			}
+
+				break;
+		}
+		//CONS
+		case 6:{
+			if(world->expPlayer - 1000 > 0){
+				world->stats[0].cons+=1;
+				world->expPlayer-=1000;	
+			}
+
+				break;
+		}
+		//Stealth
+		case 7:{
+			if(world->expPlayer - 1000 > 0){
+				world->stats[0].stealth+=1;
+				world->expPlayer-=1000;	
+			}
+
+				break;
 		}
 
 
-	free(tempStr);
+
+		default:
+			break;
+		}
+
+	}
 
 	
 }
@@ -408,6 +760,11 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 			if(strcat(itemStr, tempStr) == NULL){
 				ASSERT("String overflow");
 		}
+			snprintf(tempStr, STR_SIZE, "    <%d>  ", inventory->items[i].strReq);		
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+		}
+		
 		}
 		//If change max amount of stats for items change hear
 		//Stats are renderd only if ident

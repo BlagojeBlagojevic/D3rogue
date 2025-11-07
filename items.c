@@ -1,10 +1,10 @@
 #include "item.h"
 #define ITEM_SPECIAL 0.1f
-#define ITEM_CURSE   (ITEM_SPECIAL + 0.35f)
+#define ITEM_CURSE   (ITEM_SPECIAL + 0.1f)
 
 static void add_potion_item_to_inventory(Item_DA* inventory, Potion_Type potion, int isIdent){
     Item i = (Item){0};
-    if(rand_f32() < 0.2f){
+    if(rand_f32() < 0.1f){
         i.isCursed = true;
     }
     else{
@@ -1992,7 +1992,7 @@ void random_item_generator(Item_DA* inventory, Position pos){
     static int randomIter = 0;
     printf("random iter %d\n", randomIter++);
     const float chanceItem[] = {3.0,5.0,4.5,4.0,4.0,3.5,3.0,3.0,2.5,2.5,2.0,3.5,2.0,2.5,1.5,2.5,2.0,2.0,1.5,1.5,1.0,1.5,1.5,1.0,1.0,1.5,1.0,1.0,1.0,0.8,0.7,0.7,0.5,0.5,0.4,0.3,0.8,0.5,0.3,0.2,0.1,0.1,4.5,5.0,4.5,4.0,3.5,3.0,2.5,2.0,1.5,2.0,1.5,1.0,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0.08,0.05,0.1,0.1,0.1,0.08,0.08,0.06,0.06,0.05,0.05,0.04,0.04,0.03,0.02,4.5,4.0,3.5,3.0,2.5,2.0,1.5,1.0,0.3,0.2,0.1,0.05,4.5,4.0,3.5,3.0,2.5,2.0,1.5,0.5,0.3,0.2,0.1,4.5,3.0,4.5,3.0,3.5,5.0,4.0}; 
-    if(chance <= 0.30){
+    if(chance <= 0.50){
         int type = 0;
         while(1){
             type = (rand()%Item_Num)%(sizeof(chanceItem) / sizeof(float)); 
@@ -2005,7 +2005,7 @@ void random_item_generator(Item_DA* inventory, Position pos){
         add_item_to_inventory(type, inventory, Scroll_No, Potion_No, false, false);
         //inventory->items[inventory->count].pos = pos;  
         }
-    else if(chance > 0.30  && chance <= 0.50){
+    else if(chance > 0.50  && chance <= 0.70){
          int potion_type = (rand()%(Potion_Num - 1) + 1); 
          //printf("Porion\n");
          add_item_to_inventory(Potion, inventory, Scroll_No, potion_type, false, false);

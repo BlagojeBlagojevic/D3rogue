@@ -45,7 +45,7 @@
 
 #define rand_f32() ((float)rand()/(float)RAND_MAX)
 
-#define CHANCE_NOSEE     0.33f
+#define CHANCE_NOSEE     0.1f
 #define CHANCE_BIGPLANT  0.33f
 #define CHANCE_STOP_RUN  0.25f 
 

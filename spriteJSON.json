@@ -27,7 +27,7 @@
         
         {
             "path": "assets/monsters/wagon.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         
         {
@@ -38,42 +38,42 @@
         
         {
             "path": "assets/monsters/acolyte.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path": "assets/monsters/acolyteB.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         
         {
             "path": "assets/monsters/acolyteS.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         
         {
             "path": "assets/monsters/acolyteDeath.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path": "assets/monsters/acolyteDeathBow.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path": "assets/monsters/acolyteDeathWarrior.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path": "assets/monsters/spit.png",
-            "scale": 1.5   
+            "scale": 1.0   
         },
         {
             "path": "assets/monsters/spider.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         
         {
             "path": "assets/monsters/spiderMage.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path": "assets/monsters/wolf.png",
@@ -81,7 +81,7 @@
         },
         {
             "path" : "assets/monsters/gargoyle.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/bat.png",
@@ -89,151 +89,151 @@
         },
         {
             "path" : "assets/monsters/vampire.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/bloat.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/obsydianStatue.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/anubis.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcWarrior.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcRaider.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcShaman.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcWarloc.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/redOrc.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcBrute.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcSamurai.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcWarchief.png",
-            "scale": 1.5
+            "scale": 1.0
   
         },
         {
             "path" : "assets/monsters/orcScout.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/goblinWarrior.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/goblinArcher.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/goblinWarlord.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/goblinBarrack.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/giantRat.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/pinkJelly.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/greenJelly.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/blueJelly.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/toad.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/imp.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/mindFlayer.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/phantom.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/lich.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/phantom.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/beholderKin.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/soulReaper.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/manes.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/flashDemon.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/fireDemon.png",
-            "scale": 1.5
+            "scale": 1.0
         },
         {
             "path" : "assets/monsters/kraken.png",
-            "scale": 1.5   
+            "scale": 1.0   
         }
         ,
         {
             "path" : "assets/monsters/waterDemon.png",
-            "scale": 1.5   
+            "scale": 1.0   
         }
          
 

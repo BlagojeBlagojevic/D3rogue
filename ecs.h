@@ -50,6 +50,9 @@ typedef struct {
 	int        identScrools[Scroll_Num];
 	int        identPotions[Potion_Num];
 	TempStats_DA tempStatsPlayer;
+	int         level;
+	int         expPlayer;
+
 	} World;
 
 //Shoud	
