@@ -16,45 +16,6 @@
 #include "common.h"
 #include "item.h"
 
-
-// ECS world container
-typedef struct {
-	CompMask masks[MAX_ENTITIES];  // Component mask per entity
-
-	// Component arrays (indexed by entity ID)
-	char*      name[MAX_ENTITIES];
-	Position   position[MAX_ENTITIES];
-	Renderable renderable[MAX_ENTITIES];
-	Health     health[MAX_ENTITIES];
-	Input      input[MAX_ENTITIES];  //this is just for player prob just one element other array for monsters or use this
-	Stats      stats[MAX_ENTITIES];
-	State      state[MAX_ENTITIES];
-	Gas        gas[MAX_ENTITIES];
-	Spell      spell[MAX_ENTITIES];
-	Item_DA    inventory[MAX_ENTITIES];
-	Projectile projectile[MAX_ENTITIES];
-	int        free_list[MAX_ENTITIES];  // Recycled entity IDs
-	int        num_free;                 // Free list count
-	Map        map;
-	int        isExpMap[MAP_HEIGHT][MAP_WIDTH];
-	float      dikstra[MAP_HEIGHT][MAP_WIDTH];
-	int        visibe[MAP_HEIGHT][MAP_WIDTH];
-	Gas        gasMap[MAP_HEIGHT][MAP_WIDTH];
-	Trap       trapMap[MAP_HEIGHT][MAP_WIDTH];
-	Fire       fire[MAX_ENTITIES];
-	StatusEffects status[MAX_ENTITIES];
-	Item_DA    items;
-	float      ambientStrenght;           //
-	float      saveAmbientStrenght;
-	int        nMonster;
-	int        identScrools[Scroll_Num];
-	int        identPotions[Potion_Num];
-	TempStats_DA tempStatsPlayer;
-	int         level;
-	int         expPlayer;
-
-	} World;
-
 //Shoud	
 typedef struct{
 	char*    name;
@@ -124,6 +85,51 @@ typedef struct{
 
 
 
+
+
+// ECS world container
+typedef struct {
+	CompMask masks[MAX_ENTITIES];  // Component mask per entity
+
+	// Component arrays (indexed by entity ID)
+	char*      name[MAX_ENTITIES];
+	Position   position[MAX_ENTITIES];
+	Renderable renderable[MAX_ENTITIES];
+	Health     health[MAX_ENTITIES];
+	Input      input[MAX_ENTITIES];  //this is just for player prob just one element other array for monsters or use this
+	Stats      stats[MAX_ENTITIES];
+	State      state[MAX_ENTITIES];
+	Gas        gas[MAX_ENTITIES];
+	Spell      spell[MAX_ENTITIES];
+	Item_DA    inventory[MAX_ENTITIES];
+	Projectile projectile[MAX_ENTITIES];
+	int        free_list[MAX_ENTITIES];  // Recycled entity IDs
+	int        num_free;                 // Free list count
+	Map        map;
+	int        isExpMap[MAP_HEIGHT][MAP_WIDTH];
+	float      dikstra[MAP_HEIGHT][MAP_WIDTH];
+	int        visibe[MAP_HEIGHT][MAP_WIDTH];
+	Gas        gasMap[MAP_HEIGHT][MAP_WIDTH];
+	Trap       trapMap[MAP_HEIGHT][MAP_WIDTH];
+	Fire       fire[MAX_ENTITIES];
+	StatusEffects status[MAX_ENTITIES];
+	Item_DA    items;
+	float      ambientStrenght;           //
+	float      saveAmbientStrenght;
+	int        nMonster;
+	int        identScrools[Scroll_Num];
+	int        	  identPotions[Potion_Num];
+	TempStats_DA  tempStatsPlayer;
+	int           level;
+	int           expPlayer;
+	Generator_DA *tempGen; 
+	int           nutrition;
+
+	} World;
+
+
+
+
 void load_global_ent(Global_Ent_DA* ent, const char* name);
 void init_world(World* world);
 int  create_entity(World* world);
@@ -143,7 +149,7 @@ void add_trap(World* world, Trap_Types type, int x, int y);
 void generate_level(World* world, int level, Generator_DA *generators, Global_Ent_DA *ent);
 void load_global_generator(Generator_DA* generators, const char* name);
 void print_all_generators(Generator_DA* generators);
-
+void generate_monster_generator(World* world, Generator* gen, Position pos, Global_Ent_DA *ent);
 
 
 #endif

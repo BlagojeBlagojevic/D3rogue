@@ -18,7 +18,7 @@
 
 
 
-
+#define MAX_LEVELS 26
 static World* g_world = NULL;
 static EngineData* g_engine = NULL;
 static Sprite_DA g_sprites = {0};
@@ -65,14 +65,19 @@ void main_loop(void) {
             trap_system(g_world, &g_entDA, g_engine);
             status_system(g_world, g_engine);
             regen_system(g_world);
+            spawn_monster_system(g_world, &g_generators, &g_entDA, g_engine);
+            nutrition_system(g_world, g_engine);
+            //Tbd rename to run onec
             g_engine->isGasRun = false;
         }
         //rUN ALL 
         health_system(g_world, &g_entDA, g_engine);
+        food_system(g_world, g_engine);
         scroll_system(g_world, &g_entDA, g_engine);
         potion_system(g_world, g_engine);
         throw_system(g_world, g_engine);
         level_system(g_world, &g_generators, &g_entDA, g_engine);
+       
         
         if(g_engine->isMoving == false && g_engine->isEntMoving == true) {
             monster_change_state_system(g_world, g_engine);			
@@ -125,7 +130,7 @@ void main_loop(void) {
        if(g_engine->is2d)
         render_system2d(g_world, g_engine, &g_sprites);
         render_event_messages(g_engine, 100, 0, 600, 200);
-        render_stats_(g_world, 800, 000, 1000, 300);
+        render_stats_(g_engine, g_world, 800, 000, 1000, 300);
         
   
         if(g_engine->isRenderInventory){
@@ -214,14 +219,16 @@ int main() {
     
     // Add starter items
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Teleport, false, false);
-    add_item_to_inventory(Sword, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Dagger, &world.inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Food, &world.inventory[player], Scroll_No, Potion_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
  //   add_item_to_inventory(Bow, &world.inventory[player], Scroll_No, Potion_No, false, false);
  //   add_item_to_inventory(Arrows, &world.inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Tourch, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, false, false);
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_MagicMaping, false, false);
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Calcific, false, false);
@@ -293,9 +300,9 @@ int main() {
     g_target = LoadRenderTexture(engine->width, engine->height);
     
     // Calculate draw distance
-    engine->drawDistance = 50 - 1.0f / world.ambientStrenght;
-    if(engine->drawDistance < 10){
-        engine->drawDistance = 10;
+    engine->drawDistance = 20 - 1.0f / world.ambientStrenght;
+    if(engine->drawDistance < 0){
+        engine->drawDistance = 3;
     }
     
     MESSAGE_F("Draw distance: %d, Ambient strength: %f", engine->drawDistance, world.ambientStrenght);

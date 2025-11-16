@@ -186,11 +186,11 @@ EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *eng
 	engine->targetYaw = 0.0f;
 	engine->isMoving = false;
 	if(world->ambientStrenght != 0)
-		engine->drawDistance = 50 - 1.0f / world->ambientStrenght;
+		engine->drawDistance = 20 - 1.0f / world->ambientStrenght;
     else	
-		engine->drawDistance = 10;
-	if(engine->drawDistance < 10){
-        engine->drawDistance = 10;
+		engine->drawDistance = 3;
+	if(engine->drawDistance < 0){
+        engine->drawDistance = 3;
     }
 
 
@@ -401,12 +401,18 @@ void render_map_testing(World *world, EngineData *engine){
 }
 
 
-void render_stats_(World* world, const int x, int y, int w, int h){
+void render_stats_(EngineData *engine, World* world, const int x, int y, int w, int h){
 	DrawRectangle(x, y, w, h, (Color){0X18, 0X18, 0X18, 128});
 	char* tempStr = malloc(STR_SIZE);
 	snprintf(tempStr, STR_SIZE, "Health: %d/%d", world->health[0].current, world->health[0].max);
 	DrawText(tempStr, x, y+=20, 20, WHITE);
-	memset(tempStr, '\0', STR_SIZE);y+=30;
+	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Nutrition: %d / 10000", world->nutrition);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+
 
 	snprintf(tempStr, STR_SIZE, "Dmg: %d - %d", world->stats[0].dmgMin,  world->stats[0].dmgMax);
 	DrawText(tempStr, x, y+=20, 20, WHITE);
@@ -442,8 +448,18 @@ void render_stats_(World* world, const int x, int y, int w, int h){
 	DrawText(tempStr, x, y+=20, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
 
+	snprintf(tempStr, STR_SIZE, "Depth: %d", world->level);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+
+	snprintf(tempStr, STR_SIZE, "Radius: %d", engine->drawDistance);
+	DrawText(tempStr, x, y+=20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
 
 	
+
 	free(tempStr);
 	
 }
@@ -597,7 +613,9 @@ void render_stats_update(World* world, EngineData *engine){
 	DrawText(tempStr, x, y+=50, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
 
-	
+
+
+
 
 
 	if(IsKeyPressed(KEY_C)){
@@ -911,6 +929,7 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 			}
 			engine->tempStr.count = 0;
 			engine->whatItem = 0;
+			
 			
 		}
 		

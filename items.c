@@ -1917,7 +1917,7 @@ switch (type){
         i.pos   = (Position){0, 0};
         i.type  = Tourch;
         i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        i.value = rand()%100 + 100; 
+       // i.value = rand()%100 + 100; 
         i.value = 100;
         i.nDice = 0;
         i.to    = EQUIPTED_TOURCH;
@@ -1926,6 +1926,22 @@ switch (type){
         da_append(inventory, i);
         break;
     }
+    case Food:{
+        i.name = malloc(128);
+        strcpy(i.name, "Food");
+        i.pos   = (Position){0, 0};
+        i.type  = Food;
+        i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        i.value = rand()%100 + 100; 
+        //i.value = 100;
+        i.nDice = 0;
+        i.to    = EQUIPTED_USE_FOOD;
+        i.isEqu = isEqu;
+        i.itemChance = 4.0f; // Common utility item
+        da_append(inventory, i);
+        break;
+    }
+
     default:
         ASSERT("Not defined item");
         break;
@@ -1992,7 +2008,7 @@ void random_item_generator(Item_DA* inventory, Position pos){
     static int randomIter = 0;
     printf("random iter %d\n", randomIter++);
     const float chanceItem[] = {3.0,5.0,4.5,4.0,4.0,3.5,3.0,3.0,2.5,2.5,2.0,3.5,2.0,2.5,1.5,2.5,2.0,2.0,1.5,1.5,1.0,1.5,1.5,1.0,1.0,1.5,1.0,1.0,1.0,0.8,0.7,0.7,0.5,0.5,0.4,0.3,0.8,0.5,0.3,0.2,0.1,0.1,4.5,5.0,4.5,4.0,3.5,3.0,2.5,2.0,1.5,2.0,1.5,1.0,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0.08,0.05,0.1,0.1,0.1,0.08,0.08,0.06,0.06,0.05,0.05,0.04,0.04,0.03,0.02,4.5,4.0,3.5,3.0,2.5,2.0,1.5,1.0,0.3,0.2,0.1,0.05,4.5,4.0,3.5,3.0,2.5,2.0,1.5,0.5,0.3,0.2,0.1,4.5,3.0,4.5,3.0,3.5,5.0,4.0}; 
-    if(chance <= 0.50){
+    if(chance <= 0.3){
         int type = 0;
         while(1){
             type = (rand()%Item_Num)%(sizeof(chanceItem) / sizeof(float)); 
@@ -2010,7 +2026,10 @@ void random_item_generator(Item_DA* inventory, Position pos){
          //printf("Porion\n");
          add_item_to_inventory(Potion, inventory, Scroll_No, potion_type, false, false);
          //printf("Porion\n");
-    }    
+    } 
+    else if(chance > 0.7 && chance < 0.8){
+        add_item_to_inventory(Food, inventory, Scroll_No, Potion_No, false, false);
+    }   
 	else{
 		const float chanceScroll[] = {4.0,4.5,3.0,3.0,2.5,1.5,3.5,3.0,2.0,3.0,3.5,2.5,2.0,1.5,2.0,2.5,2.0,1.0,0.5,1.5,1.0,1.0,0.5,3.0};
         int scrollType = rand()%(Scroll_Num - 1) + 1;
@@ -2026,7 +2045,6 @@ void random_item_generator(Item_DA* inventory, Position pos){
 		}
        
        DROP(pos); 
-
       
 }
 

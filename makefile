@@ -1,6 +1,7 @@
 CC = gcc
-CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -I./cJSON/ 
 DEBUG_CFLAGS = -Og -fsanitize=address -static-libasan -ggdb
+CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -I./cJSON/  $(DEBUG_CFLAGS)
+
 
 LIBS = -Iraylib/include -Lraylib/lib  -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 
 

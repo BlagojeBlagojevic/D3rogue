@@ -251,6 +251,9 @@ void init_world(World* world) {
 	world->identScrools[Scroll_Identif] = true;
 	world->tempStatsPlayer = (TempStats_DA){0};
 	world->num_free = MAX_ENTITIES;
+	world->tempGen = NULL;
+	world->expPlayer = 0;
+	world->nutrition = 10000;
 	//world->expPlayer = 10060;
 
 	}
@@ -1350,7 +1353,7 @@ static void generate_monster_of_type(World *world, Global_Ent_DA *ent, Position 
 }
 
 
-static void generate_monster_generator(World* world, Generator* gen, Position pos, Global_Ent_DA *ent){
+void generate_monster_generator(World* world, Generator* gen, Position pos, Global_Ent_DA *ent){
 		Position monsterPos = pos;
 		int minX = pos.x - 10;
 		CLAMP(minX, 0, MAP_WIDTH);
@@ -1395,6 +1398,13 @@ static void generate_monster_generator(World* world, Generator* gen, Position po
 
 void generate_level(World* world, int level, Generator_DA *generators, Global_Ent_DA *ent){
 	//40% B, 30% N, 25% G, 5% RM
+	if(world->tempGen != NULL){
+		free(world->tempGen->items);
+		//exit(-1);
+		 //world->tempGen = NULL;
+	}
+		
+
 	float whatLevel = rand_f32();
 	int maxRooms = rand()%10 + 15;
 	//int maxRooms = ;
@@ -1432,7 +1442,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 		//if(rand_f32() < 0.8)
 	}
 	//whatLevel > 0.7f && whatLevel <= 0.9f
-	else if(whatLevel > 0.7f && whatLevel <= 0.9f){
+	else if(whatLevel > 0.7f && whatLevel <= 0.95f){
 		world->map = xmgen_graph(MAP_WIDTH, MAP_HEIGHT, maxRooms, 5, 10, rand()%2);
 		xmgen_add_enviroment(&world->map, TIle_Grass, 0, 0, MAP_WIDTH, MAP_HEIGHT, (0.45 + rand_f32() / 10.0f));
 		if(rand_f32() < 0.5f)
@@ -1520,8 +1530,9 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	add_enviroment(world);
 	xmprint(world->map);
 	
-
-	Generator_DA temp = (Generator_DA){0};
+	//Temp fix for this to be global var
+	static Generator_DA temp = (Generator_DA){0};
+	temp = (Generator_DA){0};
 	for(int i = 0; i < generators->count; i++){
 		
 		printf("%d (%d %d %d)", i, generators->items[i].startDepth, generators->items[i].endDepth, level);
@@ -1533,7 +1544,8 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 
 	
 	//Get ge  n
-	int nItems  = rand()%3;
+	//Tbd machines for secret puzzle rooms or somthing
+	int nItems  = 3;
 	while(nItems > 0){
 		const int x = rand()%world->map.w;
 		const int y = rand()%world->map.h;
@@ -1558,7 +1570,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	//exit(-1);
 	Position_DA dist = {0}; 
 	int numIt = 0;	
-	while(world->nMonster < 6){
+	while(world->nMonster < 12){
 		
 		numIt++;
 		if(numIt == 1000){
@@ -1622,7 +1634,8 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 
 	//exit(-1);
 
-	free(temp.items);
+	//free(temp.items);
+	world->tempGen = &temp;
 	free(dist.items);
 
 

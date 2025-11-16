@@ -8,6 +8,7 @@
 #include "stb_perlin.h"
 
 
+
 // Render system: Draws entities with position and renderable
 //extern Texture2D temp;
 
@@ -552,7 +553,7 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
                 p->y >= renderStartY && p->y < renderEndY &&
                 world->isExpMap[(int)p->y][(int)p->x]) {
                 
-                const Sprite s = sprites->items[world->renderable[i].type];
+                Sprite s = sprites->items[world->renderable[i].type];
                 if (s.texture.id <= 0) continue;
 
                 const float worldX = p->x * tileSize;
@@ -560,6 +561,10 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
 
                 Rectangle source = { 0.0f, 0.0f, (float)s.texture.width, (float)s.texture.height };
                 Rectangle dest = { worldX, worldY, (float)tileSize, (float)tileSize };
+				if(world->status[0].hallucinationTurn > 0){
+					s = sprites->items[rand()%S_Sprite_Num];
+						
+				}
                 DrawTexturePro(s.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
             }
         }
@@ -571,14 +576,14 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
     {
         for(int i = 1; i < MAX_ENTITIES; i++){
             if((world->masks[i] & monster_mask) == monster_mask){
-                
+				
                 const Position* p = &world->position[i];
 				const float dist = Vector2DistanceSqr(world->position[i], world->position[0]);
                 // Only draw if in visible area
                 if (p->x >= renderStartX && p->x < renderEndX && 
                     p->y >= renderStartY && p->y < renderEndY && world->visibe[(int)p->y][(int)p->x] && dist < engine->drawDistance) {
                     
-                    const Sprite s = sprites->items[world->renderable[i].type];
+                    Sprite s = sprites->items[world->renderable[i].type];
                     if (s.texture.id <= 0) continue;
 
                     const float worldX = p->x * tileSize;
@@ -594,8 +599,12 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
                         spriteSize, 
                         spriteSize 
                     };
+                    if(world->status[0].hallucinationTurn > 0){
+						s = sprites->items[rand()%S_Sprite_Num];
+						
+					}
+					DrawTexturePro(s.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
                     
-                    DrawTexturePro(s.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
                 }
             }
         }
@@ -819,8 +828,14 @@ static void cast_ray(World* world, EngineData* engine, float x, float y, int ent
 			iy = 0;
 		}
 		world->visibe[iy][ix] = true;
-		if(ent == 0)
-			world->isExpMap[iy][ix] = 1;
+		if(ent == 0){
+			const float dist = Vector2Distance(world->position[0], (Vector2){ix, iy});
+			if(dist < engine->drawDistance){
+				world->isExpMap[iy][ix] = 1;
+			}
+			
+		}
+			
 	
 		if(world->map.walling[iy][ix] == '#' || world->map.walling[iy][ix] == '+') {
 			return;
@@ -1972,7 +1987,7 @@ void health_system(World* world, Global_Ent_DA* ent, EngineData *engine) {
 
 			inventory_to_map(world, i);
 			//exp gain TBD ALL CONST THRU ENGINE FOR SETUP
-			world->expPlayer+= rand()%100;
+			world->expPlayer+= rand()%100 + world->level*5;
 			destroy_entity(world, i);
 
 			}
@@ -3234,14 +3249,10 @@ void lighting_system(World* world, EngineData* engine){
 			if(world->inventory[0].items[i].value == 0){
 				da_remove_unordered(&world->inventory[0], i);
 				world->ambientStrenght = world->saveAmbientStrenght;
-				//engine->drawDistance = 50 - 1.0f / world->ambientStrenght;
-				//if(engine->drawDistance < 10){
-				//		engine->drawDistance = 10;
-				//}
 				engine->isTorchEqu = false;
 				break;
 			}
-			engine->drawDistance = 200;
+			engine->drawDistance = 20;
 			world->ambientStrenght = world->saveAmbientStrenght + 0.2f;
 			engine->isTorchEqu = true;
 			//exit(-1);
@@ -3250,12 +3261,12 @@ void lighting_system(World* world, EngineData* engine){
 		}
 	}
 	if(!engine->isTorchEqu){
-		engine->drawDistance = 50 - 1.0f / (world->ambientStrenght + 0.0000001f);
+		engine->drawDistance = 20 - 1.0f / (world->ambientStrenght + 0.0000001f);
 		world->ambientStrenght = world->saveAmbientStrenght;
-		if(engine->drawDistance < 10){
+		if(engine->drawDistance < 0){
 			//exit(-1);
 
-			engine->drawDistance = 10;
+			engine->drawDistance = 3;
 			engine->isTorchEqu = false;
 		}
 	}
@@ -4621,10 +4632,10 @@ static void  free_level(World *world, Generator_DA *generators, Global_Ent_DA *e
 	if(engine == NULL){
 		ASSERT("Non inited engine");
 	}
-	engine->drawDistance = 50 - 1.0f / world->ambientStrenght;
+	engine->drawDistance = 20 - 1.0f / world->ambientStrenght;
 
-    if(engine->drawDistance < 10){
-        engine->drawDistance = 10;
+    if(engine->drawDistance < 0){
+        engine->drawDistance = 3;
     }
 	MESSAGE_F("Draw distance: %d, Ambient strength: %f", engine->drawDistance, world->ambientStrenght);
 
@@ -4665,8 +4676,77 @@ void level_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, En
 		MESSAGE("You fall down");
 		world->health[0].current -= rand()%20;
 		CLAMP(world->health[0].current, 0 , world->health[0].max);
+		world->level+=1;
 		free_level(world, generators, ent, engine);
+		
 		 
 	}		
 	
+}
+
+//Spawn mons if num monster < 10 and rand_f32() < 1% 
+//Maybe in fog
+#define CHANCE_SPAWN_MONSTER 0.01f
+void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine){
+	if(world->nMonster < 10){
+		if(rand_f32() <= CHANCE_SPAWN_MONSTER){
+			
+			int iter = 0;
+			while((iter++) < 100){
+				
+				const int x = rand()%MAP_WIDTH; 
+				const int y = rand()%MAP_HEIGHT;
+				if(world->tempGen == NULL){
+					ASSERT("Non inited pointer tempGen");
+				}
+				MESSAGE_F("Spawn %d", world->tempGen->count);
+				
+				print_all_generators(world->tempGen);
+				const int genNumber = rand()%world->tempGen->count;
+				
+				const Position pos = (Position){(float)x, (float)y};
+				const float dist = Vector2DistanceSqr(pos, world->position[0]);
+				if((world->map.walling[y][x] == Tile_Dirt || world->map.walling[y][x] == Tile_Dirt) && dist < 100){	
+					//printf("%d %f\n", world->level, world->tempGen->items[genNumber].chances.items[world->level]);
+					generate_monster_generator(world, &world->tempGen->items[genNumber], pos, ent);
+					break;
+				}
+				
+
+			}
+		}
+	}
+	DROP(generators);
+}
+
+
+#define MAX_NUTRITION 10000
+void food_system(World *world, EngineData *engine){
+	if(engine->whatAction == EQUIPTED_USE_FOOD){
+		const int nutrition = 1000 + rand()%5000;
+		world->nutrition += nutrition;
+		CLAMP(world->nutrition, 0, MAX_NUTRITION);
+		free_item(&world->inventory[0], engine->itemAction);		
+	}	
+}
+
+#define NUTRITION_DEC 30
+void nutrition_system(World *world, EngineData *engine){
+	const float chance = world->stats[0].str / (world->stats[0].cons*10.0f) + 0.1f;
+	if(rand_f32() <= chance){
+		world->nutrition-=rand()%NUTRITION_DEC;
+		CLAMP(world->nutrition, 0, MAX_NUTRITION);
+		if(world->nutrition == 0){
+		if(rand_f32() <= 0.5f){
+			//Tbd other efects
+			MESSAGE("You are hungry");
+			world->health[0].current-=10;
+			CLAMP(world->health[0].current, 0, 10000);
+		}
+	}
+	}
+	
+
+
+
 }

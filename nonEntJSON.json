@@ -116,6 +116,7 @@
         "assets/items/bow.png",
         "assets/items/arrow.png",
         "assets/items/tourch.png",
+        "assets/enviroment/food.png",
         "assets/items/scroll.png",
         "assets/items/potion.png",
         
@@ -124,6 +125,7 @@
         "assets/enviroment/grass.png",
         "assets/enviroment/lader.png",
         "assets/enviroment/lader.png"
+        
     ]
 
 }

@@ -79,3 +79,4 @@ This is a turn-based game where you control a character in either 3D or 2D view.
 - Check your inventory regularly to ensure you have proper equipment
 - Pay attention to status effect messages to understand combat limitations
 - Use the wait action (SPACE) strategically when you need to conserve position
+

@@ -114,7 +114,7 @@ void render_event_messages(EngineData *engine, const int x, const int y, const i
 
 void render_stats_update(World* world, EngineData *engine);
 
-void render_stats_(World* world, const int x, int y, int w, int h);
+void render_stats_(EngineData *engine, World* world, const int x, int y, int w, int h);
 
 void load_sprites(Sprite_DA *sprites, const char* name);
 

@@ -44,6 +44,10 @@ void scroll_system(World *world, Global_Ent_DA *ent, EngineData* engine);
 void potion_system(World *world, EngineData *engine);
 void throw_system(World *world, EngineData *engine);
 void level_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine);
+void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine);
+
+void food_system(World *world, EngineData *engine);
+void nutrition_system(World *world, EngineData *engine);
 
 
 #endif

@@ -26,7 +26,7 @@
         "MonsterGenerator": [
           {"Monstername": "OrcShaman", "chance": 1.0}, 
           {"Monstername": "OrcScout", "chance": 1.0}, 
-          {"Monstername": "AcolyteS", "chance": 1.0} ]
+          {"Monstername": "Acolyte", "chance": 1.0} ]
     },
     {
         "Name": "Bat lord",

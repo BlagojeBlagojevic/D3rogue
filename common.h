@@ -362,6 +362,7 @@ typedef enum{
 	S_Bow,
 	S_Arrow,
 	S_Tourch,
+	S_Food,
 	S_Scroll,
 	S_Potion,
 	//S_Pile,
@@ -372,6 +373,7 @@ typedef enum{
 	S_PlantBig,
 	S_UpS,
 	S_DownS, 
+	
 
 	//Generated sprites for gas
 	//S_BasicGas,
