@@ -55,7 +55,7 @@ void main_loop(void) {
 			SetShaderValue(g_lightingShader,  GetShaderLocation(g_lightingShader, "lightingOption"), &what, SHADER_UNIFORM_INT);
 		}
     // Game 
-    if(!g_engine->isRenderInventory && !g_engine->isRenderPickup && !g_engine->isRenderMap  && !g_engine->isRenderStats ){
+    if(!g_engine->isRenderInventory && !g_engine->isRenderPickup && !g_engine->isRenderMap  && !g_engine->isRenderStats &&  !g_engine->isRenderTrade){
         //rUN ONCE
         if(g_engine->isGasRun){
             printf("Gasss run\n");
@@ -127,15 +127,17 @@ void main_loop(void) {
     // UI Rendering
     BeginDrawing();
        //2D map render
-       if(g_engine->is2d)
-        render_system2d(g_world, g_engine, &g_sprites);
+       if(g_engine->is2d) render_system2d(g_world, g_engine, &g_sprites);
         render_event_messages(g_engine, 100, 0, 600, 200);
         render_stats_(g_engine, g_world, 800, 000, 1000, 300);
-        
-  
+         if(g_engine->isRenderTrade){
+            render_trade_system(g_world, g_engine);
+        }
+       
         if(g_engine->isRenderInventory){
             render_inventory_system(g_world, &g_world->inventory[0], g_engine);
         }
+       
         if(g_engine->isRenderPickup){
             render_pickup_system(g_world, &g_world->items, g_engine);
         }
@@ -222,6 +224,7 @@ int main() {
     add_item_to_inventory(Dagger, &world.inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Food, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Gold, &world.inventory[player], Scroll_No, Potion_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
  //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);

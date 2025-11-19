@@ -739,8 +739,95 @@ static void add_enviroment(World* world){
 				//});
 				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
 						(Sprite_Type)(S_DownS)});
+				
 						
 			}
+			else if(world->map.walling[y][x] == Tile_Armory){
+				//exit(-1);
+				int sEnt = create_entity(world);
+				add_component(world, sEnt, COMP_POSITION, &(Position){(float)x, (float)y});
+				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
+						(Sprite_Type)(S_Armory)});
+				add_tag(world, sEnt, COMP_SHOP);
+				const int numItem = 5 + rand()%5; //All are same percent
+				for(int i = 0; i < numItem; i++){
+					const int whatItem = LeatherArmor + rand()%(MetalGloves - LeatherArmor);
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], Scroll_No, Potion_No, false, false);		
+				}
+				
+			}
+			else if(world->map.walling[y][x] == Tile_Wepon){
+				//exit(-1);
+				int sEnt = create_entity(world);
+				add_component(world, sEnt, COMP_POSITION, &(Position){(float)x, (float)y});
+				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
+						(Sprite_Type)(S_WeponS)});
+				add_tag(world, sEnt, COMP_SHOP);
+				//const int numItem = 5 + rand()%5; //All are same percent
+				const int numItem = 5 + rand()%5; //All are same percent
+				for(int i = 0; i < numItem; i++){
+					const int whatItem = rand()%DMace;
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], Scroll_No, Potion_No, false, false);		
+				}
+				
+				
+			}
+			else if(world->map.walling[y][x] == Tile_Genera){
+				//exit(-1);
+				int sEnt = create_entity(world);
+				add_component(world, sEnt, COMP_POSITION, &(Position){(float)x, (float)y});
+				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
+						(Sprite_Type)(S_GeneralS)});
+				add_tag(world, sEnt, COMP_SHOP);
+			
+				for(int i = 0; i < 2 + rand()%3; i++){
+					const int whatItem = Food;
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], Scroll_No, Potion_No, false, false);		
+				}
+				for(int i = 0; i < rand()%3; i++){
+					const int whatItem = Tourch;
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], Scroll_No, Potion_No, false, false);		
+				}
+				for(int i = 0; i < rand()%2; i++){
+					const int whatItem = Potion;
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], Scroll_No, (rand()%(Potion_Num - 1) + 1), false, false);		
+				}
+				for(int i = 0; i < rand()%2; i++){
+					const int whatItem = Scroll;
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], (rand()%(Scroll_Num - 1) + 1), Potion_No, false, false);		
+				}
+
+			}
+			else if(world->map.walling[y][x] == Tile_Pot){
+				//exit(-1);
+				int sEnt = create_entity(world);
+				add_component(world, sEnt, COMP_POSITION, &(Position){(float)x, (float)y});
+				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
+						(Sprite_Type)(S_PotionS)});
+				add_tag(world, sEnt, COMP_SHOP);
+				//const int numItem = 5 + rand()%5; //All are same percent
+				const int numItem = 5 + rand()%5; //All are same percent
+				for(int i = 0; i < numItem; i++){
+					const int whatItem = Potion;
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], Scroll_No, (rand()%(Potion_Num - 1) + 1), false, false);		
+				}
+			}
+			
+			else if(world->map.walling[y][x] == Tile_Scro){
+				//exit(-1);
+				int sEnt = create_entity(world);
+				add_component(world, sEnt, COMP_POSITION, &(Position){(float)x, (float)y});
+				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
+						(Sprite_Type)(S_ScrollS)});
+				add_tag(world, sEnt, COMP_SHOP);
+				//const int numItem = 5 + rand()%5; //All are same percent
+				const int numItem = 5 + rand()%5; //All are same percent
+				for(int i = 0; i < numItem; i++){
+					const int whatItem = Scroll;
+					add_item_to_inventory((Item_Type)whatItem, &world->inventory[sEnt], (rand()%(Scroll_Num - 1) + 1), Potion_No, false, false);		
+				}
+			}
+
 			else if(world->map.walling[y][x] == Tile_Water || world->map.walling[y][x] == Tile_Dwater){
 				int count = 0;
 				for(int i = 0; i < 8; i++){
@@ -757,6 +844,7 @@ static void add_enviroment(World* world){
 	}
 	
 	xmprint(world->map);
+	//exit(-1);
 }
 
 
@@ -834,6 +922,8 @@ void generate_map(World* world, Global_Ent_DA *ent) {
 	remove_non_posible_elements(world);
 
 	xmprint(world->map);
+	
+	
 	add_enviroment(world);
 	//exit(-1);
 	while(1) {
@@ -1395,7 +1485,7 @@ void generate_monster_generator(World* world, Generator* gen, Position pos, Glob
 
 }
 
-
+#define CHANCE_SHOP 0.5f
 void generate_level(World* world, int level, Generator_DA *generators, Global_Ent_DA *ent){
 	//40% B, 30% N, 25% G, 5% RM
 	if(world->tempGen != NULL){
@@ -1527,6 +1617,36 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 			break;
 		}
 	}
+	//Stores
+	//for(int i = 0; i < 100; i++)
+	if(rand_f32() < CHANCE_SHOP){
+		while(1){
+			int x = rand()%world->map.w;
+			int y = rand()%world->map.h; 
+			if(world->map.walling[y][x] == Tile_Dirt){
+				float chance  = rand_f32();
+				if(chance <= 0.3f){
+					world->map.walling[y][x] = Tile_Genera;
+				}
+				else if(chance < 0.5){
+					world->map.walling[y][x] = Tile_Wepon;
+				}
+				else if(chance < 0.6){
+					world->map.walling[y][x] = Tile_Armory;
+				}
+				else if(chance < 0.8){
+					world->map.walling[y][x] = Tile_Pot;
+				}
+				else{
+					world->map.walling[y][x] = Tile_Scro;
+				}	
+				break;
+			}
+			
+		
+		}
+	}
+	
 	add_enviroment(world);
 	xmprint(world->map);
 	
@@ -1545,7 +1665,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	
 	//Get ge  n
 	//Tbd machines for secret puzzle rooms or somthing
-	int nItems  = 3;
+	int nItems  = 3 + rand()%2;
 	while(nItems > 0){
 		const int x = rand()%world->map.w;
 		const int y = rand()%world->map.h;
@@ -1625,6 +1745,8 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 
 		}
 		 
+
+		
 		//Generate position
 
 		//generate_monster_of_type(world, ent, &temp.items[genNumber]);

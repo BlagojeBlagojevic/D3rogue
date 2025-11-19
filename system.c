@@ -244,6 +244,11 @@ void render_system(World* world, EngineData* engine, Sprite_DA *sprites) {
 			(float)p->x, +1.2f, (float)p->y
 			}, 2.0f, WHITE);
 			}
+			else if(world->renderable[i].type == S_Armory || world->renderable[i].type == S_WeponS || world->renderable[i].type == S_GeneralS 
+				|| world->renderable[i].type == S_PotionS || world->renderable[i].type == S_ScrollS){
+				DrawBillboard(engine->camera, s.texture, (Vector3){pos.x, 0.4, pos.z}, 1.0f, WHITE);
+
+			}
 
 			else if(world->input[i].isFinishedAttack == true)	
 				DrawBillboard(engine->camera, s.texture, pos,s.scale + rand_f32()/5.0f, WHITE);	
@@ -476,7 +481,7 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
             else if (tile == '#') {
                 tileColor = (Color){0x18, 0x18, 0x18, 255}; // Wall
             }
-            else if (tile == ' ' || tile == '*') {
+            else if (tile == ' ' || tile == '*' || tile == Tile_Armory || tile == Tile_Wepon || tile == Tile_Genera || tile == Tile_Pot || tile == Tile_Scro) {
                 tileColor = BROWN; // Floor
             }
             else if (tile == '+' || tile == '-') {
@@ -2506,6 +2511,10 @@ void input_system(World* world, EngineData *engine) {
 			}*/
 
 		}
+		if(IsKeyPressed(KEY_T)){
+			engine->isRenderTrade = (engine->isRenderTrade) ? 0 : 1;
+			engine->whatItem = 0;
+		}
 		if(IsKeyPressed(KEY_I)){
 			engine->isRenderInventory = (engine->isRenderInventory) ? 0 : 1;
 			engine->whatItem = 0;
@@ -2922,6 +2931,10 @@ void input_system2d(World* world, EngineData *engine) {
                 engine->tempItemList.count = 0;
                 setup_item_system(world, engine);
             }
+			if(IsKeyPressed(KEY_T)){
+				engine->isRenderTrade = (engine->isRenderTrade) ? 0 : 1;
+				engine->whatItem = 0;
+			}
             
             if(IsKeyPressed(KEY_I)){
                 engine->isRenderInventory = (engine->isRenderInventory) ? 0 : 1;
@@ -3074,7 +3087,7 @@ void update_entity_position_system(World* world, EngineData* engine) {
 					}
 			
 			//Let for now pinkjely 30 chance to multi 		
-			else if(world->renderable[i].type == S_PinkJelly && rand_f32() < 0.3f){
+			else if(world->renderable[i].type == S_PinkJelly && rand_f32() < 0.5f){
 										
 				int is = -1;
 				float x = 0;
@@ -4699,14 +4712,14 @@ void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA 
 				if(world->tempGen == NULL){
 					ASSERT("Non inited pointer tempGen");
 				}
-				MESSAGE_F("Spawn %d", world->tempGen->count);
+				//MESSAGE_F("Spawn %d", world->tempGen->count);
 				
 				print_all_generators(world->tempGen);
 				const int genNumber = rand()%world->tempGen->count;
 				
 				const Position pos = (Position){(float)x, (float)y};
 				const float dist = Vector2DistanceSqr(pos, world->position[0]);
-				if((world->map.walling[y][x] == Tile_Dirt || world->map.walling[y][x] == Tile_Dirt) && dist < 100){	
+				if((world->map.walling[y][x] == Tile_Dirt || world->map.walling[y][x] == Tile_Dirt) && dist > 100){	
 					//printf("%d %f\n", world->level, world->tempGen->items[genNumber].chances.items[world->level]);
 					generate_monster_generator(world, &world->tempGen->items[genNumber], pos, ent);
 					break;
@@ -4717,6 +4730,7 @@ void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA 
 		}
 	}
 	DROP(generators);
+	DROP(engine);
 }
 
 

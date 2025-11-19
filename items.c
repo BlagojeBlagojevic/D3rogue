@@ -3,7 +3,7 @@
 #define ITEM_CURSE   (ITEM_SPECIAL + 0.1f)
 
 static void add_potion_item_to_inventory(Item_DA* inventory, Potion_Type potion, int isIdent){
-    Item i = (Item){0};
+    Item i = {0};
     if(rand_f32() < 0.1f){
         i.isCursed = true;
     }
@@ -14,6 +14,10 @@ static void add_potion_item_to_inventory(Item_DA* inventory, Potion_Type potion,
     i.type = Potion;
     i.potion = potion;
     i.isIdent = false;
+    
+    // Base price for potions
+    int base_price = 1000;
+    
     switch(potion){
         case Potion_No:
             ASSERT("Non existant potion");
@@ -21,69 +25,70 @@ static void add_potion_item_to_inventory(Item_DA* inventory, Potion_Type potion,
         case Potion_Healing:
             i.name = malloc(128);
             strcpy(i.name, "Potion of healing");
-            
-        break;
+            base_price = 1500;
+            break;
         case Potion_Str:
             i.name = malloc(128);
             strcpy(i.name, "Potion of strenght");
-            
-        break;    
+            base_price = 3000;
+            break;    
         case Potion_Int:
             i.name = malloc(128);
             strcpy(i.name, "Potion of inteligenec");
-            
-        break;
+            base_price = 3000;
+            break;
         case Potion_Size:
             i.name = malloc(128);
             strcpy(i.name, "Potion of size");
-            
-        break;
+            base_price = 2500;
+            break;
         case Potion_Att:
             i.name = malloc(128);
             strcpy(i.name, "Potion of att");
-            
-        break;
+            base_price = 3500;
+            break;
         case Potion_Def:
             i.name = malloc(128);
             strcpy(i.name, "Potion of def");
-            
-        break;
+            base_price = 3500;
+            break;
         case Potion_Poison:
             i.name = malloc(128);
             strcpy(i.name, "Potion of poison");
-            
-        break;
-
-	    case Potion_Gas:
-        i.name = malloc(128);
+            base_price = 2000;
+            break;
+        case Potion_Gas:
+            i.name = malloc(128);
             strcpy(i.name, "Potion of gas");
-            
-        break;
-
-	    case Potion_Acid:
-        i.name = malloc(128);
+            base_price = 2200;
+            break;
+        case Potion_Acid:
+            i.name = malloc(128);
             strcpy(i.name, "Potion of acid");
-            
-        break;
-	    case Potion_HealingGas:
-        i.name = malloc(128);
+            base_price = 2800;
+            break;
+        case Potion_HealingGas:
+            i.name = malloc(128);
             strcpy(i.name, "Potion of healing gas");
-            
-        break;
-
-
+            base_price = 4000;
+            break;
         default:
             ASSERT("Potion NOT implemented");
             break;    
     }
+    
+    
+    if(i.isCursed) {
+        base_price = base_price / 2; 
+    }
+    
+    i.price = base_price;
     da_append(inventory, i);
-
     DROP(isIdent);
 }
 
-
 static void add_scroll_item_to_inventory(Item_DA* inventory, Scroll_Type scroll, int isIdent){
-    Item i = (Item){0};
+    Item i = {0};
     if(rand_f32() < 0.2f){
         i.isCursed = true;
     }
@@ -93,256 +98,180 @@ static void add_scroll_item_to_inventory(Item_DA* inventory, Scroll_Type scroll,
     i.to = EQUIPTED_USE_SCROL;
     i.type = Scroll;
     i.potion = Potion_No;
+    
+    // Base price for scrolls
+    int base_price = 2000;
+    
     if(scroll != Scroll_No){
         switch (scroll)
         {
         case Scroll_Teleport:
             i.name = malloc(128);
             i.scroll = Scroll_Teleport;
-            //if(isIdent)
-
             strcpy(i.name, "Scroll of teleport");
-            
-            //else
-            //    strcpy(i.name, "Scroll of unonw origin");
-
-            da_append(inventory, i);    
+            base_price = 4000;
             break;
-        
         case Scroll_Identif:
             i.name = malloc(128);
             i.scroll = Scroll_Identif;
-            //if(isIdent)
             strcpy(i.name, "Scroll of identify");
-            //else
-            //    strcpy(i.name, "Scroll of unonw origin");
-
-            da_append(inventory, i);    
+            base_price = 5000;
             break;
-
         case Scroll_EnchantW:
             i.name = malloc(128);
             i.scroll = Scroll_EnchantW;
-            //if(isIdent)
             strcpy(i.name, "Scroll of enchant wepon");
-            //else
-            //    strcpy(i.name, "Scroll of unonw origin");
-
-            da_append(inventory, i);    
+            base_price = 8000;
             break;    
         case Scroll_EnchantA:
             i.name = malloc(128);
             i.scroll = Scroll_EnchantA;
-            //if(isIdent)
             strcpy(i.name, "Scroll of enchant armor");
-            //else
-            //    strcpy(i.name, "Scroll of unonw origin");
-
-            da_append(inventory, i);    
+            base_price = 8000;
             break;    
-        
         case Scroll_SummonMonster:
             i.name = malloc(128);
-            i.isCursed = false; //Not posible to be cursed
+            i.isCursed = false;
             i.scroll = Scroll_SummonMonster;
-            //if(isIdent)
             strcpy(i.name, "Scroll of summon monster");
-            
-            da_append(inventory, i);    
+            base_price = 3000;
             break;    
         case Scroll_Acq:
             i.name = malloc(128);
             i.scroll = Scroll_Acq;
-            //if(isIdent)
             strcpy(i.name, "Scroll of acquairment");
-            
-            da_append(inventory, i);    
+            base_price = 10000;
             break;    
         case Scroll_Stun:
             i.name = malloc(128);
             i.scroll = Scroll_Stun;
-            //if(isIdent)
             strcpy(i.name, "Scroll of stun");
-           
-            da_append(inventory, i);    
+            base_price = 3500;
             break;
         case Scroll_Scare: 
-        i.name = malloc(128);
+            i.name = malloc(128);
             i.scroll = Scroll_Scare;
             i.isCursed = false;
-            //if(isIdent)
-        
             strcpy(i.name, "Scroll of scare monster");
-            da_append(inventory, i);    
+            base_price = 4500;
             break;
-	    case Scroll_Hunt: 
+        case Scroll_Hunt: 
             i.name = malloc(128);
             i.scroll = Scroll_Hunt;
             i.isCursed = true;
-            //if(isIdent)
             strcpy(i.name, "Scroll of hunt monster");
-            da_append(inventory, i);    
+            base_price = 1500;
             break;
-	    case Scroll_Confuse:
-             i.name = malloc(128);
+        case Scroll_Confuse:
+            i.name = malloc(128);
             i.scroll = Scroll_Confuse;
             strcpy(i.name, "Scroll of confusion");
-            
-            da_append(inventory, i);    
+            base_price = 3000;
             break; 
-        
         case Scroll_Levitation:
             i.name = malloc(128);
             i.scroll = Scroll_Levitation;
             strcpy(i.name, "Scroll of levitation");
-            
-            da_append(inventory, i);    
+            base_price = 4000;
             break; 
-        
         case Scroll_Telepaty:
             i.name = malloc(128);
             i.scroll = Scroll_Telepaty;
             strcpy(i.name, "Scroll of telepaty");
-            
-            da_append(inventory, i);    
+            base_price = 6000;
             break; 
-
-         case Scroll_Water:
+        case Scroll_Water:
             i.name = malloc(128);
             i.scroll = Scroll_Water;
             strcpy(i.name, "Scroll of summon water");
-            
-            da_append(inventory, i);    
+            base_price = 2500;
             break;     
-        
-         case Scroll_Negation:
+        case Scroll_Negation:
             i.name = malloc(128);
             i.scroll = Scroll_Negation;
             strcpy(i.name, "Scroll of negation");
-            
-            da_append(inventory, i);    
+            base_price = 7000;
             break;     
-        
         case Scroll_Incinarat:
             i.name = malloc(128);
             i.scroll = Scroll_Incinarat;
             strcpy(i.name, "Scroll of incinerate");
-            
-            da_append(inventory, i);    
+            base_price = 5500;
             break;    
-        
         case Scroll_MagicMaping:
             i.name = malloc(128);
             i.scroll = Scroll_MagicMaping;
             strcpy(i.name, "Scroll of magic maping");
-            
-            da_append(inventory, i);    
+            base_price = 6000;
             break;
-
-
         case Scroll_Recharging:
             i.name = malloc(128);
             i.scroll = Scroll_Recharging;
             strcpy(i.name, "Scroll of recharging");
-            
-            da_append(inventory, i);    
+            base_price = 6500;
             break;    
-       
         case Scroll_Sacrifice:
             i.name = malloc(128);
             i.scroll = Scroll_Sacrifice;
             strcpy(i.name, "Scroll of sacrifice");
-            
-            da_append(inventory, i);    
+            base_price = 5000;
             break;    
-
         case Scroll_Fate:
             i.name = malloc(128);
             i.scroll = Scroll_Fate;
-            
-            
-
             strcpy(i.name, "Scroll of fate");
-            
-            da_append(inventory, i);    
+            base_price = 12000;
             break;
-        
-         case Scroll_Amnesia:
+        case Scroll_Amnesia:
             i.name = malloc(128);
             i.scroll = Scroll_Amnesia;
             i.isCursed = false;
-            
             strcpy(i.name, "Scroll of amnesia");
-            
-            da_append(inventory, i);    
+            base_price = 1000;
             break;    
-         
         case Scroll_Gambler:
             i.name = malloc(128);
             i.scroll = Scroll_Gambler;
             i.isCursed = false;
             strcpy(i.name, "Scroll of gambling");
-            
-            da_append(inventory, i);    
+            base_price = 3000;
             break;   
-        
-        
-        //case Scroll_Chasm:
-        //    i.name = malloc(128);
-        //    i.scroll = Scroll_Chasm;
-            
-        //    strcpy(i.name, "Scroll of chasm");
-            
-        //    da_append(inventory, i);    
-        //    break;        
-        
         case Scroll_Calcific:
             i.name = malloc(128);
             i.scroll = Scroll_Calcific;
-            
             strcpy(i.name, "Scroll of calfication");
-            
-            da_append(inventory, i);    
+            base_price = 4500;
             break;
-            
-            
         case Scroll_Bprince:
             i.name = malloc(128);
             i.scroll = Scroll_Bprince;
-            
             strcpy(i.name, "Scroll of bprince");
-            
-            da_append(inventory, i);    
+            base_price = 8000;
             break;
-            
         case Scroll_RemoveCurse:
             i.name = malloc(128);
             i.scroll = Scroll_RemoveCurse;
-            
             strcpy(i.name, "Scroll of remove curse");
-            
-            da_append(inventory, i);    
+            base_price = 7500;
             break;
-        
-        
-
-        
         default:
             ASSERT("Not implemented item");    
-        break;
+            break;
         }
     }
 
-//    if(i.isCursed){
- //       strcat(i.name, " cursed");
-  //  }
-
-
+    
+    if(i.isCursed) {
+        base_price = base_price / 3; 
+    }
+    
+    i.price = base_price;
+    da_append(inventory, i);
     DROP(isIdent);
 }
 
 void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scroll, Potion_Type potion, int isEqu, int isIdentScrool){
-    Item i = (Item){0};
+    Item i = {0};
     if(type == Scroll){
         add_scroll_item_to_inventory(inventory, scroll, isIdentScrool);
     }
@@ -357,7 +286,6 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
     if(chance < ITEM_SPECIAL){
         isSpecialItem = rand()%50;
         i.isCursed = false;
-        
     }
     else if(chance > ITEM_SPECIAL && chance < ITEM_CURSE){
         isSpecialItem = rand()%50;
@@ -367,28 +295,37 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
     else{
         i.isCursed = false;
     } 
-    //Str
+    
+    // Calculate stat bo
+    int stat_bonus_value = 0;
     if(isSpecialItem < 10 && isSpecialItem != 0){
         i.stats = (Stats){value, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        stat_bonus_value = abs(value) * 5000;
     }
-    //Dex
     else if(isSpecialItem > 10 && isSpecialItem < 20){
         i.stats = (Stats){ 0, value, 0, 0, 0, 0, 0, 0, 0, 0};
+        stat_bonus_value = abs(value) * 5000;
     }
-    //Int 
     else if(isSpecialItem > 20 && isSpecialItem < 30){
         i.stats = (Stats){ 0, 0, value, 0, 0, 0, 0, 0, 0, 0};
+        stat_bonus_value = abs(value) * 5000;
     }
-    //Cons
     else if(isSpecialItem > 30 && isSpecialItem < 40){
         i.stats = (Stats){0, 0, 0, value, 0, 0, 0, 0, 0, 0};
+        stat_bonus_value = abs(value) * 5000;
     }
     else{
         i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     }
 
     i.isIdent = false;
-switch (type){
+    
+    // Price calculation variables
+    int base_price = 0;
+    int power_factor = 0;
+    int rarity_multiplier = 0;
+    
+    switch (type){
     case Sword:{
         i.name  = malloc(128);
         strcpy(i.name, "Sword");
@@ -399,8 +336,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.strReq = 13;
         i.isEqu = isEqu;
-        i.itemChance = 3.0f; // Medium common weapon
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 5000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BrokenDagger:{
@@ -413,8 +352,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 5.0f; // Very common, weak weapon
-        da_append(inventory, i);
+        i.itemChance = 5.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case RustySword:{
@@ -427,8 +368,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 4.5f; // Common weak weapon
-        da_append(inventory, i);
+        i.itemChance = 4.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 2000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Dagger:{
@@ -441,8 +384,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 4.0f; // Common basic weapon
-        da_append(inventory, i);
+        i.itemChance = 4.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 3000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Shovel:{
@@ -455,8 +400,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 10;
-        i.itemChance = 4.0f; // Common tool/weapon
-        da_append(inventory, i);
+        i.itemChance = 4.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1500 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MainGauche:{
@@ -469,8 +416,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 3.5f; // Uncommon sidearm
-        da_append(inventory, i);
+        i.itemChance = 3.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 6000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Whip:{
@@ -483,8 +432,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 3.0f; // Uncommon specialty weapon
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 4000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Spear:{
@@ -497,8 +448,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 3.0f; // Uncommon polearm
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 7000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Rapier:{
@@ -511,8 +464,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 2.5f; // Rare finesse weapon
-        da_append(inventory, i);
+        i.itemChance = 2.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 10000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case SmallSword:{
@@ -528,8 +483,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 2.5f; // Rare light weapon
-        da_append(inventory, i);
+        i.itemChance = 2.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 12000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Saber:{
@@ -542,8 +499,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 2.0f; // Rare cavalry weapon
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 15000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Pick:{
@@ -556,8 +515,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 10;
-        i.itemChance = 3.5f; // Uncommon tool/weapon
-        da_append(inventory, i);
+        i.itemChance = 3.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 3500 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Cutlass:{
@@ -570,8 +531,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 2.0f; // Rare naval weapon
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 16000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case SmallTrident:{
@@ -584,8 +547,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 2.5f; // Rare polearm
-        da_append(inventory, i);
+        i.itemChance = 2.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 8000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Trident:{
@@ -598,8 +563,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 1.5f; // Very rare polearm
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 25000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Mace:{
@@ -612,8 +579,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 2.5f; // Rare blunt weapon
-        da_append(inventory, i);
+        i.itemChance = 2.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 12000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Tulwar:{
@@ -626,11 +595,12 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 2.0f; // Rare curved sword
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 15000 + power_factor * rarity_multiplier / 100;
         break;
     }
-    
     case Quartestaff:{
         i.name  = malloc(128);
         strcpy(i.name, "Quartestaff");
@@ -641,8 +611,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 2.0f; // Rare staff weapon
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 18000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BallandChain:{
@@ -655,8 +627,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 1.5f; // Very rare flail weapon
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 20000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case WarHammer:{
@@ -669,8 +643,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 1.5f; // Very rare heavy weapon
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 22000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Lance:{
@@ -683,8 +659,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 1.0f; // Very rare cavalry weapon
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 30000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Scimitar:{
@@ -697,8 +675,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 15;
-        i.itemChance = 1.5f; // Very rare curved sword
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 25000 + power_factor * rarity_multiplier / 100;
         break;
     }   
     case BroadSword:{
@@ -720,12 +700,13 @@ switch (type){
             i.value = 4;
             i.nDice = 3;
         }
-        
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 1.5f; // Very rare versatile sword
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 28000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BroadAxe:{
@@ -738,8 +719,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 15;
-        i.itemChance = 1.0f; // Very rare axe
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 35000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BattleAxe:{
@@ -752,8 +735,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 15;
-        i.itemChance = 1.0f; // Very rare military axe
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 38000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case AwlPike:{
@@ -766,8 +751,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 1.5f; // Very rare polearm
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 22000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Flail:{
@@ -783,8 +770,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 1.0f; // Very rare flail weapon
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 40000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Pike:{
@@ -797,8 +786,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 1.0f; // Very rare long polearm
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 42000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Glaive:{
@@ -811,11 +802,12 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 13;
-        i.itemChance = 1.0f; // Very rare polearm
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 45000 + power_factor * rarity_multiplier / 100;
         break;
     }
-    
     case LucerneHammer:{
         i.name  = malloc(128);
         strcpy(i.name, "LucerneHammer");
@@ -826,8 +818,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 0.8f; // Extremely rare polearm
-        da_append(inventory, i);
+        i.itemChance = 0.8f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 60000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Katana:{
@@ -840,8 +834,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
-        i.itemChance = 0.7f; // Extremely rare exotic weapon
-        da_append(inventory, i);
+        i.itemChance = 0.7f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 75000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Halberd:{
@@ -854,8 +850,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 0.7f; // Extremely rare poleaxe
-        da_append(inventory, i);
+        i.itemChance = 0.7f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 80000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case GreatAxe:{
@@ -868,8 +866,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 16;
-        i.itemChance = 0.5f; // Extremely rare heavy weapon
-        da_append(inventory, i);
+        i.itemChance = 0.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 120000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MaceScalp:{
@@ -882,8 +882,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 16;
-        i.itemChance = 0.5f; // Extremely rare heavy mace
-        da_append(inventory, i);
+        i.itemChance = 0.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 130000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case TwoHandFlail:{
@@ -896,8 +898,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 17;
-        i.itemChance = 0.4f; // Extremely rare massive flail
-        da_append(inventory, i);
+        i.itemChance = 0.4f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 180000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case LochaberAxe:{
@@ -910,8 +914,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 17;
-        i.itemChance = 0.3f; // Legendary Scottish weapon
-        da_append(inventory, i);
+        i.itemChance = 0.3f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 250000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Scythe:{
@@ -924,11 +930,12 @@ switch (type){
         i.strReq = 16;
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
-        i.itemChance = 0.8f; // Extremely rare converted tool
-        da_append(inventory, i);
+        i.itemChance = 0.8f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 70000 + power_factor * rarity_multiplier / 100;
         break;
     }       
-
     case TwoHandSword:{
         i.name  = malloc(128);
         strcpy(i.name, "TwoHandSword");
@@ -939,8 +946,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 16;
-        i.itemChance = 0.5f; // Extremely rare greatsword
-        da_append(inventory, i);
+        i.itemChance = 0.5f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 140000 + power_factor * rarity_multiplier / 100;
         break;  
     }
     case ESword:{
@@ -953,8 +962,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 17;
-        i.itemChance = 0.3f; // Legendary execution weapon
-        da_append(inventory, i);
+        i.itemChance = 0.3f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 300000 + power_factor * rarity_multiplier / 100;
         break;  
     }
     case SScythe:{
@@ -967,11 +978,12 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 16;
-        i.itemChance = 0.2f; // Legendary magical weapon
-        da_append(inventory, i);
+        i.itemChance = 0.2f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 500000 + power_factor * rarity_multiplier / 100;
         break;
     } 
-    
     case CBlade:{
         i.name  = malloc(128);
         strcpy(i.name, "BladeOfChaos");
@@ -982,8 +994,10 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 18;
-        i.itemChance = 0.1f; // Mythical chaos weapon
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 750000 + power_factor * rarity_multiplier / 100;
         break;
     } 
     case DMace:{
@@ -996,13 +1010,14 @@ switch (type){
         i.to    = EQUIPTED_WEPON;
         i.isEqu = isEqu;
         i.strReq = 18;
-        i.itemChance = 0.1f; // Mythical magical mace
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 500;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1000000 + power_factor * rarity_multiplier / 100;
         break;
     } 
-    
-    // END OF ADDED ARMOR
 
+    // ARMOR PRICING
     case LeatherArmor:{
         i.name = malloc(128);
         strcpy(i.name, "Leather Armor");
@@ -1013,11 +1028,12 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 4.5f; // Common basic armor
-        da_append(inventory, i);
+        i.itemChance = 4.5f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 4000 + power_factor * rarity_multiplier / 100;
         break;
     }
-
     case FRobe:{
         i.name = malloc(128);
         strcpy(i.name, "FilthyRag");
@@ -1028,8 +1044,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 10;
-        i.itemChance = 5.0f; // Very common trash armor
-        da_append(inventory, i);
+        i.itemChance = 5.0f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Robe:{
@@ -1042,8 +1060,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 10;
-        i.itemChance = 4.5f; // Common cloth armor
-        da_append(inventory, i);
+        i.itemChance = 4.5f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 2000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case SoftLeatherArmour:{
@@ -1056,8 +1076,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 10;
-        i.itemChance = 4.0f; // Common light armor
-        da_append(inventory, i);
+        i.itemChance = 4.0f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 5000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case SoftStuddedLeather:{
@@ -1070,9 +1092,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 3.5f; // Uncommon reinforced armor
-        da_append(inventory, i);
-        
+        i.itemChance = 3.5f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 8000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case HardLeatherArmour:{
@@ -1085,8 +1108,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 3.0f; // Uncommon medium armor
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 10000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case HardStuddedLeather:{
@@ -1099,8 +1124,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 14;
-        i.itemChance = 2.5f; // Rare heavy leather
-        da_append(inventory, i);
+        i.itemChance = 2.5f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 15000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case LeatherScaleMail:{
@@ -1113,8 +1140,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 16;
-        i.itemChance = 2.0f; // Rare composite armor
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 25000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MetalScaleMail:{
@@ -1127,8 +1156,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 1.5f; // Very rare metal armor
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 40000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case RustyChainMail:{
@@ -1141,8 +1172,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 2.0f; // Rare damaged mail
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 18000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case ChainMail:{
@@ -1155,8 +1188,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 1.5f; // Very rare quality mail
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 30000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case DoubleChainMail:{
@@ -1169,8 +1204,10 @@ switch (type){
         i.strReq = 16;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 1.0f; // Very rare reinforced mail
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 50000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case AugmentedChainMail:{
@@ -1183,8 +1220,10 @@ switch (type){
         i.strReq = 16;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.8f; // Extremely rare enhanced mail
-        da_append(inventory, i);
+        i.itemChance = 0.8f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 75000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BarChainMail:{
@@ -1197,8 +1236,10 @@ switch (type){
         i.strReq = 16;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.7f; // Extremely rare specialty mail
-        da_append(inventory, i);
+        i.itemChance = 0.7f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 90000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MetalBrigandineArmour:{
@@ -1211,8 +1252,10 @@ switch (type){
         i.strReq = 18;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.6f; // Extremely rare plate armor
-        da_append(inventory, i);
+        i.itemChance = 0.6f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 120000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case PartialPlateArmour:{
@@ -1225,8 +1268,10 @@ switch (type){
         i.strReq = 18;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.5f; // Extremely rare partial plate
-        da_append(inventory, i);
+        i.itemChance = 0.5f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 180000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MetalLamellarArmour:{
@@ -1239,8 +1284,10 @@ switch (type){
         i.strReq = 18;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.4f; // Legendary lamellar armor
-        da_append(inventory, i);
+        i.itemChance = 0.4f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 250000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case FullPlateArmour:{
@@ -1253,8 +1300,10 @@ switch (type){
         i.strReq = 18;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.3f; // Legendary full plate
-        da_append(inventory, i);
+        i.itemChance = 0.3f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 350000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case RibbedPlateArmour:{
@@ -1267,8 +1316,10 @@ switch (type){
         i.strReq = 18;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.2f; // Legendary reinforced plate
-        da_append(inventory, i);
+        i.itemChance = 0.2f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 500000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MithrilChainMail:{
@@ -1281,8 +1332,10 @@ switch (type){
         i.strReq = 18;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.1f; // Mythical mithril armor
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 600000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MithrilPlateMail:{
@@ -1295,8 +1348,10 @@ switch (type){
         i.strReq = 19;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.08f; // Mythical mithril plate
-        da_append(inventory, i);
+        i.itemChance = 0.08f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 800000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case AdamantitePlateMail:{
@@ -1309,8 +1364,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.05f; // Mythical adamantite armor
-        da_append(inventory, i);
+        i.itemChance = 0.05f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1000000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BronzeDragonScaleMail:{
@@ -1323,8 +1380,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.1f; // Mythical dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 400000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BlackDragonScaleMail:{
@@ -1337,8 +1396,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 20;
-        i.itemChance = 0.1f; // Mythical dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 400000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BlueDragonScaleMail:{
@@ -1351,8 +1412,10 @@ switch (type){
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
         i.strReq = 20;
-        i.itemChance = 0.1f; // Mythical dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 400000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case WhiteDragonScaleMail:{
@@ -1365,8 +1428,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.08f; // Mythical dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.08f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 450000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case GoldDragonScaleMail:{
@@ -1379,8 +1444,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.08f; // Mythical dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.08f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 450000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case ShiningDragonScaleMail:{
@@ -1393,8 +1460,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.06f; // Mythical special dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.06f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 500000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case ChaosDragonScaleMail:{
@@ -1407,8 +1476,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.06f; // Mythical special dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.06f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 500000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case GreenDragonScaleMail:{
@@ -1421,8 +1492,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.05f; // Mythical special dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.05f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 600000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case LawDragonScaleMail:{
@@ -1436,8 +1509,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.05f; // Mythical special dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.05f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 600000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case RedDragonScaleMail:{
@@ -1450,8 +1525,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.04f; // Mythical special dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.04f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 750000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case BalanceDragonScaleMail:{
@@ -1464,8 +1541,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.04f; // Mythical special dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.04f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 750000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MultiHuedDragonScaleMail:{
@@ -1478,8 +1557,10 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.03f; // Legendary multi-dragon scale
-        da_append(inventory, i);
+        i.itemChance = 0.03f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 900000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case PowerDragonScaleMail:{
@@ -1492,11 +1573,14 @@ switch (type){
         i.strReq = 20;
         i.to    = EQUIPTED_ARMOR;
         i.isEqu = isEqu;
-        i.itemChance = 0.02f; // Ultimate dragon scale armor
-        da_append(inventory, i);
+        i.itemChance = 0.02f;
+        power_factor = i.value * i.nDice * 300;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1200000 + power_factor * rarity_multiplier / 100;
         break;
     }
-    //
+
+ 
     case SmallBuckler:{
         i.name = malloc(128);
         strcpy(i.name, "Small Buckler");
@@ -1507,8 +1591,10 @@ switch (type){
         i.strReq = 12;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 4.5f; // Common small shield
-        da_append(inventory, i);
+        i.itemChance = 4.5f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 2000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case WoodenRoundShield:{
@@ -1521,8 +1607,10 @@ switch (type){
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
         i.strReq = 12;
-        i.itemChance = 4.0f; // Common basic shield
-        da_append(inventory, i);
+        i.itemChance = 4.0f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 3000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case ReinforcedWoodenShield:{
@@ -1535,8 +1623,10 @@ switch (type){
         i.strReq = 12;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 3.5f; // Uncommon reinforced shield
-        da_append(inventory, i);
+        i.itemChance = 3.5f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 5000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case IronRoundShield:{
@@ -1549,8 +1639,10 @@ switch (type){
         i.strReq = 12;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 3.0f; // Uncommon metal shield
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 8000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case SpikedShield:{
@@ -1563,8 +1655,10 @@ switch (type){
         i.to    = EQUIPTED_SHIELD;
         i.strReq = 12;
         i.isEqu = isEqu;
-        i.itemChance = 2.5f; // Rare specialty shield
-        da_append(inventory, i);
+        i.itemChance = 2.5f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 12000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case HeaterShield:{
@@ -1577,8 +1671,10 @@ switch (type){
         i.strReq = 12;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 2.0f; // Rare knightly shield
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 15000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case SteelKiteShield:{
@@ -1591,8 +1687,10 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 1.5f; // Very rare quality shield
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 25000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case TowerShield:{
@@ -1605,8 +1703,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 1.0f; // Very rare large shield
-        da_append(inventory, i);
+        i.itemChance = 1.0f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 40000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MithrilShield:{
@@ -1619,8 +1719,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 0.3f; // Legendary mithril shield
-        da_append(inventory, i);
+        i.itemChance = 0.3f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 150000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case DragonscaleShield:{
@@ -1633,8 +1735,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 0.2f; // Legendary dragon scale shield
-        da_append(inventory, i);
+        i.itemChance = 0.2f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 200000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case AdamantiteShield:{
@@ -1647,8 +1751,10 @@ switch (type){
         i.strReq = 15;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 0.1f; // Mythical adamantite shield
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 300000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case AegisOfReflection:{
@@ -1661,11 +1767,14 @@ switch (type){
         i.strReq = 15;
         i.to    = EQUIPTED_SHIELD;
         i.isEqu = isEqu;
-        i.itemChance = 0.05f; // Ultimate magical shield
-        da_append(inventory, i);
+        i.itemChance = 0.05f;
+        power_factor = i.value * i.nDice * 200;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 500000 + power_factor * rarity_multiplier / 100;
         break;
     }
 
+    // HELMET PRICING
     case LeatherCap:{
         i.name = malloc(128);
         strcpy(i.name, "Leather Cap");
@@ -1676,8 +1785,10 @@ switch (type){
         i.strReq = 12;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 4.5f; // Common headgear
-        da_append(inventory, i);
+        i.itemChance = 4.5f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1500 + power_factor * rarity_multiplier / 100;
         break;
     }
     case PaddedHood:{
@@ -1690,8 +1801,10 @@ switch (type){
         i.strReq = 12;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 4.0f; // Common light helmet
-        da_append(inventory, i);
+        i.itemChance = 4.0f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 2000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case IronCap:{
@@ -1704,8 +1817,10 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 3.5f; // Uncommon metal helmet
-        da_append(inventory, i);
+        i.itemChance = 3.5f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 3000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case NasalHelm:{
@@ -1718,8 +1833,10 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 3.0f; // Uncommon full helmet
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 5000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Spangenhelm:{
@@ -1732,8 +1849,10 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 2.5f; // Rare quality helmet
-        da_append(inventory, i);
+        i.itemChance = 2.5f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 8000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Bascinet:{
@@ -1746,8 +1865,10 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 2.0f; // Rare advanced helmet
-        da_append(inventory, i);
+        i.itemChance = 2.0f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 12000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case GreatHelm:{
@@ -1760,8 +1881,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 1.5f; // Very rare full helmet
-        da_append(inventory, i);
+        i.itemChance = 1.5f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 20000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case MithrilHelm:{
@@ -1774,8 +1897,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 0.5f; // Extremely rare mithril helmet
-        da_append(inventory, i);
+        i.itemChance = 0.5f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 80000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case AdamantiteHelm:{
@@ -1788,8 +1913,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 0.3f; // Legendary adamantite helmet
-        da_append(inventory, i);
+        i.itemChance = 0.3f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 120000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case DragonboneHelm:{
@@ -1802,8 +1929,10 @@ switch (type){
         i.strReq = 14;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 0.2f; // Legendary dragonbone helmet
-        da_append(inventory, i);
+        i.itemChance = 0.2f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 150000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case CrownOfWisdom:{
@@ -1816,11 +1945,14 @@ switch (type){
         i.strReq = 11;
         i.to    = EQUIPTED_HEAD;
         i.isEqu = isEqu;
-        i.itemChance = 0.1f; // Mythical magical crown
-        da_append(inventory, i);
+        i.itemChance = 0.1f;
+        power_factor = i.value * i.nDice * 150;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 200000 + power_factor * rarity_multiplier / 100;
         break;
     }
     
+    // BOOTS
     case LetherBoots:{
         i.name = malloc(128);
         strcpy(i.name, "Lether Boots");
@@ -1831,11 +1963,12 @@ switch (type){
         i.strReq = 10;
         i.to    = EQUIPTED_LEGS;
         i.isEqu = isEqu;
-        i.itemChance = 4.5f; // Common footwear
-        da_append(inventory, i);
+        i.itemChance = 4.5f;
+        power_factor = i.value * i.nDice * 100;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1000 + power_factor * rarity_multiplier / 100;
         break;
     }
-
     case MetalBoots:{
         i.name = malloc(128);
         strcpy(i.name, "Metal Boots");
@@ -1846,11 +1979,14 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_LEGS;
         i.isEqu = isEqu;
-        i.itemChance = 3.0f; // Uncommon armored boots
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 100;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 3000 + power_factor * rarity_multiplier / 100;
         break;
     }
 
+    // GLOVES
     case LetherGloves:{
         i.name = malloc(128);
         strcpy(i.name, "Lether Gloves");
@@ -1861,11 +1997,12 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_HAND;
         i.isEqu = isEqu;
-        i.itemChance = 4.5f; // Common handwear
-        da_append(inventory, i);
+        i.itemChance = 4.5f;
+        power_factor = i.value * i.nDice * 100;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 1000 + power_factor * rarity_multiplier / 100;
         break;
     }
-
     case MetalGloves:{
         i.name = malloc(128);
         strcpy(i.name, "Metal Gloves");
@@ -1876,11 +2013,14 @@ switch (type){
         i.strReq = 13;
         i.to    = EQUIPTED_HAND;
         i.isEqu = isEqu;
-        i.itemChance = 3.0f; // Uncommon armored gloves
-        da_append(inventory, i);
+        i.itemChance = 3.0f;
+        power_factor = i.value * i.nDice * 100;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 2500 + power_factor * rarity_multiplier / 100;
         break;
     }
 
+    // RANGED
     case Bow:{
         i.name = malloc(128);
         strcpy(i.name, "Bow");
@@ -1891,8 +2031,10 @@ switch (type){
         i.nDice  = rand()%2+1;
         i.to    = EQUIPTED_RANGE;
         i.isEqu = isEqu;
-        i.itemChance = 3.5f; // Uncommon ranged weapon
-        da_append(inventory, i);
+        i.itemChance = 3.5f;
+        power_factor = i.value * i.nDice * 400;
+        rarity_multiplier = (int)(100 / i.itemChance);
+        base_price = 6000 + power_factor * rarity_multiplier / 100;
         break;
     }
     case Arrows:{
@@ -1907,23 +2049,24 @@ switch (type){
         i.to    = EQUIPTED_MUTITION;
         i.fire  = Bow;
         i.isEqu = isEqu;
-        i.itemChance = 5.0f; // Very common ammunition
-        da_append(inventory, i);
+        i.itemChance = 5.0f;
+        base_price = 1000 + i.value * 50; // Price based on quantity
         break;
     }
+
+    // CONSUMABLES P
     case Tourch:{
         i.name = malloc(128);
         strcpy(i.name, "Tourch");
         i.pos   = (Position){0, 0};
         i.type  = Tourch;
         i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-       // i.value = rand()%100 + 100; 
         i.value = 100;
         i.nDice = 0;
         i.to    = EQUIPTED_TOURCH;
         i.isEqu = isEqu;
-        i.itemChance = 4.0f; // Common utility item
-        da_append(inventory, i);
+        i.itemChance = 4.0f;
+        base_price = 1000;
         break;
     }
     case Food:{
@@ -1933,12 +2076,25 @@ switch (type){
         i.type  = Food;
         i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         i.value = rand()%100 + 100; 
-        //i.value = 100;
         i.nDice = 0;
         i.to    = EQUIPTED_USE_FOOD;
         i.isEqu = isEqu;
-        i.itemChance = 4.0f; // Common utility item
-        da_append(inventory, i);
+        i.itemChance = 4.0f;
+        base_price = 1000 + i.value; // Price based on food value
+        break;
+    }
+    case Gold:{
+        i.name = malloc(128);
+        strcpy(i.name, "Gold");
+        i.pos   = (Position){0, 0};
+        i.type  = Gold;
+        i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        i.value = rand()%1000 + 10; 
+        i.nDice = 0;
+        i.to    = EQUIPTED_USE_GOLD;
+        i.isEqu = isEqu;
+        i.itemChance = 4.0f;
+        base_price = i.value; // Gold is its own price
         break;
     }
 
@@ -1946,27 +2102,35 @@ switch (type){
         ASSERT("Not defined item");
         break;
     }
+    
+    i.price = base_price + stat_bonus_value;
+    
+
+    if(i.isCursed) {
+        i.price = i.price / 2; 
+        if(i.price < 1000) i.price = 1000; // Minimum price for cursed items
+    }
+    
+ 
+    if(i.price < 1000) i.price = 1000;
+    if(i.price > 1000000) i.price = 1000000;
+    
+    da_append(inventory, i);
     }
 }
 
-
 int equipt_item(Item_DA* inventory, int whatItem){
-    
-    //Un
-    
-        for(int i = 0; i < inventory->count; i++){
+    for(int i = 0; i < inventory->count; i++){
         if(inventory->items[i].isEqu == true && inventory->items[i].to == inventory->items[whatItem].to){
             if(inventory->items[i].isCursed == true){
                 return true;
-
             }
             inventory->items[i].isEqu = false;
             break;
         }
     }
-        inventory->items[whatItem].isEqu = true;
-        return false;
-        
+    inventory->items[whatItem].isEqu = true;
+    return false;
 }
 
 int  is_item_of_type_equ(Item_DA* inventory, Item_Equipted to){
@@ -1982,33 +2146,29 @@ int  is_item_of_type_equ(Item_DA* inventory, Item_Equipted to){
     return -1;
 }
 
-
-
 void add_items_from_list(ChanceItem_DA* list, Item_DA* inventory) {
-    
     for (int i = 0; i < list->count; i++) {
-        float roll = rand_f32(); // [0,1]
+        float roll = rand_f32();
         if (roll <= list->items[i].chance) {
             printf("%s\n", ITEM_NAMES[(Item_Type)list->items[i].type]);
             add_item_to_inventory((Item_Type)list->items[i].type, inventory, Scroll_No, Potion_No, 1, false);
         }
     }
-   // exit(-1);
 }
 
 void free_item(Item_DA* inventory, int item){
     if(inventory->items[item].name != NULL)
-    free(inventory->items[item].name);
+        free(inventory->items[item].name);
     inventory->items[item].type = -1;
     da_remove_unordered(inventory, item);
 }
-//Tbd other arrs
+
 void random_item_generator(Item_DA* inventory, Position pos){
     const float chance = rand_f32() ;
     static int randomIter = 0;
     printf("random iter %d\n", randomIter++);
     const float chanceItem[] = {3.0,5.0,4.5,4.0,4.0,3.5,3.0,3.0,2.5,2.5,2.0,3.5,2.0,2.5,1.5,2.5,2.0,2.0,1.5,1.5,1.0,1.5,1.5,1.0,1.0,1.5,1.0,1.0,1.0,0.8,0.7,0.7,0.5,0.5,0.4,0.3,0.8,0.5,0.3,0.2,0.1,0.1,4.5,5.0,4.5,4.0,3.5,3.0,2.5,2.0,1.5,2.0,1.5,1.0,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0.08,0.05,0.1,0.1,0.1,0.08,0.08,0.06,0.06,0.05,0.05,0.04,0.04,0.03,0.02,4.5,4.0,3.5,3.0,2.5,2.0,1.5,1.0,0.3,0.2,0.1,0.05,4.5,4.0,3.5,3.0,2.5,2.0,1.5,0.5,0.3,0.2,0.1,4.5,3.0,4.5,3.0,3.5,5.0,4.0}; 
-    if(chance <= 0.3){
+    if(chance <= 0.1){
         int type = 0;
         while(1){
             type = (rand()%Item_Num)%(sizeof(chanceItem) / sizeof(float)); 
@@ -2017,15 +2177,14 @@ void random_item_generator(Item_DA* inventory, Position pos){
                 break;
             }
         }
-        
         add_item_to_inventory(type, inventory, Scroll_No, Potion_No, false, false);
-        //inventory->items[inventory->count].pos = pos;  
         }
+    else if(chance > 0.1 && chance < 0.5){
+        add_item_to_inventory(Gold, inventory, Scroll_No, Potion_No, false, false);
+    }    
     else if(chance > 0.50  && chance <= 0.70){
          int potion_type = (rand()%(Potion_Num - 1) + 1); 
-         //printf("Porion\n");
          add_item_to_inventory(Potion, inventory, Scroll_No, potion_type, false, false);
-         //printf("Porion\n");
     } 
     else if(chance > 0.7 && chance < 0.8){
         add_item_to_inventory(Food, inventory, Scroll_No, Potion_No, false, false);
@@ -2041,10 +2200,7 @@ void random_item_generator(Item_DA* inventory, Position pos){
             }
         }
         add_item_to_inventory(Scroll, inventory, scrollType, Potion_No, false, false);
-
 		}
        
        DROP(pos); 
-      
 }
-
