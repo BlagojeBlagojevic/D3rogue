@@ -34,7 +34,9 @@ typedef enum {
 	COMP_GAS      = 1 << 10,
 	COMP_SPELL    = 1 << 11, 
 	COMP_FIRE     = 1 << 12,
-	COMP_STATUS   = 1 << 13 
+	COMP_STATUS   = 1 << 13,
+	COMP_SHOP     = 1 << 14,
+	
 	} CompType;
 
 
@@ -363,6 +365,7 @@ typedef enum{
 	S_Arrow,
 	S_Tourch,
 	S_Food,
+	S_Gold,
 	S_Scroll,
 	S_Potion,
 	//S_Pile,
@@ -373,11 +376,11 @@ typedef enum{
 	S_PlantBig,
 	S_UpS,
 	S_DownS, 
-	
-
-	//Generated sprites for gas
-	//S_BasicGas,
-	//S_
+	S_Armory,
+	S_WeponS,
+	S_GeneralS,
+	S_PotionS,
+	S_ScrollS,
 
 	S_Sprite_Num
 
@@ -644,7 +647,11 @@ typedef enum{
 	Tile_Wall   = '#',
 	Tile_DownS  = '<',
 	Tile_UpS    = '>', 
-	
+	Tile_Armory = 'A',//
+	Tile_Wepon  = 'W',//
+	Tile_Genera = 'G',
+	Tile_Pot    = 'P',
+	Tile_Scro   = 'S',
 
 }Tiles;
 

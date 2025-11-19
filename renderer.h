@@ -68,6 +68,7 @@ typedef struct{
 	//Items temp 
 	int      isRenderPickup;
 	int      isRenderStats;
+	int      isRenderTrade;
 	Num      tempItemList;
 
 	//Water model mesh
@@ -121,6 +122,8 @@ void load_sprites(Sprite_DA *sprites, const char* name);
 void render_droped_items(World *world, EngineData *engine, Sprite_DA* sprites);
 
 void render_inventory_system(World* world, Item_DA* inventory, EngineData* engine);
+
+void render_trade_system(World* world, EngineData* engine);
 
 void setup_item_system(World* world, EngineData* engine);
 

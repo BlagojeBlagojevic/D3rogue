@@ -14,6 +14,7 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	engine->isRenderPickup    = false;
 	engine->isRenderMap       = false;
 	engine->isRenderStats     = false;
+	engine->isRenderTrade	  = false;
 	engine->is2d              = true;
 	//engine->tempStr = (Str){0};
 	memset(&engine->tempStr, 0, sizeof(Str));
@@ -934,7 +935,277 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 		}
 		
 	}
+	//Drop items D
+	if(IsKeyPressed(KEY_D)){
+		if(inventory->items[engine->whatItem].to >= EQUIPTED_ARMOR 
+			&& inventory->items[engine->whatItem].to <= EQUIPTED_HEAD){
+			int isCursed = equipt_item(&world->inventory[0], engine->whatItem);
+			if(isCursed == true){
+				MESSAGE("Not posible to drop cuss it is cursed");
+			}
+			else{
+				MESSAGE_F("You droped %s", world->inventory[0].items[engine->whatItem].name);
+				world->inventory[0].items[engine->whatItem].isEqu = false;
+				world->inventory[0].items[engine->whatItem].pos = world->position[0];
+				
+				da_append(&world->items, world->inventory[0].items[engine->whatItem]);
+				int it = create_entity(world);
+				uint8_t whatI =  world->inventory[0].items[engine->whatItem].type + S_Sword;
+				const int x = (int)world->position[0].x;
+				const int y = (int)world->position[0].y;
+				add_component(world, it, COMP_RENDER, &(Renderable){whatI});
+				add_component(world, it, COMP_POSITION, &(Position){x, y});
+				
+				da_remove_unordered(&world->inventory[0], engine->whatItem);
+				
+
+			}
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->whatItem = 0;
+			engine->tempStr.count = 0;
+			//exit(-1);
+		}
+		else{
+			MESSAGE_F("You droped %s", world->inventory[0].items[engine->whatItem].name);
+			world->inventory[0].items[engine->whatItem].isEqu = false;
+			world->inventory[0].items[engine->whatItem].pos = world->position[0];
+			da_append(&world->items, world->inventory[0].items[engine->whatItem]);
+
+			int it = create_entity(world);
+			uint8_t whatI =  world->inventory[0].items[engine->whatItem].type + S_Sword;
+			const int x = (int)world->position[0].x;
+			const int y = (int)world->position[0].y;
+			add_component(world, it, COMP_RENDER, &(Renderable){whatI});
+			add_component(world, it, COMP_POSITION, &(Position){x, y});
+			da_remove_unordered(&world->inventory[0], engine->whatItem);
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->tempStr.count = 0;
+			engine->whatItem = 0;
+			
+			
+		}
+		
+	}
+	//Tbd
+	//if(world->inventory[0].count == 0){
+		//engine->whatItem = 0;
+		
+	//}
+
 }
+
+void render_trade_system(World* world, EngineData* engine){
+	const int x = (int)world->position[0].x;
+	const int y = (int)world->position[0].y;
+	Item_DA* inventory = NULL;
+	//tBD OTHER STORES
+	if(world->map.walling[y][x] != Tile_Armory && world->map.walling[y][x] != Tile_Wepon && world->map.walling[y][x] != Tile_Genera
+	&& world->map.walling[y][x] != Tile_Pot && world->map.walling[y][x] != Tile_Scro){
+		MESSAGE("This is not a store");
+		engine->isRenderTrade = (engine->isRenderTrade) ? 0 : 1;
+		for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+		engine->tempStr.count = 0;
+		engine->whatItem = 0;
+		return;
+	}
+	//Found ent on position
+	for(int i = 1; i < MAX_ENTITIES; i++){
+		if((world->masks[i] & COMP_SHOP) == COMP_SHOP){
+			const float dist = Vector2Distance(world->position[0], world->position[i]);
+			if(dist < 1.0f){
+				inventory = &world->inventory[i];
+				printf("%d\n", i);
+				break;
+			}
+		}
+	}
+		
+
+	if(engine->tempStr.count == 0)
+	for(int i = 0; i < inventory->count; i++){
+		char *itemStr = malloc(STR_SIZE);
+	    char *tempStr = malloc(STR_SIZE);
+		
+		memset(itemStr, 0, STR_SIZE);
+		memset(tempStr, 0, STR_SIZE);
+		if(inventory->items[i].type == Scroll 
+			&& world->identScrools[inventory->items[i].scroll] == false){
+			if(strcpy(itemStr, "Scroll of unown origin") == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		else if(inventory->items[i].type == Potion 
+			&& world->identPotions[inventory->items[i].potion] == false){
+			if(strcpy(itemStr, "Potion of unown origin") == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		else
+		if(strcpy(itemStr, inventory->items[i].name) == NULL){
+			ASSERT("String overflow");
+		}
+		if(strcat(itemStr, "               ") == NULL){
+			ASSERT("String overflow");
+		}
+		//Render dice if no scroll
+		if(inventory->items[i].type != Scroll && inventory->items[i].type != Potion){
+
+			snprintf(tempStr, STR_SIZE, "D%d_", inventory->items[i].nDice);		
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+			snprintf(tempStr, STR_SIZE, "%d  ", inventory->items[i].value);		
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+		}
+			snprintf(tempStr, STR_SIZE, "    <%d>  ", inventory->items[i].strReq);		
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+		}
+		
+		}
+		//If change max amount of stats for items change hear
+		//Stats are renderd only if ident
+		if(inventory->items[i].isIdent){
+			
+		if(inventory->items[i].stats.cons != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Cons %d, ", inventory->items[i].stats.cons);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+			}
+		
+		if(inventory->items[i].stats.dex != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Dex %d, ", inventory->items[i].stats.dex);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}	
+		
+		if(inventory->items[i].stats.inte != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Inte %d, ", inventory->items[i].stats.inte);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		
+		if(inventory->items[i].stats.str != 0){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "Str %d, ", inventory->items[i].stats.str);
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		if(inventory->items[i].isCursed == true){
+			memset(tempStr, 0, STR_SIZE);
+			snprintf(tempStr, STR_SIZE, "curesed");
+			if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		}
+		}
+
+		
+		
+		memset(tempStr, 0, STR_SIZE);
+		snprintf(tempStr, STR_SIZE, "<Price %d> ", inventory->items[i].price);
+		if(strcat(itemStr, tempStr) == NULL){
+				ASSERT("String overflow");
+			}
+		da_append(&engine->tempStr, itemStr);
+		//MESSAGE_F("%s", engine->tempStr.items[engine->tempStr.count - 1]);	
+		free(tempStr);
+	}
+	//free(itemStr);
+	//
+
+	//Red str
+	const Color tBLACK = (Color){0, 0, 0, 220};
+	const int fontWidth = 20;
+	DrawRectangle(0, 0, engine->width, engine->height, tBLACK); 
+
+	for(int i = 0; i < engine->tempStr.count; i++){
+		if(i == engine->whatItem){
+			DrawRectangle(50, 50 + i * 20, engine->width, fontWidth, WHITE);
+		}
+	
+		DrawText(engine->tempStr.items[i], 50, 50 + i * 20, fontWidth, RED);
+			
+	}
+
+
+		//PlayerInventory Load
+	//Let logic be hear for disabling enbling and cordination
+	if(IsKeyPressed(KEY_C)){
+			engine->isRenderTrade = (engine->isRenderTrade) ? 0 : 1;
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}
+			engine->tempStr.count = 0;
+			engine->whatItem = 0;
+		}
+		
+	if(IsKeyPressed(KEY_UP)){
+		if(engine->whatItem > 0){
+			engine->whatItem--;			
+		}
+		else{
+			engine->whatItem = engine->tempStr.count - 1;
+		}
+	}
+	
+	if(IsKeyPressed(KEY_DOWN)){
+		if((engine->tempStr.count - 1) > engine->whatItem ){
+			engine->whatItem++;			
+		}
+		else{
+			engine->whatItem = 0;
+		}
+	}
+	if(IsKeyPressed(KEY_RIGHT)){
+		//tRADE
+		//Get g
+		int isGold  = false;
+		for(int j = 0; j < world->inventory[0].count; j++){
+			if(world->inventory[0].items[j].type == Gold){
+				
+				if(world->inventory[0].items[j].value > inventory->items[engine->whatItem].price){
+					MESSAGE_F("You bought %s for %d", inventory->items[engine->whatItem].name, inventory->items[engine->whatItem].price);
+					da_append(&world->inventory[0], inventory->items[engine->whatItem]);
+					world->inventory[0].items[j].value -=  inventory->items[engine->whatItem].price;
+					isGold = true;
+					da_remove_unordered(inventory, engine->whatItem);	
+					for(int i = 0; i < engine->tempStr.count; i++){
+						free(engine->tempStr.items[i]);
+					}
+					engine->tempStr.count = 0;
+					engine->whatItem = 0;
+				}
+				else{
+					MESSAGE("You do not have enought gold to by the item");
+				}
+				
+				break;
+			}
+		}
+		if(isGold == false){
+			MESSAGE("You do not have any gold");
+		}		
+	}
+}
+
+
+
+
 
 void setup_item_system(World* world, EngineData* engine){
 	engine->tempItemList.count = 0;
@@ -949,7 +1220,8 @@ void setup_item_system(World* world, EngineData* engine){
 	}
 }
 
-
+//Maybe weights system 
+#define MAX_INVENTORY_SIZE 20 
 void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
 	setup_item_system(world, engine);
 	if(engine->tempItemList.count != 0 && engine->tempStr.count == 0)
@@ -1060,41 +1332,65 @@ void render_pickup_system(World* world, Item_DA* inventory, EngineData* engine){
 
 	if(IsKeyPressed(KEY_RIGHT) && engine->tempItemList.count != 0){
 		//Pickup item from list
-		const int n = engine->tempItemList.items[engine->whatItem];
-		Item what = world->items.items[n];
-		
-		da_append(&world->inventory[0], what);
-		//setup_item_system(world, engine);
-		
-		for(int i = 0; i < engine->tempStr.count; i++){
-			free(engine->tempStr.items[i]);
-		}	
-
-		da_remove_unordered(&world->items, n);
-		//free_item(&world->items, n);
-		da_remove_unordered(&engine->tempItemList, engine->whatItem);
-		
-		//for(int i = 0; i < engine->tempStr.count; i++){
-		//	free(engine->tempStr.items[i]);
-		//}
-		engine->whatItem = 0;
-		engine->tempStr.count = 0;
-		setup_item_system(world, engine);
-		//setup_item_system(world, engine);
-		//Remove rendering item from world
-	
-		for(int i = 1; i < MAX_ENTITIES; i++){
-			if((world->masks[i] & COMP_RENDER) == COMP_RENDER)
-			if(what.type == (world->renderable[i].type - S_Sword)){
-				const float distance = Vector2Distance(world->position[0], world->position[i]);
-				if(distance <= 1.1f){
-					destroy_entity(world, i);
-					//exit(-1);
-					break;
+		if(world->inventory[0].count >= MAX_INVENTORY_SIZE){
+			MESSAGE("Your inventory is full");
+			MESSAGE("Drop some items");
+			
+		}
+		else{
+			const int n = engine->tempItemList.items[engine->whatItem];
+			Item what = world->items.items[n];
+			//For gold prob arrows and other multiple 
+			if(what.type == Gold){
+				int isGold = false;
+				for(int i = 0; i < world->inventory[0].count; i++){
+					if(world->inventory[0].items[i].type == Gold){
+						isGold = true;
+						world->inventory[0].items[i].value+=what.value;
+						break;
+					}	
 				}
-
+				if(isGold == false){
+					da_append(&world->inventory[0], what);
+				}
 			}
-		}		
+			else{
+				da_append(&world->inventory[0], what);
+			}
+			
+			//setup_item_system(world, engine);
+			
+			for(int i = 0; i < engine->tempStr.count; i++){
+				free(engine->tempStr.items[i]);
+			}	
+
+			da_remove_unordered(&world->items, n);
+			//free_item(&world->items, n);
+			da_remove_unordered(&engine->tempItemList, engine->whatItem);
+			
+			//for(int i = 0; i < engine->tempStr.count; i++){
+			//	free(engine->tempStr.items[i]);
+			//}
+			engine->whatItem = 0;
+			engine->tempStr.count = 0;
+			setup_item_system(world, engine);
+			//setup_item_system(world, engine);
+			//Remove rendering item from world
+		
+			for(int i = 1; i < MAX_ENTITIES; i++){
+				if((world->masks[i] & COMP_RENDER) == COMP_RENDER)
+				if(what.type == (world->renderable[i].type - S_Sword)){
+					const float distance = Vector2Distance(world->position[0], world->position[i]);
+					if(distance <= 1.1f){
+						destroy_entity(world, i);
+						//exit(-1);
+						break;
+					}
+
+				}
+			}	
+		}
+				
 	}
 
 }

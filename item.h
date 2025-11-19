@@ -27,6 +27,7 @@ typedef enum{
 	EQUIPTED_USE_SCROL,
 	EQUIPTED_USE_POTION,
 	EQUIPTED_USE_FOOD,
+	EQUIPTED_USE_GOLD, //Prob not used 
 
 	EQUIPTED_NUM,
 	
@@ -153,6 +154,7 @@ typedef enum{
 	Arrows, 
 	Tourch,
 	Food,
+	Gold,
 	Scroll,
 	Potion,
 	
@@ -279,6 +281,7 @@ static const char* ITEM_NAMES[] = {
     "Arrows", 
     "Tourch",
 	"Food",
+	"Gold",
 	"Scroll",
 	"Potion",
 	
@@ -368,7 +371,7 @@ typedef struct{
 	Scroll_Type    scroll;
 	Potion_Type    potion;
 	float          itemChance;
-
+	int            price;
 
 }Item;
 
