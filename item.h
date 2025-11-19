@@ -26,6 +26,8 @@ typedef enum{
 	
 	EQUIPTED_USE_SCROL,
 	EQUIPTED_USE_POTION,
+	EQUIPTED_USE_FOOD,
+
 	EQUIPTED_NUM,
 	
 }Item_Equipted;
@@ -150,8 +152,10 @@ typedef enum{
 	Bow,
 	Arrows, 
 	Tourch,
+	Food,
 	Scroll,
 	Potion,
+	
 	Item_Num
 }Item_Type;
 
@@ -274,11 +278,13 @@ static const char* ITEM_NAMES[] = {
     "Bow",
     "Arrows", 
     "Tourch",
+	"Food",
 	"Scroll",
-	"Potion"
+	"Potion",
+	
 };
 
-
+//Tbd destroy wepon, armor,
 typedef enum{
 	Scroll_No = 0,
 	Scroll_Teleport,

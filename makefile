@@ -1,6 +1,7 @@
 CC = gcc
-CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -I./cJSON/
 DEBUG_CFLAGS = -Og -fsanitize=address -static-libasan -ggdb
+CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -I./cJSON/  
+
 
 LIBS = -Iraylib/include -Lraylib/lib  -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 
 
@@ -49,13 +50,13 @@ clean:
 # Refacrtor maybe
 #SHADERS 300 OR 100 OR somthing webgl compatible
 emcc:
-	emcc -O3 -std=c99 -s ASYNCIFY -s ALLOW_MEMORY_GROWTH=1 -s USE_GLFW=3 -s USE_WEBGL2=1 -s FULL_ES3=1 \
+	emcc -Os -std=c99 -s ASYNCIFY -s ALLOW_MEMORY_GROWTH=1 -s USE_GLFW=3 -s USE_WEBGL2=1 -s FULL_ES3=1 \
 	--preload-file assets@assets --preload-file entJSON.json --preload-file nonEntJSON.json --preload-file genJSON.json --preload-file spriteJSON.json \
 	--preload-file shaders@shaders --use-preload-plugins \
-	ecs.c system.c renderer.c Map/Map.c items.c main.c cJSON/cJSON.c  -Iraylib/include -Lraylib/install/lib -lraylib_wasm -o Web/game.html
+	ecs.c system.c renderer.c Map/Map.c items.c main.c cJSON/cJSON.c  -Iraylib/include -Lraylib/install/lib -lraylib_wasm -o Web/index.html
 
 serve:
-	emrun --no_browser --port 8080 game.html
+	emrun --no_browser --port 8080 Web/index.html
 
 cleanemcc:
-	rm -f Web/game.html Web/game.js Web/game.wasm Web/game.data
+	rm -f Web/index.html Web/index.js Web/index.wasm Web/index.data

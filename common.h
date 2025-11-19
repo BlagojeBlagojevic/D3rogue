@@ -50,67 +50,68 @@ typedef struct {
 typedef enum{
 	//Undead monsters
 	Artas,
-	Abomination,
-	Ghoul,
-	Banshee,
-	Necromancer,
-	Wagon,
-	Zombie,
-	Acolyte,
-	AcolyteB,
-	AcolyteS,
-	AcolyteD,
-	AcolyteDB, 
-	AcolyteDW,
-	SPit,
+	Abomination,//
+	Ghoul,//b
+	Banshee,//b
+	Necromancer,//b
+	Wagon,//b
+	Zombie,//b
+	Acolyte,//b
+	AcolyteB,//b
+	AcolyteS,//b
+	AcolyteD,//b
+	AcolyteDB, //b
+	AcolyteDW,//b
+	SPit,//b
 
-	Spider,
-	SpiderMage,
+	Spider,  //Balance
+	SpiderMage,//b
 
-	Wolf,
+	Wolf, //Balance
 	
 
-	Garg,
-	Bat,
-	Vampire,
+	Garg,    //Kinda
+	Bat, //Balance Tbd summon vamp
+	Vampire,//b
 
-	Bloat,
+	Bloat,       //Balanced
+	//PitBloat
 
-	ObsidanStatue,
-	Anubis,
-	OrcWarrior,
-	OrcRaider,
-	OrcShaman,
-	OrcWarloc,
-	RedOrc,
-	OrcBrute,
-	OrcSamurai,
-	OrcWarchief,
-	OrcScout,
+	ObsidanStatue,//b
+	Anubis,   //Balanced
+	OrcWarrior, //Balance
+	OrcRaider, //Balance
+	OrcShaman,  //Balance  
+	OrcWarloc,  //Balance
+	RedOrc,     //Balance
+	OrcBrute,   //Balance  
+	OrcSamurai,   //Balanced
+	OrcWarchief,  //Balanced
+	OrcScout,     //Balanced
 
-	GoblinWarrior,
-	GoblinArcher,
-	GoblinWarlord,
-	GoblinBarrack,
+	GoblinWarrior, //Balanced
+	GoblinArcher,  //Balanced
+	GoblinWarlord, //Balanced
+	GoblinBarrack, //Balanced 
 
-	GiantRat,
-	PinkJelly,
-	GreenJelly,
-	BlueJelly,
-	Toad,
+	GiantRat,      //Balanced
+	PinkJelly,    //ba
+	GreenJelly,		//b
+	BlueJelly,	//b
+	Toad,		//B
 
-	Imp,
-	MindFlayer,
-	Phantom,
-	Lich,
-	Succubus,
-	BeholderKin,
-	SoulReaper,
-	Manes,
-	FlashDemon,
-	FireDemon,
-	Kraken,
-	WaterDemon,
+	Imp,      //B
+	MindFlayer, //B
+	Phantom, //B
+	Lich, //B
+	Succubus,//B
+	BeholderKin,//B
+	SoulReaper,//B
+	Manes,//B
+	FlashDemon,//B
+	FireDemon,//B
+	Kraken,//B
+	WaterDemon,//B
 
 	Monster_Num
 
@@ -195,7 +196,6 @@ typedef enum{
 	S_Necromancer,
 	S_Wagon,
 	S_Zombie,
-	
 	S_Acolyte,
 	S_AcolyteB,
 	S_AcolyteS,
@@ -203,21 +203,15 @@ typedef enum{
 	S_AcolyteDB,
 	S_AcolyteDW,
 	S_SPit,
-	
 	S_Spider,
 	S_SpiderMage,
-
 	S_Wolf,
-
 	S_Garg,
 	S_Bat,
 	S_Vampire,
-
 	S_Bloat,
-
 	S_ObsidanStatue,
 	S_Anubis,
-
 	S_OrcWarrior,
 	S_OrcRaider,
 	S_OrcShaman,
@@ -227,18 +221,15 @@ typedef enum{
 	S_OrcSamurai,
 	S_OrcWarchief,
 	S_OrcScout,
-
 	S_GoblinWarrior,
 	S_GoblinArcher,
 	S_GoblinWarlord,
 	S_GoblinBarrack,
-
 	S_GiantRat,
 	S_PinkJelly,
 	S_GreenJelly,
 	S_BlueJelly,
 	S_Toad,
-
 	S_Imp,
 	S_MindFlayer,
 	S_Phantom,
@@ -250,7 +241,6 @@ typedef enum{
 	S_FlashDemon,
 	S_FireDemon,
 	S_Kraken,
-	
 	//Do not change
 	S_WaterDemon,
 
@@ -372,6 +362,7 @@ typedef enum{
 	S_Bow,
 	S_Arrow,
 	S_Tourch,
+	S_Food,
 	S_Scroll,
 	S_Potion,
 	//S_Pile,
@@ -380,7 +371,9 @@ typedef enum{
 	//ENv
 	S_Plant,
 	S_PlantBig,
-	 
+	S_UpS,
+	S_DownS, 
+	
 
 	//Generated sprites for gas
 	//S_BasicGas,
@@ -649,6 +642,8 @@ typedef enum{
 	Tile_Lava   = '%',
 	Tile_Caz    = ':',
 	Tile_Wall   = '#',
+	Tile_DownS  = '<',
+	Tile_UpS    = '>', 
 	
 
 }Tiles;

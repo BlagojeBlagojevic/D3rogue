@@ -1666,7 +1666,7 @@ Map xmgen_drunk(const int w, const int h, const float floor_goal_percent) {
 
 Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_size, const int max_size) {
     srand((unsigned)time(0));
-    Map map = mnew(h, w);
+    const Map map = mnew(h, w);
 
     Rect* rooms = toss(Rect, max_rooms);
     int room_count_local = 0;

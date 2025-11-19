@@ -1,48 +1,147 @@
 {
- "Generators":
- [
+  "Generators": [
     {
-        "Name": "Wolf",
-        "Depths":  {"start": 0, "end":3, "nMonster": 2},
-        "Chances": [0.1, 0.2, 0.3],
-        "MonsterGenerator": [{"Monstername": "Wolf", "chance": 1.0}]
-
+      "Name": "ForestCritters",
+      "Depths": {"start": 0, "end": 1, "nMonster": 2},
+      "Chances": [0.3, 0.4, 0.05, 0.05, 0.05],
+      "MonsterGenerator": [
+        {"Monstername": "Toad", "chance": 0.4},
+        {"Monstername": "GiantRat", "chance": 0.4},
+        {"Monstername": "Spider", "chance": 0.6},
+        {"Monstername": "Bat", "chance": 0.02}
+      ]
     },
-    
+    {
+      "Name": "WolfPack",
+      "Depths": {"start": 0, "end": 1, "nMonster": 2},
+      "Chances": [0.2, 0.3, 0.00, 0.05],
+      "MonsterGenerator": [
+        {"Monstername": "Wolf", "chance": 1.0}
+      ]
+    },
+    {
+        "Name": "Early scout",
+        "Depths":  {"start": 1, "end":1, "nMonster": 1},
+        "Chances": [0.9, 0.9],
+        "MonsterGenerator": [
+          {"Monstername": "OrcShaman", "chance": 1.0}, 
+          {"Monstername": "OrcScout", "chance": 1.0}, 
+          {"Monstername": "Acolyte", "chance": 1.0} ]
+    },
+    {
+        "Name": "Bat lord",
+        "Depths":  {"start": 2, "end":2, "nMonster": 2},
+        "Chances": [0.9, 0.9],
+        "MonsterGenerator": [{"Monstername": "Bat", "chance": 0.7}, {"Monstername": "Vampire", "chance": 0.33}]
+    },
     {
         "Name": "Spider",
-        "Depths":  {"start": 0, "end":3, "nMonster": 1},
-        "Chances": [0.9, 0.1, 0.5],
-        "MonsterGenerator": [{"Monstername": "Spider", "chance": 1.0}]
+        "Depths":  {"start": 3, "end":3, "nMonster": 1},
+        "Chances": [0.9, 0.0000001, 0.5],
+        "MonsterGenerator": [{"Monstername": "Spider", "chance": 0.7}, {"Monstername": "SpiderMage", "chance": 0.3} ]
 
     },
     {
-        "Name": "Bat",
-        "Depths":  {"start": 0, "end":3, "nMonster": 1},
-        "Chances": [0.9, 0.1, 0.5],
-        "MonsterGenerator": [{"Monstername": "Bat", "chance": 1.0}]
+        "Name": "Mid game mix",
+        "Depths":  {"start": 4, "end":10, "nMonster": 1},
+        "Chances": [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
+        "MonsterGenerator": [
+          {"Monstername": "Vampire", "chance": 0.125},
+          {"Monstername": "SpiderMage", "chance": 0.125}, 
+          {"Monstername": "OrcShaman", "chance": 0.125},
+          {"Monstername": "OrcScout", "chance": 0.125},
+          {"Monstername": "GoblinWarrior", "chance": 0.125}, 
+          {"Monstername": "GoblinArcher", "chance": 0.125}, 
+          {"Monstername": "GoblinWarlord", "chance": 0.125},
+          {"Monstername": "Bloat", "chance": 0.125},
+          {"Monstername": "PinkJelly", "chance": 0.05},
+          {"Monstername": "GreenJelly", "chance": 0.05},
+          {"Monstername": "BlueJelly", "chance": 0.04},
+          {"Monstername": "OrcSamurai", "chance": 0.125}
+          
 
+          
+      
+        ]
+      
     },
     {
-        "Name": "GiantRat",
-        "Depths":  {"start": 0, "end":3, "nMonster": 1},
-        "Chances": [0.9, 0.1, 0.5],
-        "MonsterGenerator": [{"Monstername": "GiantRat", "chance": 1.0}]
-
+        "Name": "Goblin world",
+        "Depths":  {"start": 11, "end":11, "nMonster": 1},
+        "Chances": [0.9],
+        "MonsterGenerator": [{"Monstername": "GoblinBarrack", "chance": 1.0} ]
     },
     {
-        "Name": "Goblins ",
-        "Depths":  {"start": 0, "end":3, "nMonster": 1},
-        "Chances": [0.01, 0.05, 0.1],
-        "MonsterGenerator": [{"Monstername": "GoblinWarrior", "chance": 0.5}, {"Monstername": "GoblinArcher", "chance": 0.5}, 
-                             {"Monstername": "GoblinBarrack", "chance": 0.01}
-                            ]
+        "Name": "Relm of anubis ",
+        "Depths":  {"start": 12, "end":12, "nMonster": 3},
+        "Chances": [0.9],
+        "MonsterGenerator": [
+          {"Monstername": "Anubis", "chance": 0.33}, 
+          {"Monstername": "Garg", "chance": 0.5}, 
+          {"Monstername": "ObsidanStatue", "chance": 0.1}  ]
+    },
+    {
+        "Name": "Orc world",
+        "Depths":  {"start": 13, "end":15, "nMonster": 1},
+        "Chances": [0.99, 0.99, 0.99],
+        "MonsterGenerator": [
 
+            {"Monstername": "OrcWarrior", "chance": 0.125},
+            {"Monstername": "OrcRaider", "chance": 0.125},
+            {"Monstername": "OrcShaman", "chance": 0.04},
+            {"Monstername": "RedOrc", "chance": 0.125},
+            {"Monstername": "OrcBrute", "chance": 0.09},       
+            {"Monstername": "OrcSamurai", "chance": 0.04},
+            {"Monstername": "OrcWarchief", "chance": 0.04},
+            {"Monstername": "OrcScout", "chance": 0.04}
+            
+            
+
+           ]
+    },
+    {
+        "Name": "Undead world",
+        "Depths":  {"start": 16, "end":19, "nMonster": 1},
+        "Chances": [0.99, 0.99, 0.99, 0.99],
+        "MonsterGenerator": [
+ 
+            {"Monstername": "Abomination", "chance": 0.125},
+            {"Monstername": "Ghoul", "chance": 0.125},
+            {"Monstername": "Banshee", "chance": 0.04},
+            {"Monstername": "Necromancer", "chance": 0.125},
+            {"Monstername": "Wagon", "chance": 0.125},       
+            {"Monstername": "Zombie", "chance": 0.125},
+            {"Monstername": "Acolyte", "chance": 0.125},
+            {"Monstername": "AcolyteB", "chance": 0.125},
+            {"Monstername": "AcolyteD", "chance": 0.125},
+            {"Monstername": "AcolyteDB", "chance": 0.125},
+            {"Monstername": "AcolyteDW", "chance": 0.125},
+            {"Monstername": "Spit", "chance": 0.25}
+            
+            
+            
+            
+
+           ]
+    },
+    {
+        "Name": "Deamon world",
+        "Depths":  {"start": 19, "end":26, "nMonster": 1},
+        "Chances": [0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99],
+        "MonsterGenerator": [
+ 
+            {"Monstername": "Imp", "chance": 0.25},
+            {"Monstername": "MindFlayer", "chance": 0.125},
+            {"Monstername": "Phantom", "chance": 0.04},
+            {"Monstername": "Lich", "chance": 0.125},
+            {"Monstername": "Succubus", "chance": 0.05125},       
+            {"Monstername": "SoulReaper", "chance": 0.125},
+            {"Monstername": "Manes", "chance": 0.25},
+            {"Monstername": "FlashDemon", "chance": 0.125},
+            {"Monstername": "FireDemon", "chance": 0.05125},
+            {"Monstername": "Kraken", "chance": 0.05125},
+            {"Monstername": "WaterDemon", "chance": 0.25}
+           ]
     }
-
-    
-
-
-
- ]   
+  ]   
 }

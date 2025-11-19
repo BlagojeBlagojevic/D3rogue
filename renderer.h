@@ -80,6 +80,7 @@ typedef struct{
 	int isTorchEqu;
 	int depth;
 	int itemThrowId;
+	int is2d;
 
 
 }EngineData;
@@ -99,6 +100,10 @@ typedef struct{
 
 EngineData* init_engine(World *world, int player_entity_id, const char* name_atlas, const char* water_atlas);
 
+EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *engine);
+
+void free_engine(EngineData *engine);
+
 void render_loop(World *world, EngineData *engine);
 
 void render_map_testing(World *world, EngineData *engine);
@@ -107,7 +112,9 @@ void render_map(World *world, EngineData *engine);
 
 void render_event_messages(EngineData *engine, const int x, const int y, const int w, const int h);
 
-void render_stats(World* world, Item_DA* inventory, EngineData* engine);
+void render_stats_update(World* world, EngineData *engine);
+
+void render_stats_(EngineData *engine, World* world, const int x, int y, int w, int h);
 
 void load_sprites(Sprite_DA *sprites, const char* name);
 

@@ -222,6 +222,7 @@ void load_global_ent(Global_Ent_DA* ent, const char* name){
 			}
 		}
 	}
+		g.state.territoryRadius = 100;
 		printf("\n");	
 		da_append(ent, g);
 	}
@@ -250,6 +251,11 @@ void init_world(World* world) {
 	world->identScrools[Scroll_Identif] = true;
 	world->tempStatsPlayer = (TempStats_DA){0};
 	world->num_free = MAX_ENTITIES;
+	world->tempGen = NULL;
+	world->expPlayer = 0;
+	world->nutrition = 10000;
+	//world->expPlayer = 10060;
+
 	}
 
 // Create new entity
@@ -432,7 +438,7 @@ void add_components_to_ent_depending_on_T(World* world, Global_Ent_DA* ent, int 
 		
 	}
 	else if(type == Banshee){
-		add_component(world, monster, COMP_SPELL, &(Spell){Spell_Dmg, 3, 4, 4});
+		add_component(world, monster, COMP_SPELL, &(Spell){Spell_Dmg, 15, 4, 4});
 	}
 	else if(type == Abomination){
 		add_component(world, monster, COMP_SPELL, &(Spell){Spell_Hook, 0, 20, 20});
@@ -715,6 +721,26 @@ static void add_enviroment(World* world){
 		//		add_component(world, plantID, COMP_RENDER, &(Renderable) {
 		//		(Sprite_Type)(S_PlantBig)});
 		//	}
+			else if(world->map.walling[y][x] == Tile_UpS){
+				int sEnt = create_entity(world);
+				add_component(world, sEnt, COMP_POSITION, &(Position){(float)x, (float)y});
+				//add_component(world, plantID, COMP_HEALTH, &(Health) {
+				//	20, 20
+				//});
+				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
+						(Sprite_Type)(S_UpS)});
+						
+			}
+			else if(world->map.walling[y][x] == Tile_DownS){
+				int sEnt = create_entity(world);
+				add_component(world, sEnt, COMP_POSITION, &(Position){(float)x, (float)y});
+				//add_component(world, plantID, COMP_HEALTH, &(Health) {
+				//	20, 20
+				//});
+				add_component(world, sEnt, COMP_RENDER, &(Renderable) {
+						(Sprite_Type)(S_DownS)});
+						
+			}
 			else if(world->map.walling[y][x] == Tile_Water || world->map.walling[y][x] == Tile_Dwater){
 				int count = 0;
 				for(int i = 0; i < 8; i++){
@@ -1071,7 +1097,8 @@ int is_monster_in_next_postition(World* world, float x, float y){
 int is_monster_on_position(World* world, float x, float y){
 	CompMask mask = COMP_MONSTER;
 	const Vector2 pos = {x, y};
-	if(world->position[0].x == x && world->position[0].y == y){
+	const float dis = Vector2Distance(world->position[0], pos);
+	if(dis < 0.5){
 		///exit(-1);
 		return 0; //Player
 	}
@@ -1137,19 +1164,21 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 	//if > that creature will get + 1 turn of stunn
 	const int aCons = rand()%world->stats[attacker].cons;
 	const int dCons = rand()%world->stats[defender].cons;
-	if(aCons > dCons){
-		world->state[defender].current = STATE_STUN;
-		world->state[defender].stunTurn+=2;
-		//world->state[attacker].stunTurn-=1;
-		//CLAMP(world->state[attacker].stunTurn, 0, 100);
+	if(rand_f32() < 1.0f){
+		if(aCons > dCons){
+			
+			world->state[defender].current = STATE_STUN;
+			world->state[defender].stunTurn+=2;
+			//world->state[attacker].stunTurn-=1;
+			//CLAMP(world->state[attacker].stunTurn, 0, 100);
+		}
+		else{
+			world->state[attacker].current = STATE_STUN;
+			world->state[attacker].stunTurn+=2;
+			//world->state[defender].stunTurn-=1;
+			//CLAMP(world->state[defender].stunTurn, 0, 100);
+		}
 	}
-	else{
-		world->state[attacker].current = STATE_STUN;
-		world->state[attacker].stunTurn+=2;
-		//world->state[defender].stunTurn-=1;
-		//CLAMP(world->state[defender].stunTurn, 0, 100);
-	}
-	
 	
 	int dmgATTACK = D1(world->stats[attacker].str);
 	int dmgValue   = world->stats[attacker].dmgMin + rand()%(world->stats[attacker].dmgMax - world->stats[attacker].dmgMin);
@@ -1324,7 +1353,7 @@ static void generate_monster_of_type(World *world, Global_Ent_DA *ent, Position 
 }
 
 
-static void generate_monster_generator(World* world, Generator* gen, Position pos, Global_Ent_DA *ent){
+void generate_monster_generator(World* world, Generator* gen, Position pos, Global_Ent_DA *ent){
 		Position monsterPos = pos;
 		int minX = pos.x - 10;
 		CLAMP(minX, 0, MAP_WIDTH);
@@ -1355,7 +1384,7 @@ static void generate_monster_generator(World* world, Generator* gen, Position po
 					}
 
 					generate_monster_of_type(world, ent, (Position){x, y}, type);
-					printf("%d %d\n", x, y);
+					printf("%s %d %d\n", Monster_Names[type], x, y);
 					//exit(-1);
 					break;
 				}
@@ -1369,6 +1398,13 @@ static void generate_monster_generator(World* world, Generator* gen, Position po
 
 void generate_level(World* world, int level, Generator_DA *generators, Global_Ent_DA *ent){
 	//40% B, 30% N, 25% G, 5% RM
+	if(world->tempGen != NULL){
+		free(world->tempGen->items);
+		//exit(-1);
+		 //world->tempGen = NULL;
+	}
+		
+
 	float whatLevel = rand_f32();
 	int maxRooms = rand()%10 + 15;
 	//int maxRooms = ;
@@ -1406,7 +1442,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 		//if(rand_f32() < 0.8)
 	}
 	//whatLevel > 0.7f && whatLevel <= 0.9f
-	else if(whatLevel > 0.7f && whatLevel <= 0.9f){
+	else if(whatLevel > 0.7f && whatLevel <= 0.95f){
 		world->map = xmgen_graph(MAP_WIDTH, MAP_HEIGHT, maxRooms, 5, 10, rand()%2);
 		xmgen_add_enviroment(&world->map, TIle_Grass, 0, 0, MAP_WIDTH, MAP_HEIGHT, (0.45 + rand_f32() / 10.0f));
 		if(rand_f32() < 0.5f)
@@ -1432,8 +1468,11 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	
 	//For this prob ight map 
 	world->ambientStrenght = rand_f32() / 2.0f;    // 0.0 - 0.1 PROB LIGHTING POWER
+	if(rand_f32() < 0.33)
+		world->ambientStrenght = 0;
 	world->saveAmbientStrenght = world->ambientStrenght;
 	
+
 	for(int y = 0; y < world->map.h; y++){
 		for(int x = 0; x < world->map.w; x++){
 			world->gasMap[y][x].type = gasNo;
@@ -1443,7 +1482,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 		while(1) {
 		int x = rand()%world->map.w, y = rand()%world->map.h;
 		
-		if(world->map.walling[y][x] != '#' && world->map.walling[y][x] != '+') {
+		if(world->map.walling[y][x] == Tile_Dirt  || world->map.walling[y][x] == TIle_Grass || world->map.walling[y][x] == Tile_BGrass) {
 			world->position[0] = (Position) {
 				x, y
 				};
@@ -1452,11 +1491,48 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 		}
 	generate_doors(world, ent);
 	remove_non_posible_elements(world);
+	for(int i = 0; i < rand()%5; i++){
+		
+		while(1){
+		const int x = rand()%world->map.w; 
+		const int y = rand()%world->map.h;
+		calculate_diakstra_map(world, x, y, 0);
+		if(world->dikstra[y][x] < 255 
+		&& (world->map.walling[y][x] == Tile_Dirt || world->map.walling[y][x] == TIle_Grass || world->map.walling[y][x] == Tile_BGrass )){
+			add_trap(world, rand()%TRAP_NUM, x, y);
+			break;
+		}
+	}
+	}
+	//Generate down stairs ad up stairs
+	//for(int i = 0; i < 100; i++)
+	while(1){
+		const int x = rand()%world->map.w; 
+		const int y = rand()%world->map.h;
+		calculate_diakstra_map(world, x, y, 0);
+		if(world->dikstra[y][x] < 255 
+		&& (world->map.walling[y][x] == Tile_Dirt || world->map.walling[y][x] == TIle_Grass || world->map.walling[y][x] == Tile_BGrass )){
+			world->map.walling[y][x] = Tile_DownS;
+			break;
+		}
+	}
+	//for(int i = 0; i < 100; i++)
+	while(1){
+		const int x = rand()%world->map.w; 
+		const int y = rand()%world->map.h;
+		calculate_diakstra_map(world, x, y, 0);
+		if(world->dikstra[y][x] < 255 
+		&& (world->map.walling[y][x] == Tile_Dirt || world->map.walling[y][x] == TIle_Grass || world->map.walling[y][x] == Tile_BGrass )){
+			world->map.walling[y][x] = Tile_UpS;
+			break;
+		}
+	}
 	add_enviroment(world);
 	xmprint(world->map);
 	
-
-	Generator_DA temp = (Generator_DA){0};
+	//Temp fix for this to be global var
+	static Generator_DA temp = (Generator_DA){0};
+	temp = (Generator_DA){0};
 	for(int i = 0; i < generators->count; i++){
 		
 		printf("%d (%d %d %d)", i, generators->items[i].startDepth, generators->items[i].endDepth, level);
@@ -1466,9 +1542,10 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 		}
 	}
 
-	print_all_generators(&temp);
+	
 	//Get ge  n
-	int nItems  = rand()%5 + 5;
+	//Tbd machines for secret puzzle rooms or somthing
+	int nItems  = 3;
 	while(nItems > 0){
 		const int x = rand()%world->map.w;
 		const int y = rand()%world->map.h;
@@ -1489,6 +1566,8 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 
 	}
 	//exit(-1);
+	print_all_generators(&temp);
+	//exit(-1);
 	Position_DA dist = {0}; 
 	int numIt = 0;	
 	while(world->nMonster < 12){
@@ -1499,15 +1578,26 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 		}
 		int genNumber = 0;
 		Position pos = (Position){0.0f, 0.0f};
+		int numInt = 0;
 		
 		while(1){
+			if(numInt++ > 100)
+				break;
+			 
 			genNumber= rand()%temp.count;
+			//genNumber = 0;
 			//const int level = temp.items[genNumber].chances.count;
-			printf("%f\n", temp.items[genNumber].chances.items[level]);
+			printf("%d %f\n", level, temp.items[genNumber].chances.items[level]);
+			
+			if(temp.items[genNumber].chances.items[level] < 0.0f)
+				temp.items[genNumber].chances.items[level] *= -1.0f; 
+			else if(temp.items[genNumber].chances.items[level] == 0.0f)
+				temp.items[genNumber].chances.items[level] = 1.0f;
 			if(rand_f32() < temp.items[genNumber].chances.items[level]){
 				break;
 			}
 		}
+
 		//Position for generator 
 		int iterNumInt1 = 0;
 		while(1){
@@ -1544,9 +1634,14 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 
 	//exit(-1);
 
-	free(temp.items);
+	//free(temp.items);
+	world->tempGen = &temp;
 	free(dist.items);
 
+
+
+
+	
 //	generate_monster_of_type(world, ent, Zombie);
 //	generate_monster_of_type(world, ent, Zombie);
 //	generate_monster_of_type(world, ent, Zombie);

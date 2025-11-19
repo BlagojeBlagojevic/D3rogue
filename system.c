@@ -8,6 +8,7 @@
 #include "stb_perlin.h"
 
 
+
 // Render system: Draws entities with position and renderable
 //extern Texture2D temp;
 
@@ -121,7 +122,7 @@ void stable_sort_entities(EntityDistance *array, int count) {
 
 
 void render_system(World* world, EngineData* engine, Sprite_DA *sprites) {
-
+	 //UpdateCamera(&engine->camera, CAMERA_FREE);
 	{
 		float time = GetTime();
 			
@@ -233,6 +234,17 @@ void render_system(World* world, EngineData* engine, Sprite_DA *sprites) {
 			else if(world->renderable[i].type == S_PlantBig){
 				DrawBillboard(engine->camera, s.texture, pos, 2.0f, WHITE);
 			}	
+			else if(world->renderable[i].type == S_DownS){
+				DrawBillboard(engine->camera, s.texture, (Vector3) {
+			(float)p->x, -0.4f, (float)p->y
+			}, 2.0f, WHITE);
+			}	
+			else if(world->renderable[i].type == S_UpS){
+				DrawBillboard(engine->camera, s.texture, (Vector3) {
+			(float)p->x, +1.2f, (float)p->y
+			}, 2.0f, WHITE);
+			}
+
 			else if(world->input[i].isFinishedAttack == true)	
 				DrawBillboard(engine->camera, s.texture, pos,s.scale + rand_f32()/5.0f, WHITE);	
 				
@@ -376,6 +388,258 @@ void render_system(World* world, EngineData* engine, Sprite_DA *sprites) {
 
 }
 
+#define TILE_SIZ 48
+void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
+    
+    static Camera2D camera = {0};
+    
+    if (camera.target.x == 0 && camera.target.y == 0) {
+        camera.target = (Vector2){ world->position[0].x * TILE_SIZ, world->position[0].y * TILE_SIZ };
+        camera.offset = (Vector2){ engine->width / 2.0f, engine->height / 2.0f };
+        camera.rotation = 0.0f;
+        camera.zoom = 1.0f;
+    }
+    
+    // Update camera to follow player
+    const float playerWorldX = world->position[0].x * TILE_SIZ;
+    const float playerWorldY = world->position[0].y * TILE_SIZ;
+    
+    // Smooth camera follow (optional - adjust lerp speed as needed)
+    camera.target.x = Lerp(camera.target.x, playerWorldX, 0.1f);
+    camera.target.y = Lerp(camera.target.y, playerWorldY, 0.1f);
+    
+    // Optional: Zoom controls
+    if (IsKeyPressed(KEY_EQUAL)) camera.zoom += 0.1f;
+    if (IsKeyPressed(KEY_MINUS)) camera.zoom -= 0.1f;
+    camera.zoom = Clamp(camera.zoom, 0.5f, 3.0f); // Limit zoom range
+
+    // --- 2. Begin Camera Mode ---
+    BeginMode2D(camera);
+
+    // --- 3. Calculate World-to-Screen Transformation ---
+    // Get the visible world area based on camera
+    Rectangle cameraView = {
+        camera.target.x - (engine->width / 2) / camera.zoom,
+        camera.target.y - (engine->height / 2) / camera.zoom,
+        engine->width / camera.zoom,
+        engine->height / camera.zoom
+    };
+
+    // Calculate which tiles are visible to optimize rendering
+    const int startX = (int)(cameraView.x / TILE_SIZ) - 1;
+    const int startY = (int)(cameraView.y / TILE_SIZ) - 1;
+    const int endX = (int)((cameraView.x + cameraView.width) / TILE_SIZ) + 1;
+    const int endY = (int)((cameraView.y + cameraView.height) / TILE_SIZ) + 1;
+
+    // Clamp to map bounds
+    const int renderStartX = (startX < 0) ? 0 : startX;
+    const int renderStartY = (startY < 0) ? 0 : startY;
+    const int renderEndX = (endX > world->map.w) ? world->map.w : endX;
+    const int renderEndY = (endY > world->map.h) ? world->map.h : endY;
+
+    const int tileSize = TILE_SIZ; // Fixed tile size for world coordinates
+
+    // --- 4. Render Background (sky/void) ---
+    ClearBackground(BLACK);
+
+    // --- 5. Render Map Tiles ---
+    for(int y = renderStartY; y < renderEndY; y++){
+        for(int x = renderStartX; x < renderEndX; x++){
+            
+            // Only draw if explored
+            if(world->isExpMap[y][x] != 1) {
+                continue;
+            }
+
+            const float worldX = x * tileSize;
+            const float worldY = y * tileSize;
+
+            // Determine tile color based on tile type
+            Color tileColor = BLACK;
+            const char tile = world->map.walling[y][x];
+            
+            if (tile == Tile_Water) {
+                tileColor = BLUE;
+            }
+            else if (tile == Tile_Dwater) {
+                tileColor = DARKBLUE;
+            }
+            else if (tile == Tile_Lava) {
+                tileColor = ORANGE;
+            }
+            else if (tile == Tile_Fire) {
+                tileColor = RED;
+            }
+            else if (tile == Tile_Caz) {
+                tileColor = BLACK;
+            }
+            else if (tile == '#') {
+                tileColor = (Color){0x18, 0x18, 0x18, 255}; // Wall
+            }
+            else if (tile == ' ' || tile == '*') {
+                tileColor = BROWN; // Floor
+            }
+            else if (tile == '+' || tile == '-') {
+                tileColor = (Color){150, 100, 50, 255}; // Brown for door
+            }
+            else if (tile == Tile_DownS) {
+                tileColor = (Color){200, 200, 200, 255}; // Light gray stairs
+            }
+            else if (tile == Tile_UpS) {
+                tileColor = (Color){100, 100, 100, 255}; // Dark gray stairs
+            }
+            else if (tile == '\"' || tile == Tile_BGrass) {
+                tileColor = BROWN;
+            }
+            else if (tile == '~') {
+                tileColor = BLUE;
+            }
+
+            // Draw the tile
+            DrawRectangle(worldX, worldY, tileSize, tileSize, tileColor);
+			
+               // Rectangle source = { 0.0f, 0.0f, (float)s.texture.width, (float)s.texture.height };
+               // Rectangle dest = { worldX, worldY, (float)tileSize, (float)tileSize };
+               // DrawTexturePro(s.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
+            
+            // Draw tile symbols (optional - can be removed for pure sprite-based)
+            if((tile == '+' || tile == '-') && world->isExpMap[y][x]){
+                DrawText("+", worldX + 8, worldY + 8, 10, GREEN);
+            }
+            if((tile == '~' || tile == Tile_Dwater) && world->isExpMap[y][x]){
+                DrawText("~", worldX + 8, worldY + 8, 10, BLUE);
+            }
+            if((tile == Tile_Fire) && world->isExpMap[y][x]){
+                DrawText("^", worldX + 8, worldY + 8, 10, ORANGE);
+            }
+            if((tile == Tile_Caz) && world->isExpMap[y][x]){
+                DrawText(";", worldX + 8, worldY + 8, 10, WHITE);
+            }
+            if((tile == Tile_DownS) && world->isExpMap[y][x]){
+                DrawText("<", worldX + 6, worldY + 6, 20, WHITE);
+            }
+            if((tile == Tile_UpS) && world->isExpMap[y][x]){
+                DrawText(">", worldX + 6, worldY + 6, 20, WHITE);
+            }
+            if((tile == '\"' || tile == Tile_BGrass) && world->isExpMap[y][x]){
+                DrawText("\"", worldX + 8, worldY + 8, 10, GREEN);
+            }
+        }
+    }
+
+    // --- 6. Render Gas (with transparency) ---
+    BeginBlendMode(BLEND_ALPHA);
+    for (int y = renderStartY; y < renderEndY; y++) {
+        for (int x = renderStartX; x < renderEndX; x++) {
+            if (world->isExpMap[y][x] && world->gasMap[y][x].type != gasNo) {
+                int type = world->gasMap[y][x].type;
+                Color c = gasColor[type];
+                c.a = 100; // Semi-transparent
+                DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, c);
+            }
+        }
+    }
+    EndBlendMode();
+
+    // --- 7. Render Entities (Items) ---
+    CompMask item_mask = COMP_POSITION | COMP_RENDER;
+    for (int i = 1; i < MAX_ENTITIES; i++) {
+        if ((world->masks[i] & item_mask) == item_mask && !(world->masks[i] & COMP_MONSTER)) {
+            
+            const Position* p = &world->position[i];
+            
+            // Only draw if in visible area and explored
+            if (p->x >= renderStartX && p->x < renderEndX && 
+                p->y >= renderStartY && p->y < renderEndY &&
+                world->isExpMap[(int)p->y][(int)p->x]) {
+                
+                Sprite s = sprites->items[world->renderable[i].type];
+                if (s.texture.id <= 0) continue;
+
+                const float worldX = p->x * tileSize;
+                const float worldY = p->y * tileSize;
+
+                Rectangle source = { 0.0f, 0.0f, (float)s.texture.width, (float)s.texture.height };
+                Rectangle dest = { worldX, worldY, (float)tileSize, (float)tileSize };
+				if(world->status[0].hallucinationTurn > 0){
+					s = sprites->items[rand()%S_Sprite_Num];
+						
+				}
+                DrawTexturePro(s.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
+            }
+        }
+    }
+
+    // --- 8. Render Monsters ---
+    CompMask monster_mask = COMP_POSITION | COMP_RENDER | COMP_MONSTER;
+    //if(world->status[0].telepatyTurn > 0) // Uncomment for telepathy requirement
+    {
+        for(int i = 1; i < MAX_ENTITIES; i++){
+            if((world->masks[i] & monster_mask) == monster_mask){
+				
+                const Position* p = &world->position[i];
+				const float dist = Vector2DistanceSqr(world->position[i], world->position[0]);
+                // Only draw if in visible area
+                if (p->x >= renderStartX && p->x < renderEndX && 
+                    p->y >= renderStartY && p->y < renderEndY && world->visibe[(int)p->y][(int)p->x] && dist < engine->drawDistance) {
+                    
+                    Sprite s = sprites->items[world->renderable[i].type];
+                    if (s.texture.id <= 0) continue;
+
+                    const float worldX = p->x * tileSize;
+                    const float worldY = p->y * tileSize;
+
+                    // Increased size for monsters (150%)
+                    float spriteSize = tileSize * 1.5f;
+                    
+                    Rectangle source = { 0.0f, 0.0f, (float)s.texture.width, (float)s.texture.height };
+                    Rectangle dest = { 
+                        worldX + (tileSize - spriteSize) / 2.0f,
+                        worldY + (tileSize - spriteSize) / 2.0f,
+                        spriteSize, 
+                        spriteSize 
+                    };
+                    if(world->status[0].hallucinationTurn > 0){
+						s = sprites->items[rand()%S_Sprite_Num];
+						
+					}
+					DrawTexturePro(s.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
+                    
+                }
+            }
+        }
+    }
+    
+    // --- 9. Render Player ---
+    const Position* p_player = &world->position[0];
+    const Sprite s_player = sprites->items[world->renderable[0].type];
+    
+    if (s_player.texture.id > 0) {
+        const float worldX = p_player->x * tileSize;
+        const float worldY = p_player->y * tileSize;
+
+        // Increased size for player (150%)
+        float spriteSize = tileSize * 1.5f;
+
+        Rectangle source = { 0.0f, 0.0f, (float)s_player.texture.width, (float)s_player.texture.height };
+        Rectangle dest = { 
+            worldX + (tileSize - spriteSize) / 2.0f,
+            worldY + (tileSize - spriteSize) / 2.0f,
+            spriteSize, 
+            spriteSize 
+        };
+        
+        DrawTexturePro(s_player.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
+    }
+
+    // --- 10. End Camera Mode ---
+    EndMode2D();
+
+    // --- 11. Render UI Elements (not affected by camera) ---
+    // Example: Mini-map, player stats, messages, etc.
+    // You can call your existing UI functions here
+    // render_event_messages(engine, 10, 10, 300, 150);
+}
 
 
 
@@ -432,7 +696,8 @@ static Position get_lowest_tile_dikstra_player(World *world, int sx, int sy, int
         int x = sx + dirs[i][0];
         int y = sy + dirs[i][1];
         if (world->map.walling[y][x] != Tile_Wall &&
-            world->map.walling[y][x] != Tile_Dwater && world->map.walling[y][x] != Tile_Fire && world->map.walling[y][x] != Tile_Lava &&
+            world->map.walling[y][x] != Tile_Dwater && world->map.walling[y][x] != Tile_Fire && world->map.walling[y][x] != Tile_Lava 
+			&& world->map.walling[y][x] != Tile_Fire && world->map.walling[y][x] != Tile_Caz &&
             min > world->dikstra[y][x] && world->dikstra[y][x] != 255.0f) {
 			min = world->dikstra[y][x];
             p.x = x;
@@ -464,8 +729,9 @@ static Position get_highest_tile_dikstra_player(World *world, int sx, int sy, in
         int x = sx + dirs[i][0];
         int y = sy + dirs[i][1];
         if (world->map.walling[y][x] != Tile_Wall &&
-           world->map.walling[y][x] != Tile_Dwater  && world->map.walling[y][x] != Tile_Fire &&  world->map.walling[y][x] != Tile_Lava &&
-            min < world->dikstra[y][x] && world->dikstra[y][x] != 255.0f) {
+           world->map.walling[y][x] != Tile_Dwater  && world->map.walling[y][x] != Tile_Fire &&  world->map.walling[y][x] != Tile_Lava 
+           && world->map.walling[y][x] != Tile_Fire && world->map.walling[y][x] != Tile_Caz &&   
+		   min < world->dikstra[y][x] && world->dikstra[y][x] != 255.0f) {
             min = world->dikstra[y][x];
             p.x = x;
             p.y = y;
@@ -497,8 +763,9 @@ Position get_highest_tile_dikstra(World *world, int sx, int sy) {
         int x = sx + dirs[i][0];
         int y = sy + dirs[i][1];
 
-        if (world->map.walling[y][x] != '#' &&
-            (x != world->position[0].x || y != world->position[0].y)  && world->map.walling[y][x] != Tile_Dwater &&
+        if (world->map.walling[y][x] != Tile_Wall &&
+            (x != world->position[0].x || y != world->position[0].y)  && world->map.walling[y][x] != Tile_Dwater 
+			&& world->map.walling[y][x] != Tile_Fire && world->map.walling[y][x] != Tile_Caz && 
             max < world->dikstra[y][x]) {
             max = world->dikstra[y][x];
             p.x = x;
@@ -561,13 +828,19 @@ static void cast_ray(World* world, EngineData* engine, float x, float y, int ent
 			iy = 0;
 		}
 		world->visibe[iy][ix] = true;
-		if(ent == 0)
-			world->isExpMap[iy][ix] = 1;
+		if(ent == 0){
+			const float dist = Vector2Distance(world->position[0], (Vector2){ix, iy});
+			if(dist < engine->drawDistance){
+				world->isExpMap[iy][ix] = 1;
+			}
+			
+		}
+			
 	
 		if(world->map.walling[iy][ix] == '#' || world->map.walling[iy][ix] == '+') {
 			return;
 			}
-		else if((rand_f32() < CHANCE_NOSEE) && world->map.walling[iy][ix] == '"'){
+		else if((rand_f32() < CHANCE_NOSEE) && world->map.walling[iy][ix] == Tile_BGrass){
 			return;
 		}
 			
@@ -652,15 +925,12 @@ static void set_memory_wandering(World* world, int ent){
 		if(world->map.walling[y][x] != '#' && distance >= 25){
 			world->state[ent].lastSeenX = x;
 			world->state[ent].lastSeenY = y;
-			world->state[ent].memoryTimer = rand()%10 + 1;
+			world->state[ent].memoryTimer = rand()%20 + 1;
 			is = true;
 			}
 		}
 }
 
-
-
-// Make monster state system more interesting for player // systems.c
 void monster_change_state_system(World* world, EngineData *engine) {
     CompMask mask = COMP_POSITION | COMP_MONSTER | COMP_STATE | COMP_STATS;
 
@@ -718,7 +988,7 @@ void monster_change_state_system(World* world, EngineData *engine) {
         if (isVisible && peception > 0) {
             world->state[i].lastSeenX = playerX;
             world->state[i].lastSeenY = playerY;
-            world->state[i].memoryTimer = 5; // Remember for 15 turns
+            world->state[i].memoryTimer = 20;
         } else if (world->state[i].memoryTimer > 0) {
             world->state[i].memoryTimer--;
         }
@@ -857,7 +1127,7 @@ void monster_change_state_system(World* world, EngineData *engine) {
                         // Not all monsters get alerted - some might ignore the alert
                         if (rand_f32() < 0.7f) { // 70% chance to respond to alert
                             world->state[j].current = STATE_ALERTED;
-                            world->state[j].memoryTimer = 5; // Alerted monsters remember for a while
+                            world->state[j].memoryTimer = 20; // Alerted monsters remember for a while
                             world->state[j].lastSeenX = playerX;
                             world->state[j].lastSeenY = playerY;
                         }
@@ -870,6 +1140,148 @@ void monster_change_state_system(World* world, EngineData *engine) {
 }
 
 
+
+
+/*
+void monster_change_state_system(World* world, EngineData *engine) {
+    CompMask mask = COMP_POSITION | COMP_MONSTER | COMP_STATE | COMP_STATS;
+
+    // Player position reference
+    const int playerX = world->position[0].x;
+    const int playerY = world->position[0].y;
+	field_of_vison(world, engine, 0);	
+
+    for (int i = 1; i < MAX_ENTITIES; i++) {
+        if ((world->masks[i] & mask) != mask || world->input[i].isMoving) 
+            continue;
+		//field_of_vison(world, engine, i);
+        
+
+        bool isVisible = is_player_visible_by_monster(world, world->position[i].x, world->position[i].y);
+        int damageTaken = world->health[i].max - world->health[i].current;
+
+
+
+        // --- FEAR AND MORALE SYSTEM ---
+        world->state[i].fear += damageTaken * 0.01f; 
+        if (world->state[i].fear < 0) world->state[i].fear = 0;
+
+        // --- MEMORY SYSTEM ---
+        if (isVisible) {
+            world->state[i].lastSeenX = playerX;
+            world->state[i].lastSeenY = playerY;
+            world->state[i].memoryTimer = 15; // lasts 5 turns
+        } else if (world->state[i].memoryTimer > 0) {
+            world->state[i].memoryTimer--;
+        }
+
+        // --- STATE DECISION TREE ---
+
+
+        // Stamina check
+        //if (world->stamina[i].current <= 0) {
+        //    world->state[i].current = STATE_RESTING;
+        //    continue;
+        //}
+
+        // Fear-based running
+        if (world->state[i].fear > world->stats[i].morale) {
+            world->state[i].current = STATE_RUNING;
+            continue;
+        }
+
+        // Player is wounded - aggressive response
+        if (world->health[0].current <= (int)(0.3f * world->health[0].max)) {
+            world->state[i].current = STATE_HUNTING;
+            continue;
+        }
+
+        bool hasMemory = (world->state[i].memoryTimer > 0);
+        
+ 
+ 
+        // If monster can see player or remembers last seen pos and not hunting
+        if ((isVisible || hasMemory) && world->state[i].current != STATE_HUNTING) {
+            // Perception vs stealth check
+            int perceptionMonster =  rand() % 10 + world->stats[i].perception;
+            int stealthPlayer     =  rand() % 10 + world->stats[0].stealth;
+            
+
+            if (engine->isTorchEqu) {
+                stealthPlayer -= 10;    // torch makes player easier to see
+            }
+
+            if (perceptionMonster > stealthPlayer) {
+                float chanceH = rand_f32();
+                float chanceR = rand_f32();
+
+                if (world->state[i].chancesH > chanceH) {
+                    world->state[i].current = STATE_HUNTING;
+                } else if (world->state[i].chancesR > chanceR) {
+                    world->state[i].current = STATE_RUNING;
+                } else {
+                    world->state[i].current = STATE_SEARCHING;
+                }
+            } else {
+                // Wander when player is stealthy
+                if (rand_f32() < world->state[i].chancesW) {
+					set_memory_wandering(world, i);
+                    world->state[i].current = STATE_WANDERING;
+                } else {
+                    world->state[i].current = STATE_RESTING;
+                }
+            }
+        } 
+        else {
+            // No player info - wander or rest
+            if (world->state[i].current == STATE_WANDERING) {
+                if (isVisible && rand_f32() < world->state[i].chancesH) {
+                    world->state[i].current = STATE_HUNTING;
+                } else if (rand_f32() < world->state[i].chancesR) {
+                    world->state[i].current = STATE_RESTING;
+                }
+            } 
+            else if (world->state[i].current == STATE_HUNTING && 
+                     rand_f32() < world->state[i].chancesR) {
+                world->state[i].current = STATE_RESTING;
+                // Optional: add message "You stop hearing noises"
+            }
+            else if (world->state[i].current == STATE_RESTING && 
+                     rand_f32() < world->state[i].chancesW) {
+				set_memory_wandering(world, i);		
+                world->state[i].current = STATE_WANDERING;
+            }
+            else if (rand_f32() < world->state[i].chancesW) {
+                // Set random wander target
+                set_memory_wandering(world, i);
+                world->state[i].current = STATE_SEARCHING;
+            }
+            else {
+                world->state[i].current = STATE_RESTING;
+            }
+        }
+
+        // --- GROUP ALERTING ---
+        if (world->state[i].current == STATE_HUNTING) {
+            for (int j = 1; j < MAX_ENTITIES; j++) {
+                if (i == j) continue;
+                if ((world->masks[j] & mask) == mask) {
+                    int dx = world->position[i].x - world->position[j].x;
+                    int dy = world->position[i].y - world->position[j].y;
+                    if (dx*dx + dy*dy < 100) { // within 5 tiles
+                        if (world->state[j].current != STATE_HUNTING) {
+                            world->state[j].current = STATE_ALERTED;
+                            world->state[j].memoryTimer = 15;
+                            world->state[j].lastSeenX = playerX;
+                            world->state[j].lastSeenY = playerY;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+*/
 static void spell_system(World* world, EngineData* engine, Global_Ent_DA* ent, int i){
 	//MESSAGE_F("SPELL SYSTEM %d", i);
 	const Spell spell = world->spell[i];
@@ -1016,7 +1428,7 @@ static void spell_system(World* world, EngineData* engine, Global_Ent_DA* ent, i
 						int intM = rand()%(world->stats[i].inte + 1);
                         if (intM > intP) { // alert if higer then player i mean
                             world->state[j].current = STATE_HUNTING;
-                            world->state[j].memoryTimer = 10; // Alerted monsters remember for a while
+                            world->state[j].memoryTimer = 20; // Alerted monsters remember for a while
                             world->state[j].lastSeenX = world->position[0].x;
                             world->state[j].lastSeenY = world->position[0].y;
                         }
@@ -1051,6 +1463,9 @@ static void spell_system(World* world, EngineData* engine, Global_Ent_DA* ent, i
 		int intM = rand()%(world->stats[i].inte + 1);
 		if(intM > intP){
 			world->state[0].stunTurn += world->spell[i].value;
+			if(world->status[0].poisonImune == false){
+				world->status[0].poisonTurn+=world->spell[i].value;
+			}
 			MESSAGE("You are cought in web");
 		}
 		
@@ -1426,11 +1841,15 @@ void monster_state_system(World* world, EngineData *engine, Global_Ent_DA* ent) 
 				//Change door for op
 				const int xD = (int)p.x;
 				const int yD = (int)p.y; 
-				if(world->map.walling[yD][xD] == '+'){
+				if(world->map.walling[yD][xD] == Tile_CDoor){
 				for(int i = 1; i < MAX_ENTITIES; i++){
 				if((world->position[i].x == xD) &&  (world->position[i].y == yD)){
 				//exit(-1);
-					world->renderable[i].type = S_OpenDoor;
+					if(world->renderable[i].type == S_ClosedDoor){
+						world->renderable[i].type = S_OpenDoor;
+						world->map.walling[yD][xD] = Tile_ODoor;
+					}
+						
 					//MESSAGE("eNT OP");
 				}
 			}
@@ -1451,13 +1870,29 @@ void monster_state_system(World* world, EngineData *engine, Global_Ent_DA* ent) 
 
 	}
 
+void regen_system(World *world){
+	//Regen health
+	
+	for (int i = 0; i < MAX_ENTITIES; i++) {
+		if(world->health[i].current != world->health[i].max){
+			const int chance = rand()%50;
+			if(chance < world->stats[i].cons){
+				world->health[i].current++;
+				CLAMP(world->health[i].current, 0, world->health[i].max);
+			}
+
+		}}
+}
+
 // Health system: Checks for dead entities
 void health_system(World* world, Global_Ent_DA* ent, EngineData *engine) {
 	CompMask mask = COMP_HEALTH;
 
 	for (int i = 0; i < MAX_ENTITIES; i++) {
+		
 		if(i == 0){
 			if(world->health[0].current <= 0){
+				printf("You lose");
 				exit(-1);
 			}
 		}
@@ -1526,8 +1961,8 @@ void health_system(World* world, Global_Ent_DA* ent, EngineData *engine) {
 			else if(world->renderable[i].type == S_Bloat){
 				const int x = world->position[i].x;
 				const int y = world->position[i].y;
-				world->gasMap[y][x].type = rand()%gasNum;
-				world->gasMap[y][x].timeToStay = 1000;
+				world->gasMap[y][x].type = gasHealing + rand()%(gasNum - gasHealing);
+				world->gasMap[y][x].timeToStay = 2000;
 			}
 			//Tbd pinkjely when confusion
 			//LetsBe acid
@@ -1551,6 +1986,8 @@ void health_system(World* world, Global_Ent_DA* ent, EngineData *engine) {
 			}
 
 			inventory_to_map(world, i);
+			//exp gain TBD ALL CONST THRU ENGINE FOR SETUP
+			world->expPlayer+= rand()%100 + world->level*5;
 			destroy_entity(world, i);
 
 			}
@@ -1566,7 +2003,8 @@ void player_door_system(World* world, EngineData *engine){
 		MESSAGE("You open a door\n");
 		world->map.walling[y][x] = '-';
 		for(int i = 1; i < MAX_ENTITIES; i++){
-			if((world->position[i].x == engine->nextPosition.x) &&  (world->position[i].y == engine->nextPosition.z)){
+			if((world->position[i].x == engine->nextPosition.x) &&  (world->position[i].y == engine->nextPosition.z) 
+			&& world->renderable[i].type == S_ClosedDoor ){
 				//exit(-1);
 				world->renderable[i].type = S_OpenDoor;
 				//world->map.walling[y][x] = '-';
@@ -1884,7 +2322,8 @@ void input_system(World* world, EngineData *engine) {
 	//CompMask mask = COMP_INPUT;
 	//Input curent = world->input[0];
 	//DROP(world);
-
+	if(IsKeyPressed(KEY_TAB))
+		engine->is2d = true;
 
 	if (!engine->isMoving) {
 		engine->nextPosition = engine->camera.position;
@@ -1927,6 +2366,7 @@ void input_system(World* world, EngineData *engine) {
 					engine->isMoving = true;
 					engine->isEntMoving = true;
 					engine->isRotation = false;
+					engine->isGasRun = true;
 					int dx = (int)roundf(sinf(engine->playerYaw));
 					int dz = (int)roundf(cosf(engine->playerYaw));
 					//engine->nextPosition.x -= dx;
@@ -2020,6 +2460,7 @@ void input_system(World* world, EngineData *engine) {
 		}
 		//
 		if(IsKeyPressed(KEY_A)){
+			engine->isGasRun = true;
 			int rID = is_item_of_type_equ(&world->inventory[0], EQUIPTED_RANGE);
 			int mID = is_item_of_type_equ(&world->inventory[0], EQUIPTED_MUTITION);
 			
@@ -2036,6 +2477,7 @@ void input_system(World* world, EngineData *engine) {
 					spawn_projectile(world, 0, world->inventory[0].items[mID].type + S_Sword, 0, engine);
 					engine->isMoving = true;
 					engine->isEntMoving = true;
+					
 					
 				}
 				else{
@@ -2074,11 +2516,13 @@ void input_system(World* world, EngineData *engine) {
 		}
 
 		if (IsKeyDown(KEY_W)) {
+			engine->isGasRun = true;
 			if(world->state[0].stunTurn > 0){
 					world->state[0].stunTurn--;
 					engine->isMoving = true;
 					engine->isEntMoving = true;
 					engine->isRotation = false;
+					
 					int dx = (int)roundf(sinf(engine->playerYaw));
 					int dz = (int)roundf(cosf(engine->playerYaw));
 					//engine->nextPosition.x -= dx;
@@ -2101,7 +2545,7 @@ void input_system(World* world, EngineData *engine) {
 			}
 
 			engine->isRotation = false;
-			engine->isGasRun = true;
+			//engine->isGasRun = true;
 			int dx = (int)roundf(sinf(engine->playerYaw));
 			int dz = (int)roundf(cosf(engine->playerYaw));
 			engine->nextPosition.x += dx;
@@ -2140,11 +2584,13 @@ void input_system(World* world, EngineData *engine) {
 			}
 
 		if (IsKeyPressed(KEY_S)) {
+			engine->isGasRun = true;
 				if(world->state[0].stunTurn > 0){
 					world->state[0].stunTurn--;
 					engine->isMoving = true;
 					engine->isEntMoving = true;
 					engine->isRotation = false;
+					//engine->isGasRun = true;
 					int dx = (int)roundf(sinf(engine->playerYaw));
 					int dz = (int)roundf(cosf(engine->playerYaw));
 					//engine->nextPosition.x -= dx;
@@ -2203,16 +2649,306 @@ void input_system(World* world, EngineData *engine) {
 		}
 
 	}
+void input_system2d(World* world, EngineData *engine) {
+    //CompMask mask = COMP_INPUT;
+    //Input curent = world->input[0];
+    //DROP(world);
 
+	if(IsKeyPressed(KEY_TAB)){
+		engine->is2d = false;
+		//iexit(-1);
+	}
 
+    if (!engine->isMoving) {
+        engine->nextPosition = engine->camera.position;
+
+        // --- CONFUSION TURN LOGIC (Unchanged) ---
+        if(world->status[0].confusionTurn > 0){
+            const int key = GetKeyPressed();
+            
+            const int what = rand()%5;
+            if (what == 0 && key) {
+            engine->targetYaw -= PI/2.0f;
+            engine->isMoving = true;
+            engine->moveLerpAlpha = 0.0f;
+            engine->isRotation = true;
+
+            }
+
+        if (what == 1 && key) {
+            engine->targetYaw += PI/2.0f;
+            engine->isMoving = true;
+            engine->moveLerpAlpha = 0.0f;
+            engine->isRotation = true;
+            }
+        else if(what == 2 && key){
+            if(world->state[0].stunTurn > 0){
+                world->state[0].stunTurn--;
+                engine->isEntMoving = true;
+                engine->isMoving = false;
+                engine->isGasRun = true;
+                MESSAGE_F("Stun turn %d", world->state[0].stunTurn);
+                return;
+            }
+            engine->isEntMoving = true;
+            engine->isMoving = true;
+            engine->isGasRun = true;
+        }
+        else if (key){
+            {
+            if(world->state[0].stunTurn > 0){
+                    world->state[0].stunTurn--;
+                    engine->isMoving = true;
+                    engine->isEntMoving = true;
+                    engine->isRotation = false;
+                    engine->isGasRun = true;
+                    int dx = (int)roundf(sinf(engine->playerYaw));
+                    int dz = (int)roundf(cosf(engine->playerYaw));
+                    //engine->nextPosition.x -= dx;
+                    //engine->nextPosition.z -= dz;
+                    const int x = (int)engine->nextPosition.x + dx;
+                    const int y = (int)engine->nextPosition.z + dz;
+                
+                    if(world->dikstra[y][x] >= 255 ) {
+                    int whatMonster = is_monster_in_next_postition(world,(float)x, (float)y); 
+                    if(whatMonster){
+                        int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                        world->health[whatMonster].current-=dmg;
+                        MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
+                        //exit(-1);
+                    }
+                    }
+                
+                    MESSAGE_F("Stun turn %d", world->state[0].stunTurn);
+                    return;
+            }
+
+            engine->isRotation = false;
+            engine->isGasRun = true;
+            int dx = (int)roundf(sinf(engine->playerYaw));
+            int dz = (int)roundf(cosf(engine->playerYaw));
+            engine->nextPosition.x += dx;
+            engine->nextPosition.z += dz;
+            const int x = (int)engine->nextPosition.x;
+            const int y = (int)engine->nextPosition.z;
+            calculate_diakstra_map(world, world->position[0].x, world->position[0].y, 1);
+            if(world->dikstra[y][x] >= 255 ) {
+                //MESSAGE("aTTCA");
+                
+                int whatMonster = is_monster_in_next_postition(world,engine->nextPosition.x, engine->nextPosition.z); 
+                if(whatMonster){
+                    int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                    world->health[whatMonster].current-=dmg;
+                    MESSAGE_F("You atacked %s", world->name[whatMonster])
+                //MESSAGE_F("Player health %d", world->health[0].current);
+                    if(dmg == 0){
+                        MESSAGE("It sustained no dmg");
+                    }
+                    else{
+                        MESSAGE_F("You hit it for %d", dmg);
+                    }
+                }
+                    engine->nextPosition.x -= dx;
+                    engine->nextPosition.z -= dz;
+                
+                }
+            engine->isMoving = true;
+            engine->isEntMoving = true;
+            engine->moveLerpAlpha = 0.00001f;
+            }
+        }
+
+        }
+
+        else {
+            
+            int dx = 0;
+            int dz = 0;
+            bool moveKeyPressed = false;
+            
+            if (IsKeyPressed(KEY_UP)) {
+                dz = -1;
+                moveKeyPressed = true;
+            } else if (IsKeyPressed(KEY_DOWN)) {
+                dz = 1;
+                moveKeyPressed = true;
+            } else if (IsKeyPressed(KEY_LEFT)) {
+                dx = -1;
+                moveKeyPressed = true;
+            } else if (IsKeyPressed(KEY_RIGHT)) {
+                dx = 1;
+                moveKeyPressed = true;
+            }
+#if DIRECTIONS == 8
+            // Diagonal Movement (Q, E, Z, C)
+            else if (IsKeyPressed(KEY_Q)) { // Up-Left (NW)
+                dx = -1;
+                dz = 1;
+                moveKeyPressed = true;
+            } else if (IsKeyPressed(KEY_E)) { // Up-Right (NE)
+                dx = 1;
+                dz = 1;
+                moveKeyPressed = true;
+            } else if (IsKeyPressed(KEY_Z)) { // Down-Left (SW)
+                dx = -1;
+                dz = -1;
+                moveKeyPressed = true;
+            } else if (IsKeyPressed(KEY_C)) { // Down-Right (SE)
+                dx = 1;
+                dz = -1;
+                moveKeyPressed = true;
+            }
+
+#endif
+            // If any movement key was pressed, handle movement/attack
+            if (moveKeyPressed) {
+                engine->isGasRun = true;
+
+                // --- Stun logic (Attack if stunned) ---
+                if(world->state[0].stunTurn > 0){
+                    world->state[0].stunTurn--;
+                    engine->isMoving = true;
+                    engine->isEntMoving = true;
+                    engine->isRotation = false; // Never rotate on move
+                    
+                    const int x = (int)engine->nextPosition.x + dx;
+                    const int y = (int)engine->nextPosition.z + dz;
+                
+                    if(world->dikstra[y][x] >= 255 ) {
+                        int whatMonster = is_monster_in_next_postition(world,(float)x, (float)y); 
+                        if(whatMonster){
+                            int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                            world->health[whatMonster].current-=dmg;
+                            MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
+                        }
+                    }
+                    MESSAGE_F("Stun turn %d", world->state[0].stunTurn);
+                    return; // End turn
+                }
+
+                // --- Normal Movement/Attack logic ---
+                engine->isRotation = false;
+                
+                engine->nextPosition.x += dx;
+                engine->nextPosition.z += dz;
+                
+                const int x = (int)engine->nextPosition.x;
+                const int y = (int)engine->nextPosition.z;
+
+                // Handle water height 
+                if(world->map.walling[y][x] == '~'){
+                    engine->nextPosition.y = 0.1f;
+                }
+                else{
+                    engine->nextPosition.y = 0.6f;
+                }
+
+                calculate_diakstra_map(world, world->position[0].x, world->position[0].y, 1);
+                
+                // Check collision/attack
+                if(world->dikstra[y][x] >= 255 ) {
+                    int whatMonster = is_monster_in_next_postition(world,engine->nextPosition.x, engine->nextPosition.z); 
+                    if(whatMonster){
+                        int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                        world->health[whatMonster].current-=dmg;
+                        MESSAGE_F("You atacked %s", world->name[whatMonster])
+                        if(dmg == 0){
+                            MESSAGE("It sustained no dmg");
+                        }
+                        else{
+                            MESSAGE_F("You hit it for %d", dmg);
+                        }
+                    }
+                    // Revert position if collision
+                    engine->nextPosition.x -= dx;
+                    engine->nextPosition.z -= dz;
+                }
+                
+                engine->isMoving = true;
+                engine->isEntMoving = true;
+                engine->moveLerpAlpha = 0.00001f; 
+            }
+
+            // This 'else if' is preserved for KEY_SPACE
+            else if(IsKeyDown(KEY_SPACE)){
+                if(world->state[0].stunTurn > 0){
+                    world->state[0].stunTurn--;
+                    engine->isEntMoving = true;
+                    engine->isMoving = false;
+                    engine->isGasRun = true;
+                    MESSAGE_F("Stun turn %d", world->state[0].stunTurn);
+                    return;
+                }
+                engine->isEntMoving = true;
+                engine->isMoving = true;
+                engine->isGasRun = true;
+            }
+            
+            // Other keys remain unchanged
+            if(IsKeyPressed(KEY_A)){
+                engine->isGasRun = true;
+                int rID = is_item_of_type_equ(&world->inventory[0], EQUIPTED_RANGE);
+                int mID = is_item_of_type_equ(&world->inventory[0], EQUIPTED_MUTITION);
+                
+                if((rID == -1) || ((mID == -1)))
+                    return;
+                if((world->inventory[0].items[mID].fire == world->inventory[0].items[rID].type)){
+                    //MESSAGE_F("%d %d", rID, mID);
+                    if(world->inventory[0].items[mID].value > 0){
+                        world->inventory[0].items[mID].value--;
+                        if(world->inventory[0].items[mID].value == 0){
+                            da_remove_unordered(&world->inventory[0], mID);
+                            return;
+                        }
+                        spawn_projectile(world, 0, world->inventory[0].items[mID].type + S_Sword, 0, engine);
+                        engine->isMoving = true;
+                        engine->isEntMoving = true;
+                        
+                        
+                    }
+                    else{
+                        MESSAGE("No arrows");   
+                    }
+                    
+                }
+                else{
+                    MESSAGE("No range");
+                }
+            }
+            
+            if(IsKeyPressed(KEY_P)){
+                //Tbd list
+                engine->isRenderPickup = true;
+                engine->tempItemList.count = 0;
+                setup_item_system(world, engine);
+            }
+            
+            if(IsKeyPressed(KEY_I)){
+                engine->isRenderInventory = (engine->isRenderInventory) ? 0 : 1;
+                engine->whatItem = 0;
+            }
+
+            if(IsKeyPressed(KEY_H)){
+                engine->isRenderStats = (engine->isRenderStats) ? 0 : 1;
+            }
+
+            if(IsKeyPressed(KEY_M)){
+                engine->isRenderMap = true;
+            }   
+
+        } 
+    }
+}
 
 void update_player_position_system(World* world, EngineData* engine) {
 
 	float MOVE_SPEED;
 	if(engine->isRotation)
 		MOVE_SPEED = 2.0f;
-	else 
-		MOVE_SPEED = 5.0f;
+	else{
+		MOVE_SPEED = (engine->is2d) ? 50.0f : 5.0f;
+	} 
+		
 	const float TILE_SIZE  = 1.0f;
 
 	DROP(world);
@@ -2251,8 +2987,8 @@ void update_player_position_system(World* world, EngineData* engine) {
 	}
 
 void update_entity_position_system(World* world, EngineData* engine) {
-	const float MOVE_SPEED = 2.0f;
-	const float MOVE_SPEED_PROJECTILE = 0.1f;
+	const float MOVE_SPEED = (engine->is2d) ? 50.0f : 2.0f;
+	const float MOVE_SPEED_PROJECTILE = (engine->is2d) ? 50.0f : 0.0f;;
 	const float TILE_SIZE  = 1.0f;
 
 	CompMask mask = COMP_POSITION;
@@ -2315,6 +3051,9 @@ void update_entity_position_system(World* world, EngineData* engine) {
 				//MESSAGE("Monster attack");
 				MESSAGE_F("You are atacked by %s", world->name[i])
 				//MESSAGE_F("Player health %d", world->health[0].current);
+			if(world->renderable[i].type == S_Bloat){
+				world->health[i].current = 0;
+				}		
 				if(dmg == 0){
 					//MESSAGE("You sustained no dmg");
 				}
@@ -2333,6 +3072,7 @@ void update_entity_position_system(World* world, EngineData* engine) {
 							}
 						}
 					}
+			
 			//Let for now pinkjely 30 chance to multi 		
 			else if(world->renderable[i].type == S_PinkJelly && rand_f32() < 0.3f){
 										
@@ -2466,7 +3206,7 @@ void update_entity_position_system(World* world, EngineData* engine) {
 					if(world->inventory[i].items[mID].value == 0){
 						da_remove_unordered(&world->inventory[i], mID);
 					}
-					spawn_projectile(world, i,  world->inventory[0].items[mID].type + S_Sword, 0,  engine);
+					spawn_projectile(world, i,  P_Arrow, 0,  engine);
 					//MESSAGE("pROJECTILE");
 				} //else MESSAGE("Test");
 			}
@@ -2509,14 +3249,10 @@ void lighting_system(World* world, EngineData* engine){
 			if(world->inventory[0].items[i].value == 0){
 				da_remove_unordered(&world->inventory[0], i);
 				world->ambientStrenght = world->saveAmbientStrenght;
-				//engine->drawDistance = 50 - 1.0f / world->ambientStrenght;
-				//if(engine->drawDistance < 10){
-				//		engine->drawDistance = 10;
-				//}
 				engine->isTorchEqu = false;
 				break;
 			}
-			engine->drawDistance = 200;
+			engine->drawDistance = 20;
 			world->ambientStrenght = world->saveAmbientStrenght + 0.2f;
 			engine->isTorchEqu = true;
 			//exit(-1);
@@ -2525,12 +3261,12 @@ void lighting_system(World* world, EngineData* engine){
 		}
 	}
 	if(!engine->isTorchEqu){
-		engine->drawDistance = 50 - 1.0f / (world->ambientStrenght + 0.0000001f);
+		engine->drawDistance = 20 - 1.0f / (world->ambientStrenght + 0.0000001f);
 		world->ambientStrenght = world->saveAmbientStrenght;
-		if(engine->drawDistance < 10){
+		if(engine->drawDistance < 0){
 			//exit(-1);
 
-			engine->drawDistance = 10;
+			engine->drawDistance = 3;
 			engine->isTorchEqu = false;
 		}
 	}
@@ -2540,7 +3276,7 @@ void lighting_system(World* world, EngineData* engine){
 #define CHANCE_ACID_ITEM 0.25f
 void gas_system(World *world, EngineData *engine){
 	CompMask mask = COMP_POSITION | COMP_GAS;
-	engine->isGasRun = false;
+	//engine->isGasRun = false;
 	//static int counter = 0;
 	//MESSAGE_F("Difusion %d", counter++);
 	const int dirs[8][2] = {
@@ -3870,4 +4606,147 @@ void throw_system(World *world, EngineData *engine){
 		MESSAGE("Throw");
 		engine->itemThrowId = -1;
 	}
+}
+
+
+
+static void  free_level(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine){
+	
+	for(int i = 1; i < MAX_ENTITIES; i++){
+		if(world->inventory[i].count > 0){
+			for(int j = 0; j < world->inventory[i].count; j++)
+			free_item(&world->inventory[i], j);
+		}
+	}
+	for(int j = 0; j < world->items.count; j++)
+		free_item(&world->items, j);
+
+	for(int i = 1; i < MAX_ENTITIES; i++){
+		destroy_entity(world, i);
+	}
+	//init_world(world);
+	xmclose(world->map);
+	generate_level(world, world->level, generators, ent);
+	//free_engine(engine);
+	engine = init_engine_soft(world, 0, engine);
+	if(engine == NULL){
+		ASSERT("Non inited engine");
+	}
+	engine->drawDistance = 20 - 1.0f / world->ambientStrenght;
+
+    if(engine->drawDistance < 0){
+        engine->drawDistance = 3;
+    }
+	MESSAGE_F("Draw distance: %d, Ambient strength: %f", engine->drawDistance, world->ambientStrenght);
+
+	//free_engine(engine);
+	//exit(-1);
+	
+
+
+	
+		
+}
+
+//LEt level system for now works like a angband so new 
+//Tbd up/down stairs
+#define MAX_LEVEL 26
+void level_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine){
+	const int x = (int)world->position[0].x;
+	const int y = (int)world->position[0].y;
+	if(world->map.walling[y][x] == Tile_UpS){
+		if(IsKeyPressed(KEY_U)){
+		world->level--;
+		MESSAGE("You accended");
+		if(world->level < 0){
+		
+			exit(-1);
+		}
+		free_level(world, generators, ent, engine);
+		}
+	}
+	else if(world->map.walling[y][x] == Tile_DownS && world->level < MAX_LEVEL){
+		if(IsKeyPressed(KEY_D)){
+			world->level++;
+			MESSAGE("You decended");
+			free_level(world, generators, ent, engine);
+		}		
+		}
+	if(world->map.walling[y][x] == Tile_Caz){
+		MESSAGE("You fall down");
+		world->health[0].current -= rand()%20;
+		CLAMP(world->health[0].current, 0 , world->health[0].max);
+		world->level+=1;
+		free_level(world, generators, ent, engine);
+		
+		 
+	}		
+	
+}
+
+//Spawn mons if num monster < 10 and rand_f32() < 1% 
+//Maybe in fog
+#define CHANCE_SPAWN_MONSTER 0.01f
+void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine){
+	if(world->nMonster < 10){
+		if(rand_f32() <= CHANCE_SPAWN_MONSTER){
+			
+			int iter = 0;
+			while((iter++) < 100){
+				
+				const int x = rand()%MAP_WIDTH; 
+				const int y = rand()%MAP_HEIGHT;
+				if(world->tempGen == NULL){
+					ASSERT("Non inited pointer tempGen");
+				}
+				MESSAGE_F("Spawn %d", world->tempGen->count);
+				
+				print_all_generators(world->tempGen);
+				const int genNumber = rand()%world->tempGen->count;
+				
+				const Position pos = (Position){(float)x, (float)y};
+				const float dist = Vector2DistanceSqr(pos, world->position[0]);
+				if((world->map.walling[y][x] == Tile_Dirt || world->map.walling[y][x] == Tile_Dirt) && dist < 100){	
+					//printf("%d %f\n", world->level, world->tempGen->items[genNumber].chances.items[world->level]);
+					generate_monster_generator(world, &world->tempGen->items[genNumber], pos, ent);
+					break;
+				}
+				
+
+			}
+		}
+	}
+	DROP(generators);
+}
+
+
+#define MAX_NUTRITION 10000
+void food_system(World *world, EngineData *engine){
+	if(engine->whatAction == EQUIPTED_USE_FOOD){
+		const int nutrition = 1000 + rand()%5000;
+		world->nutrition += nutrition;
+		CLAMP(world->nutrition, 0, MAX_NUTRITION);
+		free_item(&world->inventory[0], engine->itemAction);		
+	}	
+}
+
+#define NUTRITION_DEC 30
+void nutrition_system(World *world, EngineData *engine){
+	const float chance = world->stats[0].str / (world->stats[0].cons*10.0f) + 0.1f;
+	if(rand_f32() <= chance){
+		world->nutrition-=rand()%NUTRITION_DEC;
+		CLAMP(world->nutrition, 0, MAX_NUTRITION);
+		if(world->nutrition == 0){
+		if(rand_f32() <= 0.5f){
+			//Tbd other efects
+			MESSAGE("You are hungry");
+			world->health[0].current-=10;
+			CLAMP(world->health[0].current, 0, 10000);
+		}
+	}
+	}
+	
+
+
+
 }
