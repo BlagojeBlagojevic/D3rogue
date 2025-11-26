@@ -9,7 +9,7 @@ uniform vec4 colDiffuse;
 out vec4 finalColor;
 
 // ===== Tunables (no new uniforms) =====
-const float EDGE_THRESHOLD = 0.25; // lower = more edges
+const float EDGE_THRESHOLD = 0.55; // lower = more edges
 const float LINE_INTENSITY = 1.0;  // 1.0 = pure black lines
 const bool  TRANSPARENT_BG = false; // true = transparent where no edge
 const int   THICKEN_STEPS = 0;     // 0=thin, >0=slightly thicker outline

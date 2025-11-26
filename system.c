@@ -3,7 +3,7 @@
 #include <stdio.h>
 
  #ifndef __EMSCRIPTEN__
-#define STB_PERLIN_IMPLEMENTATION
+//#define STB_PERLIN_IMPLEMENTATION
 #endif
 #include "stb_perlin.h"
 
@@ -393,7 +393,7 @@ void render_system(World* world, EngineData* engine, Sprite_DA *sprites) {
 
 }
 
-#define TILE_SIZ 48
+#define TILE_SIZ 64
 void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
     
     static Camera2D camera = {0};
@@ -418,10 +418,8 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
     if (IsKeyPressed(KEY_MINUS)) camera.zoom -= 0.1f;
     camera.zoom = Clamp(camera.zoom, 0.5f, 3.0f); // Limit zoom range
 
-    // --- 2. Begin Camera Mode ---
     BeginMode2D(camera);
 
-    // --- 3. Calculate World-to-Screen Transformation ---
     // Get the visible world area based on camera
     Rectangle cameraView = {
         camera.target.x - (engine->width / 2) / camera.zoom,
@@ -444,7 +442,6 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
 
     const int tileSize = TILE_SIZ; // Fixed tile size for world coordinates
 
-    // --- 4. Render Background (sky/void) ---
     ClearBackground(BLACK);
 
     // --- 5. Render Map Tiles ---
@@ -532,7 +529,6 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
         }
     }
 
-    // --- 6. Render Gas (with transparency) ---
     BeginBlendMode(BLEND_ALPHA);
     for (int y = renderStartY; y < renderEndY; y++) {
         for (int x = renderStartX; x < renderEndX; x++) {
@@ -546,7 +542,6 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
     }
     EndBlendMode();
 
-    // --- 7. Render Entities (Items) ---
     CompMask item_mask = COMP_POSITION | COMP_RENDER;
     for (int i = 1; i < MAX_ENTITIES; i++) {
         if ((world->masks[i] & item_mask) == item_mask && !(world->masks[i] & COMP_MONSTER)) {
@@ -575,7 +570,6 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
         }
     }
 
-    // --- 8. Render Monsters ---
     CompMask monster_mask = COMP_POSITION | COMP_RENDER | COMP_MONSTER;
     //if(world->status[0].telepatyTurn > 0) // Uncomment for telepathy requirement
     {
@@ -615,7 +609,6 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
         }
     }
     
-    // --- 9. Render Player ---
     const Position* p_player = &world->position[0];
     const Sprite s_player = sprites->items[world->renderable[0].type];
     
@@ -637,18 +630,13 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
         DrawTexturePro(s_player.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
     }
 
-    // --- 10. End Camera Mode ---
     EndMode2D();
 
-    // --- 11. Render UI Elements (not affected by camera) ---
-    // Example: Mini-map, player stats, messages, etc.
-    // You can call your existing UI functions here
-    // render_event_messages(engine, 10, 10, 300, 150);
 }
 
 
 
-#define DIRECTIONS 4
+#define DIRECTIONS 8
 static Position get_lowest_tile_dikstra(World *world, int sx, int sy) {
     Position p = {sx, sy};
     float min = 256.0f;
@@ -1897,6 +1885,9 @@ void health_system(World* world, Global_Ent_DA* ent, EngineData *engine) {
 		
 		if(i == 0){
 			if(world->health[0].current <= 0){
+				//FILE *f = fopen("save/game.data", "r");
+				remove("save/game.data");
+				//fclose(f);
 				printf("You lose");
 				exit(-1);
 			}
@@ -2322,6 +2313,386 @@ void projectile_system(World* world, EngineData *engine){
 
 
 
+static void saveItem(Item* item, FILE* f) {
+    // Write simple fields
+    fwrite(&item->stats, sizeof(Stats), 1, f);
+    fwrite(&item->value, sizeof(int), 1, f);
+    fwrite(&item->nDice, sizeof(int), 1, f);
+    fwrite(&item->pos, sizeof(Position), 1, f);
+    
+    // Write name string
+    if (item->name != NULL) {
+        int len = strlen(item->name) + 1; // +1 for null terminator
+        fwrite(&len, sizeof(int), 1, f);
+        fwrite(item->name, sizeof(char), len, f);
+    } else {
+        int len = 0;
+        fwrite(&len, sizeof(int), 1, f);
+    }
+    
+    // Write remaining fields
+    fwrite(&item->type, sizeof(Item_Type), 1, f);
+    fwrite(&item->fire, sizeof(Item_Type), 1, f);
+    fwrite(&item->to, sizeof(Item_Equipted), 1, f);
+    fwrite(&item->isEqu, sizeof(int), 1, f);
+    fwrite(&item->strReq, sizeof(int), 1, f);
+    fwrite(&item->isIdent, sizeof(int), 1, f);
+    fwrite(&item->isCursed, sizeof(int), 1, f);
+    fwrite(&item->scroll, sizeof(Scroll_Type), 1, f);
+    fwrite(&item->potion, sizeof(Potion_Type), 1, f);
+    fwrite(&item->itemChance, sizeof(float), 1, f);
+    fwrite(&item->price, sizeof(int), 1, f);
+}
+
+
+static void saveItemDA(Item_DA* item_da, FILE* f) {
+    // Write count and capacity
+    fwrite(&item_da->count, sizeof(int), 1, f);
+    fwrite(&item_da->capacity, sizeof(int), 1, f);
+    
+    // Write each item in the array
+    for (int i = 0; i < item_da->count; i++) {
+        saveItem(&item_da->items[i], f);
+    }
+}
+
+
+
+
+void saveWorld(World* world, FILE* f) {
+    // Write arrays and simple fields
+    fwrite(world->masks, sizeof(CompMask), MAX_ENTITIES, f);
+    
+    // Write names - need special handling for strings
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (world->name[i] != NULL) {
+            int len = strlen(world->name[i]) + 1; // +1 for null terminator
+            fwrite(&len, sizeof(int), 1, f);
+            fwrite(world->name[i], sizeof(char), len, f);
+        } else {
+            int len = 0;
+            fwrite(&len, sizeof(int), 1, f);
+        }
+    }
+    
+    // Write component arrays
+    fwrite(world->position, sizeof(Position), MAX_ENTITIES, f);
+    fwrite(world->renderable, sizeof(Renderable), MAX_ENTITIES, f);
+    fwrite(world->health, sizeof(Health), MAX_ENTITIES, f);
+    fwrite(world->input, sizeof(Input), MAX_ENTITIES, f);
+    fwrite(world->stats, sizeof(Stats), MAX_ENTITIES, f);
+    fwrite(world->state, sizeof(State), MAX_ENTITIES, f);
+    fwrite(world->gas, sizeof(Gas), MAX_ENTITIES, f);
+    fwrite(world->spell, sizeof(Spell), MAX_ENTITIES, f);
+    
+    // Write inventory array - special handling for Item_DA
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        saveItemDA(&world->inventory[i], f);
+    }
+    
+    fwrite(world->projectile, sizeof(Projectile), MAX_ENTITIES, f);
+    
+    // Write free list
+    fwrite(world->free_list, sizeof(int), MAX_ENTITIES, f);
+    fwrite(&world->num_free, sizeof(int), 1, f);
+    
+    // Write Map with special handling for dynamic 2D array
+    fwrite(&world->map.h, sizeof(int), 1, f);
+    fwrite(&world->map.w, sizeof(int), 1, f);
+    for (int i = 0; i < world->map.h; i++) {
+        fwrite(world->map.walling[i], sizeof(char), world->map.w, f);
+    }
+    
+    // Write 2D arrays
+    fwrite(world->isExpMap, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
+    fwrite(world->dikstra, sizeof(float), MAP_HEIGHT * MAP_WIDTH, f);
+    fwrite(world->visibe, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
+    fwrite(world->gasMap, sizeof(Gas), MAP_HEIGHT * MAP_WIDTH, f);
+    fwrite(world->trapMap, sizeof(Trap), MAP_HEIGHT * MAP_WIDTH, f);
+    
+    // Write entity arrays
+    fwrite(world->fire, sizeof(Fire), MAX_ENTITIES, f);
+    fwrite(world->status, sizeof(StatusEffects), MAX_ENTITIES, f);
+    
+    // Write items (single Item_DA)
+    saveItemDA(&world->items, f);
+    
+    // Write simple fields
+    fwrite(&world->ambientStrenght, sizeof(float), 1, f);
+    fwrite(&world->saveAmbientStrenght, sizeof(float), 1, f);
+    fwrite(&world->nMonster, sizeof(int), 1, f);
+    fwrite(world->identScrools, sizeof(int), Scroll_Num, f);
+    fwrite(world->identPotions, sizeof(int), Potion_Num, f);
+    fwrite(&world->tempStatsPlayer, sizeof(TempStats_DA), 1, f);
+    fwrite(&world->level, sizeof(int), 1, f);
+    fwrite(&world->expPlayer, sizeof(int), 1, f);
+    
+  
+    
+    fwrite(&world->nutrition, sizeof(int), 1, f);
+}
+
+static void save_system(World* world, EngineData *engine){
+	FILE *f = fopen("save/game.data", "wb+");
+	if(f == NULL){ASSERT("File is not alocc");}
+	//First stuff is version
+	const int ver = 1;
+	fwrite(&ver, sizeof(int), 1, f);
+	
+		fwrite(&engine->width, sizeof(engine->width), 1, f);
+		fwrite(&engine->height, sizeof(engine->height), 1, f);
+		fwrite(&engine->camera, sizeof(engine->camera), 1, f);
+		fwrite(&engine->modelPosition, sizeof(engine->modelPosition), 1, f);
+		fwrite(&engine->nextPosition, sizeof(engine->nextPosition), 1, f);
+		fwrite(&engine->playerYaw, sizeof(engine->playerYaw), 1, f);
+		fwrite(&engine->targetYaw, sizeof(engine->targetYaw), 1, f);
+		fwrite(&engine->isMoving, sizeof(engine->isMoving), 1, f);
+		fwrite(&engine->isRotation, sizeof(engine->isRotation), 1, f);
+		fwrite(&engine->isAnyMoving, sizeof(engine->isAnyMoving), 1, f);
+		fwrite(&engine->isEntMoving, sizeof(engine->isEntMoving), 1, f);
+		fwrite(&engine->isGasRun, sizeof(engine->isGasRun), 1, f);
+		fwrite(&engine->moveLerpAlpha, sizeof(engine->moveLerpAlpha), 1, f);
+		//fwrite(&engine->messeges, sizeof(engine->messeges), 1, f);
+		fwrite(&engine->isRenderInventory, sizeof(engine->isRenderInventory), 1, f);
+		fwrite(&engine->whatItem, sizeof(engine->whatItem), 1, f);
+		fwrite(&engine->whatAction, sizeof(engine->whatAction), 1, f);
+		fwrite(&engine->itemAction, sizeof(engine->itemAction), 1, f);
+		fwrite(&engine->systemAction, sizeof(engine->systemAction), 1, f);
+		fwrite(&engine->tempStr, sizeof(engine->tempStr), 1, f);
+		fwrite(&engine->isRenderMap, sizeof(engine->isRenderMap), 1, f);
+		fwrite(&engine->isRenderPickup, sizeof(engine->isRenderPickup), 1, f);
+		fwrite(&engine->isRenderStats, sizeof(engine->isRenderStats), 1, f);
+		fwrite(&engine->isRenderTrade, sizeof(engine->isRenderTrade), 1, f);
+	//	fwrite(&engine->tempItemList, sizeof(engine->tempItemList), 1, f);
+		fwrite(&engine->drawDistance, sizeof(engine->drawDistance), 1, f);
+		fwrite(&engine->isTorch, sizeof(engine->isTorch), 1, f);
+		fwrite(&engine->isTorchEqu, sizeof(engine->isTorchEqu), 1, f);
+		fwrite(&engine->depth, sizeof(engine->depth), 1, f);
+		fwrite(&engine->itemThrowId, sizeof(engine->itemThrowId), 1, f);
+		fwrite(&engine->is2d, sizeof(engine->is2d), 1, f);
+
+	saveWorld(world, f);
+	fclose(f);
+
+
+}
+
+
+static void loadItem(Item* item, FILE* f) {
+    // Read simple fields
+    fread(&item->stats, sizeof(Stats), 1, f);
+    fread(&item->value, sizeof(int), 1, f);
+    fread(&item->nDice, sizeof(int), 1, f);
+    fread(&item->pos, sizeof(Position), 1, f);
+    
+    // Read name string
+    int len;
+    fread(&len, sizeof(int), 1, f);
+    if (len > 0) {
+        item->name = malloc(len * sizeof(char));
+        fread(item->name, sizeof(char), len, f);
+    } else {
+        item->name = NULL;
+    }
+    
+    // Read remaining fields
+    fread(&item->type, sizeof(Item_Type), 1, f);
+    fread(&item->fire, sizeof(Item_Type), 1, f);
+    fread(&item->to, sizeof(Item_Equipted), 1, f);
+    fread(&item->isEqu, sizeof(int), 1, f);
+    fread(&item->strReq, sizeof(int), 1, f);
+    fread(&item->isIdent, sizeof(int), 1, f);
+    fread(&item->isCursed, sizeof(int), 1, f);
+    fread(&item->scroll, sizeof(Scroll_Type), 1, f);
+    fread(&item->potion, sizeof(Potion_Type), 1, f);
+    fread(&item->itemChance, sizeof(float), 1, f);
+    fread(&item->price, sizeof(int), 1, f);
+}
+
+
+
+static void loadItemDA(Item_DA* item_da, FILE* f) {
+    // Free existing items if any
+    if (item_da->items != NULL) {
+        for (int i = 0; i < item_da->count; i++) {
+            if (item_da->items[i].name != NULL) {
+                free(item_da->items[i].name);
+            }
+        }
+        free(item_da->items);
+    }
+    
+    // Read count and capacity
+    fread(&item_da->count, sizeof(int), 1, f);
+    fread(&item_da->capacity, sizeof(int), 1, f);
+    
+    // Allocate items array
+    if (item_da->capacity > 0) {
+        item_da->items = (Item*)malloc(item_da->capacity * sizeof(Item));
+        // Initialize to zero
+        memset(item_da->items, 0, item_da->capacity * sizeof(Item));
+    } else {
+        item_da->items = NULL;
+    }
+    
+    // Read each item
+    for (int i = 0; i < item_da->count; i++) {
+        loadItem(&item_da->items[i], f);
+    }
+}
+
+
+void loadWorld(World* world, FILE* f, Generator_DA *generators) {
+    // Read arrays and simple fields
+    fread(world->masks, sizeof(CompMask), MAX_ENTITIES, f);
+    
+    // Read names - special handling for strings
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        int len;
+        fread(&len, sizeof(int), 1, f);
+        if (len > 0) {
+            world->name[i] = malloc(len * sizeof(char));
+            fread(world->name[i], sizeof(char), len, f);
+        } else {
+            world->name[i] = NULL;
+        }
+    }
+    
+    // Read component arrays
+    fread(world->position, sizeof(Position), MAX_ENTITIES, f);
+    fread(world->renderable, sizeof(Renderable), MAX_ENTITIES, f);
+    fread(world->health, sizeof(Health), MAX_ENTITIES, f);
+    fread(world->input, sizeof(Input), MAX_ENTITIES, f);
+    fread(world->stats, sizeof(Stats), MAX_ENTITIES, f);
+    fread(world->state, sizeof(State), MAX_ENTITIES, f);
+    fread(world->gas, sizeof(Gas), MAX_ENTITIES, f);
+    fread(world->spell, sizeof(Spell), MAX_ENTITIES, f);
+    
+    // Read inventory array - special handling for Item_DA
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        loadItemDA(&world->inventory[i], f);
+    }
+    
+    fread(world->projectile, sizeof(Projectile), MAX_ENTITIES, f);
+    
+    // Read free list
+    fread(world->free_list, sizeof(int), MAX_ENTITIES, f);
+    fread(&world->num_free, sizeof(int), 1, f);
+    
+    // Read Map with special handling for dynamic 2D array
+    // First free existing map data if it exists
+    if (world->map.walling != NULL) {
+        for (int i = 0; i < world->map.h; i++) {
+            free(world->map.walling[i]);
+        }
+        free(world->map.walling);
+    }
+    
+    // Read dimensions
+    fread(&world->map.h, sizeof(int), 1, f);
+    fread(&world->map.w, sizeof(int), 1, f);
+    
+    // Allocate new map
+    world->map.walling = (char**)malloc(world->map.h * sizeof(char*));
+    for (int i = 0; i < world->map.h; i++) {
+        world->map.walling[i] = (char*)malloc(world->map.w * sizeof(char));
+        fread(world->map.walling[i], sizeof(char), world->map.w, f);
+    }
+    
+    // Read 2D arrays
+    fread(world->isExpMap, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
+    fread(world->dikstra, sizeof(float), MAP_HEIGHT * MAP_WIDTH, f);
+    fread(world->visibe, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
+    fread(world->gasMap, sizeof(Gas), MAP_HEIGHT * MAP_WIDTH, f);
+    fread(world->trapMap, sizeof(Trap), MAP_HEIGHT * MAP_WIDTH, f);
+    
+    // Read entity arrays
+    fread(world->fire, sizeof(Fire), MAX_ENTITIES, f);
+    fread(world->status, sizeof(StatusEffects), MAX_ENTITIES, f);
+    
+    // Read items (single Item_DA)
+    loadItemDA(&world->items, f);
+    
+    // Read simple fields
+    fread(&world->ambientStrenght, sizeof(float), 1, f);
+    fread(&world->saveAmbientStrenght, sizeof(float), 1, f);
+    fread(&world->nMonster, sizeof(int), 1, f);
+    fread(world->identScrools, sizeof(int), Scroll_Num, f);
+    fread(world->identPotions, sizeof(int), Potion_Num, f);
+    fread(&world->tempStatsPlayer, sizeof(TempStats_DA), 1, f);
+    fread(&world->level, sizeof(int), 1, f);
+    fread(&world->expPlayer, sizeof(int), 1, f);
+    
+  
+    
+    fread(&world->nutrition, sizeof(int), 1, f);
+	
+	//Temp gens 
+	static Generator_DA temp = (Generator_DA){0};
+	temp = (Generator_DA){0};
+	for(int i = 0; i < generators->count; i++){
+		
+		printf("%d (%d %d %d)", i, generators->items[i].startDepth, generators->items[i].endDepth, world->level);
+		if((generators->items[i].startDepth <= world->level) 
+		  && (generators->items[i].endDepth >= world->level)){
+			printf("lOOP");
+			da_append(&temp, generators->items[i]);
+		}
+	}
+	print_all_generators(&temp);
+}
+
+
+void load_system(World* world, EngineData *engine, Generator_DA *generators){
+	FILE *f = fopen("save/game.data", "rb");
+	const Texture2D tempW = engine->water;
+	const Texture2D tempF = engine->fire;
+	
+	if(f == NULL){printf("No save file"); return;};//Notr load
+	int ver;
+	fread(&ver, sizeof(int), 1, f);
+
+	fread(&engine->width, sizeof(engine->width), 1, f);
+	fread(&engine->height, sizeof(engine->height), 1, f);
+	fread(&engine->camera, sizeof(engine->camera), 1, f);
+	fread(&engine->modelPosition, sizeof(engine->modelPosition), 1, f);
+	fread(&engine->nextPosition, sizeof(engine->nextPosition), 1, f);
+	fread(&engine->playerYaw, sizeof(engine->playerYaw), 1, f);
+	fread(&engine->targetYaw, sizeof(engine->targetYaw), 1, f);
+	fread(&engine->isMoving, sizeof(engine->isMoving), 1, f);
+	fread(&engine->isRotation, sizeof(engine->isRotation), 1, f);
+	fread(&engine->isAnyMoving, sizeof(engine->isAnyMoving), 1, f);
+	fread(&engine->isEntMoving, sizeof(engine->isEntMoving), 1, f);
+	fread(&engine->isGasRun, sizeof(engine->isGasRun), 1, f);
+	fread(&engine->moveLerpAlpha, sizeof(engine->moveLerpAlpha), 1, f);
+	//fread(&engine->messeges, sizeof(engine->messeges), 1, f);
+	fread(&engine->isRenderInventory, sizeof(engine->isRenderInventory), 1, f);
+	fread(&engine->whatItem, sizeof(engine->whatItem), 1, f);
+	fread(&engine->whatAction, sizeof(engine->whatAction), 1, f);
+	fread(&engine->itemAction, sizeof(engine->itemAction), 1, f);
+	fread(&engine->systemAction, sizeof(engine->systemAction), 1, f);
+	fread(&engine->tempStr, sizeof(engine->tempStr), 1, f);
+	fread(&engine->isRenderMap, sizeof(engine->isRenderMap), 1, f);
+	fread(&engine->isRenderPickup, sizeof(engine->isRenderPickup), 1, f);
+	fread(&engine->isRenderStats, sizeof(engine->isRenderStats), 1, f);
+	fread(&engine->isRenderTrade, sizeof(engine->isRenderTrade), 1, f);
+	//fread(&engine->tempItemList, sizeof(engine->tempItemList), 1, f);
+	fread(&engine->drawDistance, sizeof(engine->drawDistance), 1, f);
+	fread(&engine->isTorch, sizeof(engine->isTorch), 1, f);
+	fread(&engine->isTorchEqu, sizeof(engine->isTorchEqu), 1, f);
+	fread(&engine->depth, sizeof(engine->depth), 1, f);
+	fread(&engine->itemThrowId, sizeof(engine->itemThrowId), 1, f);
+	fread(&engine->is2d, sizeof(engine->is2d), 1, f);
+	loadWorld(world, f, generators);
+
+	fclose(f);
+
+
+}
+
+
+
+
 //Shoud have just position to move
 void input_system(World* world, EngineData *engine) {
 	//CompMask mask = COMP_INPUT;
@@ -2653,6 +3024,16 @@ void input_system(World* world, EngineData *engine) {
 			
 		if(IsKeyPressed(KEY_M)){
 			engine->isRenderMap = true;
+		}
+		if(IsKeyPressed(KEY_LEFT_SHIFT) || IsKeyPressed(KEY_RIGHT_SHIFT)){
+			#ifndef  __EMSCRIPTEN__	
+				MESSAGE("Saved a progres");
+
+				save_system(world, engine);
+				//saveGame(engine, world, "save/game.data");
+			#else
+				MESSAGE("Saving is not implemented in web");
+			#endif
 		}	
 
 		}
@@ -2667,6 +3048,16 @@ void input_system2d(World* world, EngineData *engine) {
 		engine->is2d = false;
 		//iexit(-1);
 	}
+	if(IsKeyPressed(KEY_LEFT_SHIFT) || IsKeyPressed(KEY_RIGHT_SHIFT)){
+		#ifndef  __EMSCRIPTEN__	
+				MESSAGE("Saved a progres");
+				save_system(world, engine);
+				//saveGame(engine, world, "save/game.data");
+			#else
+				MESSAGE("Saving is not implemented in web");
+			#endif
+		}	
+
 
     if (!engine->isMoving) {
         engine->nextPosition = engine->camera.position;
@@ -3459,8 +3850,8 @@ void gas_system(World *world, EngineData *engine){
 
 
 //Let for now just for player and block all other
-#define CHANCE_DROWN 0.99f
-#define CHANCE_WASH_ITEM 0.99f
+#define CHANCE_DROWN 0.05f
+#define CHANCE_WASH_ITEM 0.45f
 void water_system(World *world, EngineData* engine){
 	//for(int)
 	const int x = (int)world->position[0].x;

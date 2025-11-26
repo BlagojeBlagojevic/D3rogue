@@ -38,8 +38,6 @@ typedef struct{
 	int width;
 	int height;
 	Camera   camera;
-	Model    model;
-	Mesh     mesh;
 	Vector3  modelPosition;
 	Vector3  nextPosition;
 	float    playerYaw;
@@ -50,7 +48,7 @@ typedef struct{
 	uint8_t  isEntMoving;
 	uint8_t  isGasRun;
 	float    moveLerpAlpha;
-	Str      messeges;
+	
 
 	//Actions items
 	int      isRenderInventory;
@@ -62,27 +60,24 @@ typedef struct{
 	Str      tempStr;
 
 	int      isRenderMap;
-	Texture2D water;
-	Texture2D fire;
-	
+
 	//Items temp 
 	int      isRenderPickup;
 	int      isRenderStats;
 	int      isRenderTrade;
 	Num      tempItemList;
-
-	//Water model mesh
-	//Model    modelW;
-	//Mesh     meshW;
-//	ModelMesh_DA water;
-	//Vector3  modelPositionW;
 	int drawDistance;
 	int isTorch;
 	int isTorchEqu;
 	int depth;
 	int itemThrowId;
 	int is2d;
-
+	Str      messeges;
+	Texture2D water;
+	Texture2D fire;
+	Model    model;
+	Mesh     mesh;
+	
 
 }EngineData;
 

@@ -1,9 +1,10 @@
 CC = gcc
 DEBUG_CFLAGS = -Og -fsanitize=address -static-libasan -ggdb
-CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -I./cJSON/  
+CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -Wno-unused-result -I./cJSON/ 
+ 
 
 
-LIBS = -Iraylib/include -Lraylib/lib  -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 
+LIBS = -Iraylib/include raylib/lib/libraylib.a -lGL -lm -lpthread -ldl -lrt -lX11 
 
 SRCS = ecs.c system.c renderer.c Map/Map.c items.c main.c cJSON/cJSON.c 
 DEPS = $(SRCS:.c=.d)
@@ -53,7 +54,8 @@ emcc:
 	emcc -Os -std=c99 -s ASYNCIFY -s ALLOW_MEMORY_GROWTH=1 -s USE_GLFW=3 -s USE_WEBGL2=1 -s FULL_ES3=1 \
 	--preload-file assets@assets --preload-file entJSON.json --preload-file nonEntJSON.json --preload-file genJSON.json --preload-file spriteJSON.json \
 	--preload-file shaders@shaders --use-preload-plugins \
-	ecs.c system.c renderer.c Map/Map.c items.c main.c cJSON/cJSON.c  -Iraylib/include -Lraylib/install/lib -lraylib_wasm -o Web/index.html
+	ecs.c system.c renderer.c Map/Map.c items.c main.c cJSON/cJSON.c  -Iraylib/include raylib/lib/libraylib_wasm.a\
+	 -o Web/index.html
 
 serve:
 	emrun --no_browser --port 8080 Web/index.html

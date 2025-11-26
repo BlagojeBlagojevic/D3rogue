@@ -49,6 +49,7 @@ void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA 
 void food_system(World *world, EngineData *engine);
 void nutrition_system(World *world, EngineData *engine);
 
+void load_system(World* world, EngineData *engine, Generator_DA *generators);
 
 #endif
 

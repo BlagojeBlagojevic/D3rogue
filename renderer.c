@@ -111,7 +111,7 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 	}
 
 
-
+//, int isMapReset
 EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *engine) {
 	const Position p =  world->position[player_entity_id];
 
@@ -938,7 +938,8 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 	//Drop items D
 	if(IsKeyPressed(KEY_D)){
 		if(inventory->items[engine->whatItem].to >= EQUIPTED_ARMOR 
-			&& inventory->items[engine->whatItem].to <= EQUIPTED_HEAD){
+			&& inventory->items[engine->whatItem].to <= EQUIPTED_HEAD
+			&& inventory->items[engine->whatItem].isEqu == true){
 			int isCursed = equipt_item(&world->inventory[0], engine->whatItem);
 			if(isCursed == true){
 				MESSAGE("Not posible to drop cuss it is cursed");
@@ -979,6 +980,7 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 			const int y = (int)world->position[0].y;
 			add_component(world, it, COMP_RENDER, &(Renderable){whatI});
 			add_component(world, it, COMP_POSITION, &(Position){x, y});
+			
 			da_remove_unordered(&world->inventory[0], engine->whatItem);
 			for(int i = 0; i < engine->tempStr.count; i++){
 				free(engine->tempStr.items[i]);
