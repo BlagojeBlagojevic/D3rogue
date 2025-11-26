@@ -537,7 +537,7 @@ static const char* itemActions[] = {
 
 
 #define MAP_WIDTH  80
-#define MAP_HEIGHT 30
+#define MAP_HEIGHT 20
 
 
 

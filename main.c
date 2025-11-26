@@ -127,7 +127,13 @@ void main_loop(void) {
     // UI Rendering
     BeginDrawing();
        //2D map render
-       if(g_engine->is2d) render_system2d(g_world, g_engine, &g_sprites);
+       if(g_engine->is2d){ 
+        BeginTextureMode(g_target);
+         rlPushMatrix();
+            render_system2d(g_world, g_engine, &g_sprites);
+        rlPopMatrix();
+        EndTextureMode();
+        }
         render_event_messages(g_engine, 100, 0, 600, 200);
         render_stats_(g_engine, g_world, 800, 000, 1000, 300);
          if(g_engine->isRenderTrade){
@@ -191,6 +197,15 @@ int main() {
     add_component(&world, player, COMP_INPUT, NULL);
     add_component(&world, player, COMP_FIRE, &(Fire){0, 0});
     add_component(&world, player, COMP_STATUS, &(StatusEffects){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    //world.expPlayer = 10000;
+    unsigned int temp;
+    printf("\n\n Input start exp:\n >");
+    while(fscanf(stdin, "%u", &temp) == EOF){
+
+    }
+    printf("Temp %u", temp);
+    world.expPlayer = temp;
+
     
     // Initialize window
     //SetConfigFlags(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
@@ -218,7 +233,8 @@ int main() {
         CloseWindow();
         return -1;
     }
-    
+
+
     // Add starter items
     //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Teleport, false, false);
     add_item_to_inventory(Dagger, &world.inventory[player], Scroll_No, Potion_No, false, false);
@@ -316,20 +332,31 @@ int main() {
     g_sprites = sprites;
     g_entDA = entDA;
     g_generators = generators;
+
     
+    //return 0;
     // Start game loop
     #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(main_loop, 0, 1);
+        emscripten_set_main_loop(main_loop, 0, 1);
     #else
-    while (!WindowShouldClose()) {
-        main_loop();
-    }
-    
-    // Cleanup
-    UnloadShader(g_lightingShader);
-    UnloadShader(g_blureShader);
-    UnloadRenderTexture(g_target);
-    CloseWindow();
+        load_system(g_world, g_engine, &g_generators);
+        g_engine = init_engine_soft(g_world, 0, g_engine);
+        engine->drawDistance = 20 - 1.0f / g_world->ambientStrenght;
+
+        if(g_engine->drawDistance < 0){
+            g_engine->drawDistance = 3;
+        }
+        xmprint(world.map);
+
+        while (!WindowShouldClose()) {
+            main_loop();
+        }
+        
+        // Cleanup
+        UnloadShader(g_lightingShader);
+        UnloadShader(g_blureShader);
+        UnloadRenderTexture(g_target);
+        CloseWindow();
     #endif
 
     return 0;

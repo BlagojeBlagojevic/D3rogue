@@ -10,16 +10,16 @@ uniform vec4 colDiffuse;
 out vec4 finalColor;
 
 // === CRT Parameters ===
-const float CURVE_AMOUNT       = 0.01;       // barrel distortion
-const float SCANLINE_INTENSITY = 0.9;       // strength of scanlines
-const float CHROMA_OFFSET      = 5.0;  // RGB shift
-const float VIGNETTE_STRENGTH  = 0.3;       // vignette darkening
+const float CURVE_AMOUNT       = 0.02;       // barrel distortion
+const float SCANLINE_INTENSITY = 0.5;       // strength of scanlines
+const float CHROMA_OFFSET      = 1.0;  // RGB shift
+const float VIGNETTE_STRENGTH  = 0.1;       // vignette darkening
 const float MASK_STRENGTH      = 0.15;      // phosphor mask visibility
 
 // === FOG Parameters ===
 const vec3  FOG_COLOR          = vec3(0.00, 0.00, 0.0); // Fog color (black for a dark effect)
 const float FOG_START          = 0.00;                // Vertical position where fog begins (0.0 = bottom)
-const float FOG_END            = 1.00;                // Vertical position where fog is at full strength (1.0 = top)
+const float FOG_END            = 2.00;                // Vertical position where fog is at full strength (1.0 = top)
 
 // Curves the UVs to simulate CRT glass
 vec2 curveCoords(vec2 uv)

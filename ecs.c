@@ -1576,6 +1576,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 			world->position[0] = (Position) {
 				x, y
 				};
+			world->map.walling[y][x] = Tile_UpS;	
 			break;
 			}
 		}
