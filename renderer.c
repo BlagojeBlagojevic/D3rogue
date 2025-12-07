@@ -131,7 +131,6 @@ EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *eng
 	engine->whatItem = 0;
 	engine->itemThrowId = -1;
 	
-	//Zbog kog kurc ovo ne radi
 	//free(world->items.items);
 	//xmprint(world->map);
 
@@ -409,6 +408,11 @@ void render_stats_(EngineData *engine, World* world, const int x, int y, int w, 
 	DrawText(tempStr, x, y+=20, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
 
+	snprintf(tempStr, STR_SIZE, "Stamina: %d/%d", world->vital[0].current, world->vital[0].max);
+	DrawText(tempStr, x, y += 20, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
+
+
 	snprintf(tempStr, STR_SIZE, "Nutrition: %d / 10000", world->nutrition);
 	DrawText(tempStr, x, y+=20, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
@@ -580,6 +584,7 @@ void render_stats_update(World* world, EngineData *engine){
 	DrawText(tempStr, x, y+=50, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
 
+
 	snprintf(tempStr, STR_SIZE, "Dmg: %d - %d", world->stats[0].dmgMin,  world->stats[0].dmgMax);
 	DrawText(tempStr, x, y+=50, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
@@ -609,7 +614,12 @@ void render_stats_update(World* world, EngineData *engine){
 	snprintf(tempStr, STR_SIZE, "Stealth: %d", world->stats[0].stealth);
 	DrawText(tempStr, x, y+=50, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
+
+	snprintf(tempStr, STR_SIZE, "Stamina: %d/%d", world->vital[0].current, world->vital[0].max);
+	DrawText(tempStr, x, y+=50, 20, WHITE);
+	memset(tempStr, '\0', STR_SIZE);
 	
+
 	snprintf(tempStr, STR_SIZE, "Exp: %d", world->expPlayer);
 	DrawText(tempStr, x, y+=50, 20, WHITE);
 	memset(tempStr, '\0', STR_SIZE);
@@ -669,9 +679,9 @@ void render_stats_update(World* world, EngineData *engine){
 		}	
 		//DEF
 		case 2:{
-			if(world->expPlayer - 1000 > 0){
+			if(world->expPlayer - 5000 > 0){
 				world->stats[0].defence+=1;
-				world->expPlayer-=1000;	
+				world->expPlayer-=5000;	
 			}
 
 				break;
@@ -722,6 +732,13 @@ void render_stats_update(World* world, EngineData *engine){
 				break;
 		}
 
+		case 8:{
+			if(world->expPlayer - 250 > 0){
+				world->vital[0].max+=1;
+				world->expPlayer -= 250;
+			}
+			break;
+		}
 
 
 		default:

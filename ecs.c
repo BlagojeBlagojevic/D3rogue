@@ -327,7 +327,11 @@ void add_component(World* world, int entity, CompType type, void* data) {
 		case COMP_OPEN:
 			ASSERT("Not implemneted OPEN");
 			break;
-		;					
+		
+		case COMP_VITAL:
+			world->vital[entity] = *(Vital*)data;
+			break;	
+
 		// Handle other components
 		default:
 			ASSERT("Unrechable Component");
@@ -362,13 +366,18 @@ void add_spell_depending_on_T(World world,  int monster){
 	DROP(world);
 }	
 
-
+//THIS kinda like hero
+#define CHANCE_FOR_PLAYER_MIRROR 0.02f
 void add_components_to_ent_depending_on_T(World* world, Global_Ent_DA* ent, int monster, int type, Vector2 p){
 	Global_Ent e = ent->items[type];
 	
+
 	//add_trap(world, TRAP_BEAR, (int)p.x, (int)p.y);
 	world->name[monster] = e.name;
 	//DO not change order
+	
+	//const float chancesForPlayerMirror = 0.1f;
+
 	if(e.masks & COMP_POSITION){
 		add_component(world, monster, COMP_POSITION, &(Position) {
 			p.x, p.y 
@@ -380,17 +389,30 @@ void add_components_to_ent_depending_on_T(World* world, Global_Ent_DA* ent, int 
 			});
 
 	}
-	if(e.masks & COMP_HEALTH){
+	if(e.masks & COMP_HEALTH){	
 		add_component(world, monster, COMP_HEALTH, &(Health) {
 			e.health.current, e.health.max
 		});
 	}
+
 	if(e.masks & COMP_STATS){
-	add_component(world, monster, COMP_STATS,  &(Stats) {
-		e.stats.str, e.stats.dex, e.stats.inte, e.stats.cons, e.stats.morale, e.stats.perception, e.stats.perception, e.stats.dmgMax, e.stats.dmgMin
-		,e.stats.defence	
-	});
+		if(rand_f32() <= CHANCE_FOR_PLAYER_MIRROR)
+			add_component(world, monster, COMP_STATS,  &(Stats) {
+				world->stats[0].str, world->stats[0].dex, world->stats[0].inte, world->stats[0].cons, e.stats.morale, e.stats.perception, e.stats.perception, 
+				world->stats[0].dmgMax, world->stats[0].dmgMin
+				, world->stats[0].defence	
+			});
+		else 
+			add_component(world, monster, COMP_STATS,  &(Stats) {
+				e.stats.str, e.stats.dex, e.stats.inte, e.stats.cons, e.stats.morale, e.stats.perception, e.stats.perception, e.stats.dmgMax, e.stats.dmgMin
+				,e.stats.defence	
+			});
+			world->health[monster].max = world->health[0].max;
+			world->health[monster].current = world->health[0].current;
+			
 	}
+
+	add_component(world, monster, COMP_VITAL, &(Vital){e.stats.cons*2 , e.stats.cons*2});
 
 	add_component(world, monster, COMP_INPUT, &(Input){
 		(Position){p.x, p.y}, 0.0f, 0.0f, 0.0f, true, true, 0, 0  
@@ -1254,24 +1276,20 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 	//if > that creature will get + 1 turn of stunn
 	const int aCons = rand()%world->stats[attacker].cons;
 	const int dCons = rand()%world->stats[defender].cons;
-	if(rand_f32() < 1.0f){
+	//if(rand_f32() < 1.0f)
+	//If vital 0 /2 dex str att def
+	{
 		if(aCons > dCons){
-			
-			world->state[defender].current = STATE_STUN;
-			world->state[defender].stunTurn+=2;
-			//world->state[attacker].stunTurn-=1;
-			//CLAMP(world->state[attacker].stunTurn, 0, 100);
+			world->vital[defender].current -= (aCons - dCons);
+			CLAMP(world->vital[defender].current, 0, world->vital[defender].max);
 		}
-		else{
-			world->state[attacker].current = STATE_STUN;
-			world->state[attacker].stunTurn+=2;
-			//world->state[defender].stunTurn-=1;
-			//CLAMP(world->state[defender].stunTurn, 0, 100);
-		}
+		
 	}
 	
 	int dmgATTACK = D1(world->stats[attacker].str);
+	
 	int dmgValue   = world->stats[attacker].dmgMin + rand()%(world->stats[attacker].dmgMax - world->stats[attacker].dmgMin);
+	
 	int armorValue = world->stats[defender].defence;
 	int dogeDEFFENCE =0;
 	if(world->stats[defender].dex != 0)
@@ -1339,6 +1357,10 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 			dogeDEFFENCE +=item.stats.dex;
 		}		
 	}
+	//IF one of vital is 0 
+	if(world->vital[attacker].current == 0) dmgATTACK/=2;
+	if(world->vital[attacker].current == 0) dmgValue/=2;
+	if(world->vital[defender].current == 0) dogeDEFFENCE/=2;
 	int AC = armorValue; //4 types equipted for armor
 	//For testing
 	if(defender == 0)
@@ -1450,6 +1472,7 @@ void generate_monster_generator(World* world, Generator* gen, Position pos, Glob
 		int minY = pos.y - 10;
 		CLAMP(minY, 0, MAP_HEIGHT);
 		int counter = 0;
+		 
 		for(int i = 0; i < gen->nMonsters; i++)
 		while(1){
 			if((counter++) > 100) break;
@@ -1558,7 +1581,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	
 	//For this prob ight map 
 	world->ambientStrenght = rand_f32() / 2.0f;    // 0.0 - 0.1 PROB LIGHTING POWER
-	if(rand_f32() < 0.33)
+	if(rand_f32() < 0.15)
 		world->ambientStrenght = 0;
 	world->saveAmbientStrenght = world->ambientStrenght;
 	

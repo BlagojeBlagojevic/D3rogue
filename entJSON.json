@@ -25,7 +25,7 @@
       "COMP_MONSTER": { "is": true },
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
-      "COMP_STATS": { "is": true, "str": 18, "dex": 8, "inte": 5, "cons": 17, "morale": 10, "perception": 9, "stealth": 4, "dmgmin": 6, "dmgmax": 12, "defence": 15 },
+      "COMP_STATS": { "is": true, "str": 18, "dex": 8, "inte": 5, "cons": 17, "morale": 10, "perception": 9, "stealth": 4, "dmgmin": 6, "dmgmax": 12, "defence": 5 },
       "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.0, "chanceRe": 0.0, "chanceB": 0.0, "chanceRange": 0.0 },
       "COMP_OPEN": { "is": false },
       "ITEMS": [

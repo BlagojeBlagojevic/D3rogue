@@ -1,0 +1,73 @@
+digraph MonsterStateMachine {
+    // Graph Styling
+    rankdir=TB;
+    splines=ortho;
+    node [shape=box, style="filled, rounded", fontname="Arial", fillcolor="#f0f0f0"];
+    edge [fontname="Arial", fontsize=10];
+
+    // Define States
+    node [fillcolor="#ADD8E6"] STATE_WANDERING;  // Light Blue
+    node [fillcolor="#FF6347"] STATE_HUNTING;    // Tomato Red
+    node [fillcolor="#FFD700"] STATE_RUNNING;    // Gold (Fleeing)
+    node [fillcolor="#FFA07A"] STATE_ALERTED;    // Light Salmon
+    node [fillcolor="#D3D3D3"] STATE_STALKING;   // Grey
+    
+
+    // --- LOGIC BLOCK 1: Player Visible & Perceived ---
+    // Condition: if(isV && perception > 0)
+    
+    // Transition: Engaging the Player
+    // Logic: if(current != RUNNING) && (rand < chancesH)
+    {STATE_WANDERING STATE_ALERTED STATE_STALKING} -> STATE_HUNTING [
+        label="Player Visible\nPerception > 0\nChanceH Check", 
+        color="red"
+    ];
+
+    // Transition: Fleeing
+    // Logic: if(current == HUNTING) && (Damage >= 50%) && (rand < chancesR)
+    STATE_HUNTING -> STATE_RUNNING [
+        label="HP < 50%\nChanceR Check", 
+        color="orange", 
+        penwidth=2
+    ];
+
+    // --- LOGIC BLOCK 2: Player NOT Visible OR NOT Perceived ---
+    // Condition: else { ... }
+
+    // Transition: Calming Down
+    // Logic: if(current == RUNNING) && (rand < chancesW)
+    STATE_RUNNING -> STATE_WANDERING [
+        label="Player Lost/Hidden\nChanceW Check", 
+        color="green"
+    ];
+
+    // Internal Action: Wandering Update
+    // Logic: if(current == WANDERING) && is_monster_on_position
+    STATE_WANDERING -> STATE_WANDERING [
+        label="Reached Target Tile\n(Set New Memory)", 
+        color="blue"
+    ];
+
+    // --- GROUP LOGIC (External Triggers) ---
+    // This logic applies to neighbor entities (j), but we visualize it as 
+    // "What causes ME to enter this state?"
+    
+    // Logic: Ally is HUNTING or STALKING -> Radius < 36 -> Rand < 0.7
+    // Valid for states: NOT HUNTING, NOT RUNNING, NOT STUN
+    
+    subgraph cluster_allies {
+        label = "Nearby Allies (External Events)";
+        style = dashed;
+        color = grey;
+        node [shape=plaintext, fillcolor=none, style=""];
+        Ally_Hunting [label="Ally is HUNTING"];
+        Ally_Stalking [label="Ally is STALKING"];
+    }
+
+    Ally_Hunting -> STATE_ALERTED [style=dashed, label="Dist < 6 tiles\n70% Chance"];
+    Ally_Stalking -> STATE_ALERTED [style=dashed, label="Dist < 6 tiles\n70% Chance"];
+
+    // Explicitly showing that ALERTED flows back into the main loop (usually to Hunting)
+    // based on the next frame's "Player Visible" check
+    STATE_ALERTED -> STATE_HUNTING [style=invis]; 
+}

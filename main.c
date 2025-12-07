@@ -66,6 +66,7 @@ void main_loop(void) {
             status_system(g_world, g_engine);
             regen_system(g_world);
             spawn_monster_system(g_world, &g_generators, &g_entDA, g_engine);
+            stamina_system(g_world, g_engine);
             nutrition_system(g_world, g_engine);
             //Tbd rename to run onec
             g_engine->isGasRun = false;
@@ -193,6 +194,7 @@ int main() {
     add_component(&world, player, COMP_HEALTH, &(Health){30, 30});
     add_component(&world, player, COMP_STATS, &(Stats){12, 6, 10, 10, 0, 5, 5, 2, 1, 0});	
     world.stats[0].stealth = 10;
+    add_component(&world, player, COMP_VITAL, &(Vital){20, 20});
     add_tag(&world, player, COMP_PLAYER);
     add_component(&world, player, COMP_INPUT, NULL);
     add_component(&world, player, COMP_FIRE, &(Fire){0, 0});
