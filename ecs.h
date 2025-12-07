@@ -98,6 +98,7 @@ typedef struct {
 	Health     health[MAX_ENTITIES];
 	Input      input[MAX_ENTITIES];  //this is just for player prob just one element other array for monsters or use this
 	Stats      stats[MAX_ENTITIES];
+	Vital      vital[MAX_ENTITIES];   //in save load world
 	State      state[MAX_ENTITIES];
 	Gas        gas[MAX_ENTITIES];
 	Spell      spell[MAX_ENTITIES];

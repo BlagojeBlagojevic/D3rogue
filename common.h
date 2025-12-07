@@ -36,6 +36,7 @@ typedef enum {
 	COMP_FIRE     = 1 << 12,
 	COMP_STATUS   = 1 << 13,
 	COMP_SHOP     = 1 << 14,
+	COMP_VITAL    = 1 << 15,
 	
 	} CompType;
 
@@ -431,11 +432,11 @@ typedef struct {
 	int morale;//Just monsters for now to run and stuff
 	int perception;
 	int stealth;
+	
 
 	int dmgMax;
 	int dmgMin;
 	int defence;
-
 
 }Stats;
 
@@ -537,7 +538,7 @@ static const char* itemActions[] = {
 
 
 #define MAP_WIDTH  80
-#define MAP_HEIGHT 20
+#define MAP_HEIGHT 40
 
 
 
@@ -716,6 +717,12 @@ typedef struct{
 	ProjeciteType type;
 	int itemID;
 }Projectile;
+
+
+typedef struct  {
+	int max;
+	int current;
+}Vital;
 
 
 

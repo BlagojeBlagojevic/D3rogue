@@ -924,7 +924,95 @@ static void set_memory_wandering(World* world, int ent){
 		}
 }
 
+
 void monster_change_state_system(World* world, EngineData *engine) {
+    CompMask mask = COMP_POSITION | COMP_MONSTER | COMP_STATE | COMP_STATS;
+
+    const int playerX = world->position[0].x;
+    const int playerY = world->position[0].y;
+    	const int dirs[8][2] = {
+        { 0, -1}, // Up
+        { 0,  1}, // Down
+        {-1,  0}, // Left
+        { 1,  0}, // Right
+        {-1, -1}, // Up-left
+        {-1,  1}, // Down-left
+        { 1, -1}, // Up-right
+        { 1,  1}  // Down-right
+    };
+	field_of_vison(world, engine, 0);
+	for(int i = 1; i < MAX_ENTITIES; i++){
+		if((world->masks[i] & mask) == mask){
+			field_of_vison(world, engine, i);
+			bool isV = is_player_visible_by_monster(world, playerX, playerY);
+			int perception = rand()%(world->stats[i].perception + 1) - rand()%(world->stats[i].stealth + 1);
+			if(engine->isTorch)
+				perception+=10;
+			if(world->state[i].current == STATE_HUNTING)
+				perception+=5;	
+			//IF vis by player -> HUNTING / RUNNING / STAKING(we will see) 
+			if(isV && ((perception > 0))){
+				//HUNTING -> FLEEING if maxHealh < 10% and running chane 
+				if(world->state[i].current == STATE_HUNTING){
+					const int dmg = world->health[i].max - world->health[i].current;
+					if(dmg >= 0.5f * world->health[i].max){
+						if(rand_f32() < world->state[i].chancesR)
+							world->state[i].current = STATE_RUNING;
+					}
+				}
+				else if(world->state[i].current != STATE_RUNING){
+					if(rand_f32() < world->state[i].chancesH){
+						world->state[i].current = STATE_HUNTING;
+
+					}
+				}
+			}
+			//WANDERING ifNotSet, 
+			else{
+				//Wandering if on tile set a new wandering location if not do nothing
+				if(world->state[i].current == STATE_WANDERING){
+					const bool isMonster = is_monster_on_position(world, world->state[i].lastSeenX, world->state[i].lastSeenY);
+					if(isMonster){
+						world->state[i].current = STATE_WANDERING;
+						set_memory_wandering(world, i);
+					}
+				}
+				if(world->state[i].current == STATE_RUNING){
+					if(rand_f32() < world->state[i].chancesW){
+						world->state[i].current = STATE_WANDERING;
+						set_memory_wandering(world, i);
+					}
+				}	
+			}
+		}
+
+		//gROUP
+
+		if (world->state[i].current == STATE_HUNTING || world->state[i].current == STATE_STALKING) {
+            for (int j = 1; j < MAX_ENTITIES; j++) {
+                if (i == j || (world->masks[j] & mask) != mask) continue;
+
+                if (Vector2DistanceSqr(world->position[i], world->position[j]) < 36) { // Alert radius of ~6 tiles
+                    if (world->state[j].current != STATE_HUNTING && world->state[j].current != STATE_RUNING && world->state[j].current != STATE_STUN) {
+                        // Not all monsters get alerted - some might ignore the alert
+                        if (rand_f32() < 0.7f) { // 70% chance to respond to alert
+                            world->state[j].current = STATE_ALERTED;
+                            world->state[j].memoryTimer = 10 + rand()%20; // Alerted monsters remember for a while
+                            world->state[j].lastSeenX = playerX;
+                            world->state[j].lastSeenY = playerY;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+	}	
+
+}
+
+void monster_change_state_system_(World* world, EngineData *engine) {
     CompMask mask = COMP_POSITION | COMP_MONSTER | COMP_STATE | COMP_STATS;
 
     const int playerX = world->position[0].x;
@@ -961,7 +1049,7 @@ void monster_change_state_system(World* world, EngineData *engine) {
         float healthRatio = world->health[i].current / (float)world->health[i].max;
         float playerHealthRatio = world->health[0].current / (float)world->health[0].max;
         float distanceToPlayer = Vector2Distance(world->position[i], world->position[0]);
-		int peception = rand()%(world->stats[i].perception + 1) - rand()%(world->stats[i].stealth + 1) - sP; 
+		int peception = rand()%(world->stats[i].perception + 1) - rand()%(world->stats[i].stealth + 1); 
         
 		//if(engine->)
 		
@@ -1120,7 +1208,7 @@ void monster_change_state_system(World* world, EngineData *engine) {
                         // Not all monsters get alerted - some might ignore the alert
                         if (rand_f32() < 0.7f) { // 70% chance to respond to alert
                             world->state[j].current = STATE_ALERTED;
-                            world->state[j].memoryTimer = 20; // Alerted monsters remember for a while
+                            world->state[j].memoryTimer = 10 + rand()%20; // Alerted monsters remember for a while
                             world->state[j].lastSeenX = playerX;
                             world->state[j].lastSeenY = playerY;
                         }
@@ -1131,6 +1219,9 @@ void monster_change_state_system(World* world, EngineData *engine) {
     }
 	}
 }
+
+
+
 
 
 
@@ -1826,6 +1917,9 @@ void monster_state_system(World* world, EngineData *engine, Global_Ent_DA* ent) 
 				else if(world->state[i].current == STATE_STALKING){
 					p = get_lowest_tile_dikstra(world, world->position[i].x, world->position[i].y);
 				}
+				else if(world->state[i].current == STATE_TERRITORIAL){
+					p = get_random_tile_dikstra(world, world->position[i].x, world->position[i].y);
+				}
 				//else if(world->state[i].current == STATE_)	
 				else{
 					p = get_highest_tile_dikstra_player(world, world->position[i].x, world->position[i].y, world->position[0].x ,world->position[0].y);
@@ -1882,6 +1976,7 @@ void health_system(World* world, Global_Ent_DA* ent, EngineData *engine) {
 	CompMask mask = COMP_HEALTH;
 
 	for (int i = 0; i < MAX_ENTITIES; i++) {
+		
 		
 		if(i == 0){
 			if(world->health[0].current <= 0){
@@ -1983,7 +2078,7 @@ void health_system(World* world, Global_Ent_DA* ent, EngineData *engine) {
 
 			inventory_to_map(world, i);
 			//exp gain TBD ALL CONST THRU ENGINE FOR SETUP
-			world->expPlayer+= rand()%100 + world->level*5;
+			world->expPlayer+= rand()%100 + world->level*(5 + world->stats[0].inte) ;
 			destroy_entity(world, i);
 
 			}
@@ -2380,8 +2475,11 @@ void saveWorld(World* world, FILE* f) {
     fwrite(world->renderable, sizeof(Renderable), MAX_ENTITIES, f);
     fwrite(world->health, sizeof(Health), MAX_ENTITIES, f);
     fwrite(world->input, sizeof(Input), MAX_ENTITIES, f);
-    fwrite(world->stats, sizeof(Stats), MAX_ENTITIES, f);
-    fwrite(world->state, sizeof(State), MAX_ENTITIES, f);
+    
+	fwrite(world->stats, sizeof(Stats), MAX_ENTITIES, f);
+    fwrite(world->vital, sizeof(Vital), MAX_ENTITIES, f);
+	fwrite(world->state, sizeof(State), MAX_ENTITIES, f);
+	
     fwrite(world->gas, sizeof(Gas), MAX_ENTITIES, f);
     fwrite(world->spell, sizeof(Spell), MAX_ENTITIES, f);
     
@@ -2564,6 +2662,7 @@ void loadWorld(World* world, FILE* f, Generator_DA *generators) {
     fread(world->health, sizeof(Health), MAX_ENTITIES, f);
     fread(world->input, sizeof(Input), MAX_ENTITIES, f);
     fread(world->stats, sizeof(Stats), MAX_ENTITIES, f);
+	fread(world->vital, sizeof(Vital), MAX_ENTITIES, f);
     fread(world->state, sizeof(State), MAX_ENTITIES, f);
     fread(world->gas, sizeof(Gas), MAX_ENTITIES, f);
     fread(world->spell, sizeof(Spell), MAX_ENTITIES, f);
@@ -5150,8 +5249,16 @@ void nutrition_system(World *world, EngineData *engine){
 		}
 	}
 	}
-	
-
-
-
+}
+#define STAMINA_INC 0.1f
+void stamina_system(World *world, EngineData *engine){
+	for(int i = 0; i < MAX_ENTITIES; i++){
+		if((world->masks[i] & COMP_VITAL) == COMP_VITAL){
+			if(rand_f32() < STAMINA_INC){
+				world->vital[i].current++;
+				CLAMP(world->vital[i].current, 0, world->vital[i].max);
+			}
+		}
+	}
+	DROP(engine);
 }
