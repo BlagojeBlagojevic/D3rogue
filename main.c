@@ -290,7 +290,7 @@ int main() {
     
     // For Emscripten, we can't disable cursor in the same way
     #ifndef __EMSCRIPTEN__
-    DisableCursor();
+        DisableCursor();
     #endif
     //world.ambientStrenght = 0;
    
@@ -341,8 +341,10 @@ int main() {
     #ifdef __EMSCRIPTEN__
         emscripten_set_main_loop(main_loop, 0, 1);
     #else
-        load_system(g_world, g_engine, &g_generators);
         g_engine = init_engine_soft(g_world, 0, g_engine);
+        load_system(g_world, g_engine, &g_generators);
+        //Garbage in FIXED 
+
         engine->drawDistance = 20 - 1.0f / g_world->ambientStrenght;
 
         if(g_engine->drawDistance < 0){

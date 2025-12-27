@@ -1667,6 +1667,11 @@ Map xmgen_drunk(const int w, const int h, const float floor_goal_percent) {
 Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_size, const int max_size) {
     srand((unsigned)time(0));
     const Map map = mnew(h, w);
+    int isGen = true;
+    
+    while(isGen){
+ 
+    
 
     Rect* rooms = toss(Rect, max_rooms);
     int room_count_local = 0;
@@ -1817,8 +1822,15 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
     if(wallCount == (map.h*map.w)){
         xmclose(map);
         free(rooms);
-        return xmgen_brogue(w, h, max_rooms, min_size, max_size);
+        isGen = true;
+        //return xmgen_brogue(w, h, max_rooms, min_size, max_size);
     }
+    else{
+        isGen = false;
+        connect_rooms(map, rooms, room_count_local);
+        free(rooms);    
+    }
+         
 
    // xmgen_add_enviroment(&map, '\"', 0, 0, w, h, 0.6f);
     //bool isLake = false;
@@ -1832,8 +1844,7 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
       //  }
    // }
 
-    connect_rooms(map, rooms, room_count_local);
+}
 
-    free(rooms);
     return map;
 }

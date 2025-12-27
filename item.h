@@ -353,6 +353,17 @@ typedef enum{
 }Potion_Type;
 
 
+enum{
+	CRIT, 
+	LIFESTEAL,
+	BASH
+};
+
+enum{
+	DOGE,
+	THORN,
+	//BASH alredy defined
+};
 
 
 typedef struct{
@@ -372,6 +383,9 @@ typedef struct{
 	Potion_Type    potion;
 	float          itemChance;
 	int            price;
+	// 0 - 100 s
+	int            special[3];
+
 
 }Item;
 
