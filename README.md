@@ -37,11 +37,14 @@ This is a turn-based game where you control a character in either 3D or 2D view.
 
 ### Attacking
 - **Automatic** - When you try to move into an enemy's space, you will automatically attack instead
-- Attack damage is calculated based on your equipment and stats
-- Combat messages will display your attack results
 
 ### Ranged Attacks
 - **A** - Fire a ranged weapon (requires equipped bow and matching ammunition)
+
+### Battle system 
+The combat system is a multi-layered simulation that begins with a constitution check, where both attacker and defender roll against their constitution stats—if the attacker rolls higher, the defender immediately loses vitality equal to the difference. Attack resolution then proceeds through several stages: the attacker rolls a strength-based attack die while the defender attempts to dodge with a dexterity-based roll; both parties' equipped items add flat bonuses and special effects like critical strikes, lifesteal, bash stuns, thorns, and extra dodge chance, though equipment with strength requirements carries a risk of failure if the wielder lacks sufficient strength. If either combatant's vitality is depleted, their offensive or defensive capabilities are halved. Finally, if the attacker's roll exceeds the defender's dodge, damage is calculated by subtracting the defender's total armor from the attacker's total damage output, with the result clamped to a minimum of zero.
+
+
 
 ## Inventory & Items
 
