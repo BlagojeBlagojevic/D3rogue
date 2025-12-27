@@ -1291,17 +1291,25 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 	int dmgValue   = world->stats[attacker].dmgMin + rand()%(world->stats[attacker].dmgMax - world->stats[attacker].dmgMin);
 	
 	int armorValue = world->stats[defender].defence;
+
+	int dicesAttSpecial[] = {0, 0, 0};
+	int dicesDefSpecial[] = {0, 0, 0};
+
 	int dogeDEFFENCE =0;
 	if(world->stats[defender].dex != 0)
 		dogeDEFFENCE = D1(world->stats[defender].dex);
 	//Attacker add to stats
 	for(int i = 0; i < world->inventory[attacker].count; i++){
 		const Item item = world->inventory[attacker].items[i];
+		
 		if(item.isEqu == true){
 			//Tbd store
 			if(item.to == EQUIPTED_WEPON && !isRange){
 				//MESSAGE_F("Used %s", item.name);
 				//exit(-1);
+				dicesAttSpecial[0] = item.special[0];
+				dicesAttSpecial[1] = item.special[1];
+				dicesAttSpecial[2] = item.special[2];
 				const int v = Dn_X(item.nDice, item.value);
 				if(attacker == 0){
 					if(item.strReq > world->stats[0].str){
@@ -1336,12 +1344,17 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 
 	for(int i = 0; i < world->inventory[defender].count; i++){
 		const Item item = world->inventory[defender].items[i];
+
 		if(item.isEqu == true){
 			//Tbd store
 			if(item.to == EQUIPTED_SHIELD || item.to == EQUIPTED_ARMOR 
 			|| item.to == EQUIPTED_HEAD  || item.to == EQUIPTED_LEGS
 			|| item.to == EQUIPTED_HAND ){
 				const int v = Dn_X(item.nDice, item.value);
+				dicesDefSpecial[0] += item.special[0];
+				dicesDefSpecial[1] += item.special[1];
+				dicesDefSpecial[2] += item.special[2];
+
 				if(defender == 0){
 					if(item.strReq > world->stats[0].str){
 						const float chanceToNoUse = 0.20 + 0.1*(item.strReq - world->stats[0].str);
@@ -1361,7 +1374,61 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 	if(world->vital[attacker].current == 0) dmgATTACK/=2;
 	if(world->vital[attacker].current == 0) dmgValue/=2;
 	if(world->vital[defender].current == 0) dogeDEFFENCE/=2;
-	int AC = armorValue; //4 types equipted for armor
+
+
+	//If added in stats Tbd
+	//Crit 4 - 10
+	if(dicesAttSpecial[CRIT] >= D1(100)){
+		printf("Crit\n");
+		dmgValue += 4 + rand()%6;
+	}
+
+	if(dicesAttSpecial[LIFESTEAL] >= D1(100)){
+		printf("Life\n");
+		world->health[attacker].current += dmgATTACK;
+		CLAMP(world->health[attacker].current, 0, world->health[attacker].max);
+	}
+	
+	
+	if(dicesAttSpecial[BASH] >= D1(100)){
+		printf("Bash\n");
+		world->state[defender].stunTurn += 4 + rand()%6;
+		world->state[defender].current = STATE_STUN;
+	}
+
+
+
+
+	int AC = armorValue; 
+
+	//If added in stats Tbd
+	//Def dices
+
+		//Crit 4 - 10
+	if(dicesDefSpecial[DOGE] >= D1(100)){
+		printf("Doge\n");
+		AC += 4 + rand()%6;
+	}
+
+	if(dicesDefSpecial[THORN] >= D1(100)){
+		printf("Thorn\n");
+		world->health[attacker].current -= 4 + rand()%6;
+		CLAMP(world->health[attacker].current, 0, world->health[attacker].max);
+	}
+	
+	
+	if(dicesDefSpecial[BASH] >= D1(100)){
+		printf("Bash def\n");
+		//exit(-1);
+		world->state[attacker].stunTurn += 4 + rand()%6;
+		world->state[attacker].current = STATE_STUN;
+	}
+
+
+
+	
+
+
 	//For testing
 	if(defender == 0)
 	LOG("AC %d\n", AC);

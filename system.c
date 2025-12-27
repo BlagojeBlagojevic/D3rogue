@@ -943,11 +943,25 @@ void monster_change_state_system(World* world, EngineData *engine) {
 	field_of_vison(world, engine, 0);
 	for(int i = 1; i < MAX_ENTITIES; i++){
 		if((world->masks[i] & mask) == mask){
+			
+		if(world->state[i].current == STATE_STUN){
+			if(world->state[i].stunTurn > 0){
+				world->state[i].stunTurn--;
+				world->state[i].current = STATE_STUN;
+				//return;
+			}
+		else{
+			world->state[i].current = STATE_WANDERING;
+		}
+		}
+		else{
 			field_of_vison(world, engine, i);
 			bool isV = is_player_visible_by_monster(world, playerX, playerY);
-			int perception = rand()%(world->stats[i].perception + 1) - rand()%(world->stats[i].stealth + 1);
+			int perception = rand()%(world->stats[i].perception + 1) - rand()%(world->stats[0].stealth + 1);
 			if(engine->isTorch)
 				perception+=10;
+			else 
+				perception-=5;	
 			if(world->state[i].current == STATE_HUNTING)
 				perception+=5;	
 			//IF vis by player -> HUNTING / RUNNING / STAKING(we will see) 
@@ -992,7 +1006,7 @@ void monster_change_state_system(World* world, EngineData *engine) {
             for (int j = 1; j < MAX_ENTITIES; j++) {
                 if (i == j || (world->masks[j] & mask) != mask) continue;
 
-                if (Vector2DistanceSqr(world->position[i], world->position[j]) < 36) { // Alert radius of ~6 tiles
+                if (Vector2DistanceSqr(world->position[i], world->position[j]) < 16) { // Alert radius of ~4 tiles
                     if (world->state[j].current != STATE_HUNTING && world->state[j].current != STATE_RUNING && world->state[j].current != STATE_STUN) {
                         // Not all monsters get alerted - some might ignore the alert
                         if (rand_f32() < 0.7f) { // 70% chance to respond to alert
@@ -1005,10 +1019,8 @@ void monster_change_state_system(World* world, EngineData *engine) {
                 }
             }
         }
-
-
-
 	}	
+	}
 
 }
 
@@ -2437,6 +2449,7 @@ static void saveItem(Item* item, FILE* f) {
     fwrite(&item->potion, sizeof(Potion_Type), 1, f);
     fwrite(&item->itemChance, sizeof(float), 1, f);
     fwrite(&item->price, sizeof(int), 1, f);
+	fwrite(&item->special, sizeof(int), 3, f);
 }
 
 
@@ -2556,7 +2569,7 @@ static void save_system(World* world, EngineData *engine){
 		fwrite(&engine->whatAction, sizeof(engine->whatAction), 1, f);
 		fwrite(&engine->itemAction, sizeof(engine->itemAction), 1, f);
 		fwrite(&engine->systemAction, sizeof(engine->systemAction), 1, f);
-		fwrite(&engine->tempStr, sizeof(engine->tempStr), 1, f);
+		//fwrite(&engine->tempStr, sizeof(engine->tempStr), 1, f);
 		fwrite(&engine->isRenderMap, sizeof(engine->isRenderMap), 1, f);
 		fwrite(&engine->isRenderPickup, sizeof(engine->isRenderPickup), 1, f);
 		fwrite(&engine->isRenderStats, sizeof(engine->isRenderStats), 1, f);
@@ -2605,6 +2618,7 @@ static void loadItem(Item* item, FILE* f) {
     fread(&item->potion, sizeof(Potion_Type), 1, f);
     fread(&item->itemChance, sizeof(float), 1, f);
     fread(&item->price, sizeof(int), 1, f);
+	fread(&item->special, sizeof(int), 3, f);
 }
 
 
@@ -2770,7 +2784,7 @@ void load_system(World* world, EngineData *engine, Generator_DA *generators){
 	fread(&engine->whatAction, sizeof(engine->whatAction), 1, f);
 	fread(&engine->itemAction, sizeof(engine->itemAction), 1, f);
 	fread(&engine->systemAction, sizeof(engine->systemAction), 1, f);
-	fread(&engine->tempStr, sizeof(engine->tempStr), 1, f);
+	//fread(&engine->tempStr, sizeof(engine->tempStr), 1, f);
 	fread(&engine->isRenderMap, sizeof(engine->isRenderMap), 1, f);
 	fread(&engine->isRenderPickup, sizeof(engine->isRenderPickup), 1, f);
 	fread(&engine->isRenderStats, sizeof(engine->isRenderStats), 1, f);

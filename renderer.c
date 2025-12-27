@@ -800,6 +800,13 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 			if(strcat(itemStr, tempStr) == NULL){
 				ASSERT("String overflow");
 		}
+
+		
+		memset(tempStr, 0, STR_SIZE);
+		snprintf(tempStr, STR_SIZE, "(%d, %d  %d)  ", inventory->items[i].special[CRIT],  inventory->items[i].special[DOGE],  inventory->items[i].special[BASH]);
+		if(strcat(itemStr, tempStr) == NULL){
+			ASSERT("String overflow");
+		}
 		
 		}
 		//If change max amount of stats for items change hear
@@ -837,6 +844,9 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 				ASSERT("String overflow");
 			}
 		}
+
+
+
 		if(inventory->items[i].isCursed == true){
 			memset(tempStr, 0, STR_SIZE);
 			snprintf(tempStr, STR_SIZE, "curesed");
@@ -865,10 +875,12 @@ void render_inventory_system(World* world, Item_DA* inventory, EngineData* engin
 			}	
 			
 		}
-			
+		//printf("\n\\n, %s", itemStr);	
+		//exit(-1);
+		//CARE if ptr not old
 		da_append(&engine->tempStr, itemStr);
 		//MESSAGE_F("%s", engine->tempStr.items[engine->tempStr.count - 1]);	
-		free(tempStr);
+		//free(tempStr);
 	}
 	//free(itemStr);
 	//

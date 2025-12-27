@@ -319,7 +319,12 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
     }
 
     i.isIdent = false;
-    
+
+    //Percents 0 - 100 for dices
+    i.special[0] = 0;
+    i.special[0] = 0;
+    i.special[0] = 0;
+
     // Price calculation variables
     int base_price = 0;
     int power_factor = 0;
@@ -340,6 +345,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 5000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%5;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = 0;
         break;
     }
     case BrokenDagger:{
@@ -356,6 +364,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = 0;
         break;
     }
     case RustySword:{
@@ -372,6 +383,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 2000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = 0;
         break;
     }
     case Dagger:{
@@ -388,6 +402,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 3000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = 0;
         break;
     }
     case Shovel:{
@@ -404,6 +421,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1500 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%2;
+        i.special[LIFESTEAL] = 0;
+        i.special[BASH] = 0;
         break;
     }
     case MainGauche:{
@@ -420,6 +440,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 6000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = 0;
         break;
     }
     case Whip:{
@@ -436,6 +459,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 4000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = 0;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Spear:{
@@ -452,6 +478,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 7000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = 0;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%2;
+        
         break;
     }
     case Rapier:{
@@ -468,6 +498,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 10000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = 0;
         break;
     }
     case SmallSword:{
@@ -487,6 +520,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 12000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%5;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%2;
         break;
     }
     case Saber:{
@@ -503,6 +539,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 15000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = 0;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Pick:{
@@ -519,6 +558,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 3500 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = 0;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = 0;
         break;
     }
     case Cutlass:{
@@ -535,6 +577,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 16000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%2;
         break;
     }
     case SmallTrident:{
@@ -551,6 +596,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 8000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%15;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%2;
         break;
     }
     case Trident:{
@@ -567,6 +615,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 25000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Mace:{
@@ -583,6 +634,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 12000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Tulwar:{
@@ -599,6 +653,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 15000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%5;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Quartestaff:{
@@ -615,6 +672,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 18000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = 0;
+        i.special[LIFESTEAL] = rand()%15;
+        i.special[BASH] = rand()%15;
         break;
     }
     case BallandChain:{
@@ -631,6 +691,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 20000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%15;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%10;
         break;
     }
     case WarHammer:{
@@ -647,6 +710,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 22000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Lance:{
@@ -663,6 +729,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 30000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = 0;
+        i.special[LIFESTEAL] = rand()%2;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Scimitar:{
@@ -679,6 +748,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 25000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = 0;
+        i.special[LIFESTEAL] = rand()%15;
+        i.special[BASH] = rand()%10;
         break;
     }   
     case BroadSword:{
@@ -707,6 +779,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 28000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case BroadAxe:{
@@ -723,6 +798,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 35000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case BattleAxe:{
@@ -739,6 +817,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 38000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case AwlPike:{
@@ -755,6 +836,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 22000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Flail:{
@@ -774,6 +858,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 40000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Pike:{
@@ -790,6 +877,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 42000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%5;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Glaive:{
@@ -806,6 +896,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 45000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case LucerneHammer:{
@@ -822,6 +915,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 60000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Katana:{
@@ -838,6 +934,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 75000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Halberd:{
@@ -854,6 +953,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 80000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case GreatAxe:{
@@ -870,6 +972,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 120000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case MaceScalp:{
@@ -886,6 +991,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 130000 + power_factor * rarity_multiplier / 100;
+
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case TwoHandFlail:{
@@ -902,6 +1011,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 180000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case LochaberAxe:{
@@ -918,6 +1030,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 250000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }
     case Scythe:{
@@ -934,6 +1049,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 70000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     }       
     case TwoHandSword:{
@@ -950,6 +1068,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 140000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%20;
+        i.special[LIFESTEAL] = rand()%4;
+        i.special[BASH] = rand()%10;
         break;  
     }
     case ESword:{
@@ -966,6 +1087,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 300000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%30;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;  
     }
     case SScythe:{
@@ -982,6 +1106,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 500000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%10;
         break;
     } 
     case CBlade:{
@@ -998,6 +1125,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 750000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%2;
+        i.special[LIFESTEAL] = rand()%40;
+        i.special[BASH] = rand()%2;
         break;
     } 
     case DMace:{
@@ -1014,6 +1144,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 500;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1000000 + power_factor * rarity_multiplier / 100;
+        i.special[CRIT] = rand()%10;
+        i.special[LIFESTEAL] = rand()%10;
+        i.special[BASH] = rand()%30;
         break;
     } 
 
@@ -1032,6 +1165,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 4000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;   
         break;
     }
     case FRobe:{
@@ -1048,6 +1184,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case Robe:{
@@ -1064,6 +1203,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 2000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case SoftLeatherArmour:{
@@ -1080,6 +1222,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 5000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case SoftStuddedLeather:{
@@ -1096,6 +1241,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 8000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case HardLeatherArmour:{
@@ -1112,6 +1260,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 10000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case HardStuddedLeather:{
@@ -1128,6 +1279,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 15000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case LeatherScaleMail:{
@@ -1144,6 +1298,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 25000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case MetalScaleMail:{
@@ -1160,6 +1317,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 40000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case RustyChainMail:{
@@ -1176,6 +1336,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 18000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case ChainMail:{
@@ -1192,6 +1355,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 30000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case DoubleChainMail:{
@@ -1208,6 +1374,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 50000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case AugmentedChainMail:{
@@ -1224,6 +1393,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 75000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case BarChainMail:{
@@ -1240,6 +1412,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 90000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case MetalBrigandineArmour:{
@@ -1256,6 +1431,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 120000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case PartialPlateArmour:{
@@ -1272,6 +1450,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 180000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case MetalLamellarArmour:{
@@ -1288,6 +1469,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 250000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case FullPlateArmour:{
@@ -1304,6 +1488,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 350000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case RibbedPlateArmour:{
@@ -1320,6 +1507,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 500000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case MithrilChainMail:{
@@ -1336,6 +1526,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 600000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case MithrilPlateMail:{
@@ -1352,6 +1545,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 800000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case AdamantitePlateMail:{
@@ -1368,6 +1564,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1000000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case BronzeDragonScaleMail:{
@@ -1384,6 +1583,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 400000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case BlackDragonScaleMail:{
@@ -1400,6 +1602,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 400000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case BlueDragonScaleMail:{
@@ -1416,6 +1621,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 400000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case WhiteDragonScaleMail:{
@@ -1432,6 +1640,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 450000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case GoldDragonScaleMail:{
@@ -1448,6 +1659,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 450000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case ShiningDragonScaleMail:{
@@ -1464,6 +1678,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 500000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case ChaosDragonScaleMail:{
@@ -1480,6 +1697,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 500000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case GreenDragonScaleMail:{
@@ -1496,6 +1716,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 600000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case LawDragonScaleMail:{
@@ -1513,6 +1736,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 600000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case RedDragonScaleMail:{
@@ -1529,6 +1755,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 750000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case BalanceDragonScaleMail:{
@@ -1545,6 +1774,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 750000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case MultiHuedDragonScaleMail:{
@@ -1561,6 +1793,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 900000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
     case PowerDragonScaleMail:{
@@ -1577,6 +1812,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 300;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1200000 + power_factor * rarity_multiplier / 100;
+         i.special[DOGE]  = rand()%10;
+        i.special[THORN] = rand()%10;
+        i.special[BASH]  = rand()%10;
         break;
     }
 
@@ -1595,6 +1833,9 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 2000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
         break;
     }
     case WoodenRoundShield:{
@@ -1611,6 +1852,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 3000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case ReinforcedWoodenShield:{
@@ -1627,6 +1872,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 5000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case IronRoundShield:{
@@ -1643,6 +1892,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 8000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case SpikedShield:{
@@ -1659,6 +1912,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 12000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case HeaterShield:{
@@ -1675,6 +1932,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 15000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case SteelKiteShield:{
@@ -1691,6 +1952,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 25000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case TowerShield:{
@@ -1707,6 +1972,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 40000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case MithrilShield:{
@@ -1723,6 +1992,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 150000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case DragonscaleShield:{
@@ -1739,6 +2012,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 200000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case AdamantiteShield:{
@@ -1755,6 +2032,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 300000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case AegisOfReflection:{
@@ -1771,6 +2052,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 200;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 500000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
 
@@ -1789,6 +2074,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1500 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case PaddedHood:{
@@ -1805,6 +2094,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 2000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case IronCap:{
@@ -1821,6 +2114,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 3000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case NasalHelm:{
@@ -1837,6 +2134,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 5000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case Spangenhelm:{
@@ -1853,6 +2154,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 8000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case Bascinet:{
@@ -1869,6 +2174,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 12000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case GreatHelm:{
@@ -1885,6 +2194,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 20000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case MithrilHelm:{
@@ -1901,6 +2214,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 80000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case AdamantiteHelm:{
@@ -1917,6 +2234,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 120000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case DragonboneHelm:{
@@ -1933,6 +2254,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 150000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case CrownOfWisdom:{
@@ -1949,6 +2274,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 150;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 200000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     
@@ -1967,6 +2296,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 100;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case MetalBoots:{
@@ -1983,6 +2316,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 100;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 3000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
 
@@ -2001,6 +2338,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 100;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 1000 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
     case MetalGloves:{
@@ -2017,6 +2358,10 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         power_factor = i.value * i.nDice * 100;
         rarity_multiplier = (int)(100 / i.itemChance);
         base_price = 2500 + power_factor * rarity_multiplier / 100;
+        i.special[DOGE]  = rand()%3;
+        i.special[THORN] = rand()%3;
+        i.special[BASH]  = rand()%3;
+        
         break;
     }
 
