@@ -178,8 +178,9 @@ int main() {
     srand(time(NULL));
     #endif
     
-    World world;
-    init_world(&world);
+    //World world;
+    g_world = malloc(sizeof(World));
+    init_world(g_world);
     Global_Ent_DA entDA = {0};
     Generator_DA generators = (Generator_DA){0};
     
@@ -189,16 +190,16 @@ int main() {
     print_all_generators(&generators);
     
     // Create player entity
-    int player = create_entity(&world);
-    add_component(&world, player, COMP_POSITION, &(Position){0, 0});
-    add_component(&world, player, COMP_HEALTH, &(Health){30, 30});
-    add_component(&world, player, COMP_STATS, &(Stats){12, 6, 10, 10, 0, 5, 5, 2, 1, 0});	
-    world.stats[0].stealth = 10;
-    add_component(&world, player, COMP_VITAL, &(Vital){20, 20});
-    add_tag(&world, player, COMP_PLAYER);
-    add_component(&world, player, COMP_INPUT, NULL);
-    add_component(&world, player, COMP_FIRE, &(Fire){0, 0});
-    add_component(&world, player, COMP_STATUS, &(StatusEffects){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    int player = create_entity(g_world);
+    add_component(g_world, player, COMP_POSITION, &(Position){0, 0});
+    add_component(g_world, player, COMP_HEALTH, &(Health){30, 30});
+    add_component(g_world, player, COMP_STATS, &(Stats){12, 6, 10, 10, 0, 5, 5, 2, 1, 0});	
+    g_world->stats[0].stealth = 10;
+    add_component(g_world, player, COMP_VITAL, &(Vital){20, 20});
+    add_tag(g_world, player, COMP_PLAYER);
+    add_component(g_world, player, COMP_INPUT, NULL);
+    add_component(g_world, player, COMP_FIRE, &(Fire){0, 0});
+    add_component(g_world, player, COMP_STATUS, &(StatusEffects){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
     //world.expPlayer = 10000;
     unsigned int temp;
     printf("\n\n Input start exp:\n >");
@@ -206,29 +207,29 @@ int main() {
 
     }
     printf("Temp %u", temp);
-    world.expPlayer = temp;
+    g_world->expPlayer = temp;
 
     
     // Initialize window
     //SetConfigFlags(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
-//#ifndef __EMSCRIPTEN__
-//    SetConfigFlags(FLAG_FULLSCREEN_MODE);  
-//#endif    
+#ifndef __EMSCRIPTEN__
+    SetConfigFlags(FLAG_FULLSCREEN_MODE);  
+#endif    
     InitWindow(1200, 700, "3D Roguelike");
 
  //   int monitor = GetCurrentMonitor();
  //   SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
 
     // Initialize world items and inventory
-    world.items = (Item_DA){0};
+    g_world->items = (Item_DA){0};
     for(int i = 0; i < MAX_ENTITIES; i++){
-        world.inventory[i] = (Item_DA){0};
+        g_world->inventory[i] = (Item_DA){0};
     }
     
     // Generate level and initialize engine
-    world.level = 0;
-    generate_level(&world, world.level, &generators, &entDA);
-    EngineData *engine = init_engine(&world, player, "assets/tex.png", "assets/wa.jpeg");
+    g_world->level = 0;
+    generate_level(g_world, g_world->level, &generators, &entDA);
+    EngineData *engine = init_engine(g_world, player, "assets/tex.png", "assets/wa.jpeg");
     
     if(engine == NULL) {
         TraceLog(LOG_ERROR, "Failed to initialize engine");
@@ -238,42 +239,13 @@ int main() {
 
 
     // Add starter items
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Teleport, false, false);
-    add_item_to_inventory(Dagger, &world.inventory[player], Scroll_No, Potion_No, false, false);
-    add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, Potion_No, false, false);
-    add_item_to_inventory(Food, &world.inventory[player], Scroll_No, Potion_No, false, false);
-    add_item_to_inventory(Gold, &world.inventory[player], Scroll_No, Potion_No, false, false);
- //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
- //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
- //   add_item_to_inventory(Robe, &world.inventory[player], Scroll_No, false, false);
- //   add_item_to_inventory(Bow, &world.inventory[player], Scroll_No, Potion_No, false, false);
- //   add_item_to_inventory(Arrows, &world.inventory[player], Scroll_No, Potion_No, false, false);
-    add_item_to_inventory(Tourch, &world.inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Dagger, &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Robe,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Food,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Gold,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Tourch, &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    add_item_to_inventory(Scroll, &g_world->inventory[player], Scroll_Identif, Potion_No, false, false);
     
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_MagicMaping, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Calcific, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Fate, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Fate, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Teleport, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_EnchantW, false, false);
-    // add_item_to_inventory(Scroll, &world.inventory[player], Scroll_EnchantA, false, false);
-    //add_item_to_inventory(Scroll, &world.inventory[player], Scroll_SummonMonster, false, false);
-    add_item_to_inventory(Scroll, &world.inventory[player], Scroll_Identif, Potion_No, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Healing, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Str, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Int, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Size, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Str, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Att, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Def, false, false);
-    //add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Poison, false, false);
-   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Acid, false, false);
-   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_Gas, false, false);
-   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
-   // add_item_to_inventory(Potion, &world.inventory[player], Scroll_No, Potion_HealingGas, false, false);
-
   //  engine->width  = GetMonitorWidth(monitor);
   //  engine->height = GetMonitorHeight(monitor);
     engine->width = 1200;
@@ -302,7 +274,7 @@ int main() {
         // Setup shader uniforms
         g_lightingShader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(g_lightingShader, "viewPos");
         SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "ambientStrength"), 
-                      &world.ambientStrenght, SHADER_UNIFORM_FLOAT);
+                      &g_world->ambientStrenght, SHADER_UNIFORM_FLOAT);
         
         //if (engine->model.materialCount > 0) {
             engine->model.materials[0].shader = g_lightingShader;
@@ -321,15 +293,15 @@ int main() {
     g_target = LoadRenderTexture(engine->width, engine->height);
     
     // Calculate draw distance
-    engine->drawDistance = 20 - 1.0f / world.ambientStrenght;
+    engine->drawDistance = 20 - 1.0f / g_world->ambientStrenght;
     if(engine->drawDistance < 0){
         engine->drawDistance = 3;
     }
     
-    MESSAGE_F("Draw distance: %d, Ambient strength: %f", engine->drawDistance, world.ambientStrenght);
+    MESSAGE_F("Draw distance: %d, Ambient strength: %f", engine->drawDistance, g_world->ambientStrenght);
     
     // Store global pointers
-    g_world = &world;
+   // g_world = &world;
     g_engine = engine;
     g_sprites = sprites;
     g_entDA = entDA;
@@ -341,8 +313,9 @@ int main() {
     #ifdef __EMSCRIPTEN__
         emscripten_set_main_loop(main_loop, 0, 1);
     #else
-        g_engine = init_engine_soft(g_world, 0, g_engine);
+        //g_engine = init_engine_soft(g_world, 0, g_engine);
         load_system(g_world, g_engine, &g_generators);
+        g_engine = init_engine_soft(g_world, 0, g_engine);
         //Garbage in FIXED 
 
         engine->drawDistance = 20 - 1.0f / g_world->ambientStrenght;
@@ -350,7 +323,7 @@ int main() {
         if(g_engine->drawDistance < 0){
             g_engine->drawDistance = 3;
         }
-        xmprint(world.map);
+        xmprint(g_world->map);
 
         while (!WindowShouldClose()) {
             main_loop();

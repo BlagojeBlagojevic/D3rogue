@@ -1269,6 +1269,9 @@ for(int i = 0; i < n; i++){
 
 
 
+#define CHANCE_BREAK_WEPON 0.01f
+#define CHANCE_BREAK_ARMOR 0.05f
+
 int attack_dmg_callculations(World* world, int attacker, int defender, int isRange){
 
 	//CALCULATION FOR ENGEGING IN COMBAT
@@ -1319,6 +1322,18 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 							dmgValue-= v + 1;
 						}
 					}
+					//BREAK ITEM
+					if(rand_f32() <= CHANCE_BREAK_WEPON){
+						printf("BROKE w\n");
+						if(rand_f32() < 0.1){
+							world->inventory[attacker].items[i].nDice--;
+							CLAMP(world->inventory[attacker].items[i].nDice, 0, 100);
+						}
+						else{
+							world->inventory[attacker].items[i].value--;
+							CLAMP(world->inventory[attacker].items[i].value, 0, 100);
+						}
+					}
 				} 
 				
 				dmgValue+=v;
@@ -1363,6 +1378,19 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 							armorValue-= v + 1;
 						}
 					}
+					//BREAK ITEM
+					if(rand_f32() <= CHANCE_BREAK_ARMOR){
+						printf("BROKE\n");
+						if(rand_f32() < 0.1){
+							world->inventory[defender].items[i].nDice--;
+							CLAMP(world->inventory[defender].items[i].nDice, 0, 100);
+						}
+						else{
+							world->inventory[defender].items[i].value--;
+							CLAMP(world->inventory[defender].items[i].value, 0, 100);
+						}
+					}
+
 				} 
 				armorValue+=v;
 				//exit(-1)
