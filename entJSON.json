@@ -9,7 +9,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 16, "dex": 14, "inte": 12, "cons": 15, "morale": 13, "perception": 11, "stealth": 8, "dmgmin": 4, "dmgmax": 10, "defence": 12 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.15, "chanceH": 0.75, "chanceW": 0.65, "chanceRe": 0.45, "chanceB": 0.55, "chanceRange": 0.35 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.15, "chanceH": 0.75, "chanceW": 0.65, "chanceRe": 0.45, "chanceB": 0.55, "chanceRange": 0.35, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.5, "name": "Sword"},
@@ -26,7 +26,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 18, "dex": 8, "inte": 5, "cons": 17, "morale": 10, "perception": 9, "stealth": 4, "dmgmin": 6, "dmgmax": 12, "defence": 5 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.0, "chanceRe": 0.0, "chanceB": 0.0, "chanceRange": 0.0 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.0, "chanceRe": 0.0, "chanceB": 0.0, "chanceRange": 0.0, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "RustySword"},
@@ -44,7 +44,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 15, "inte": 5, "cons": 11, "morale": 7, "perception": 12, "stealth": 11, "dmgmin": 2, "dmgmax": 7, "defence": 4 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.0, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.0, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Dagger"},
@@ -60,7 +60,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 7, "dex": 15, "inte": 16, "cons": 9, "morale": 110, "perception": 14, "stealth": 16, "dmgmin": 1, "dmgmax": 5, "defence": 6 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.20, "chanceW": 0.70, "chanceRe": 0.50, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.20, "chanceW": 0.70, "chanceRe": 0.50, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.8, "name": "FRobe"},
@@ -76,7 +76,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 9, "dex": 11, "inte": 18, "cons": 13, "morale": 11, "perception": 15, "stealth": 8, "dmgmin": 1, "dmgmax": 4, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.12, "chanceH": 0.50, "chanceW": 0.75, "chanceRe": 0.55, "chanceB": 0.45, "chanceRange": 0.30 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.12, "chanceH": 0.50, "chanceW": 0.75, "chanceRe": 0.55, "chanceB": 0.45, "chanceRange": 0.30, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Robe"},
@@ -96,7 +96,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 5, "dex": 10, "inte": 3, "cons": 22, "morale": 60, "perception": 10, "stealth": 2, "dmgmin": 1, "dmgmax": 2, "defence": 2 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.05, "chanceW": 0.80, "chanceRe": 0.55, "chanceB": 0.45, "chanceRange": 0.99 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.05, "chanceH": 0.05, "chanceW": 0.80, "chanceRe": 0.55, "chanceB": 0.45, "chanceRange": 0.99, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 1.0, "name": "Shovel"},
@@ -114,7 +114,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 10, "dex": 1, "inte": 3, "cons": 13, "morale": 500, "perception": 7, "stealth": 7, "dmgmin": 3, "dmgmax": 12, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.0, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.0 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.0, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.0, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "RustySword"},
@@ -131,7 +131,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 11, "dex": 12, "inte": 9, "cons": 11, "morale": 90, "perception": 15, "stealth": 13, "dmgmin": 2, "dmgmax": 6, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.30, "chanceH": 0.50, "chanceW": 0.60, "chanceRe": 0.50, "chanceB": 0.50, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.30, "chanceH": 0.50, "chanceW": 0.60, "chanceRe": 0.50, "chanceB": 0.50, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Pike"},
@@ -150,7 +150,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 11, "dex": 18, "inte": 11, "cons": 11, "morale": 9, "perception": 17, "stealth": 9, "dmgmin": 2, "dmgmax": 7, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.80, "chanceH": 0.80, "chanceW": 0.60, "chanceRe": 0.40, "chanceB": 0.60, "chanceRange": 0.70 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.80, "chanceH": 0.80, "chanceW": 0.60, "chanceRe": 0.40, "chanceB": 0.60, "chanceRange": 0.70, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Robe"},
@@ -169,7 +169,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 12, "dex": 6, "inte": 12, "cons": 6, "morale": 50, "perception": 20, "stealth": 11, "dmgmin": 4, "dmgmax": 7, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.6, "name": "Sword"},
@@ -188,7 +188,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 18, "inte": 11, "cons": 13, "morale": 13, "perception": 17, "stealth": 15, "dmgmin": 3, "dmgmax": 18, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.50, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.50, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "AwlPike"},
@@ -207,7 +207,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 19, "inte": 13, "cons": 13, "morale": 13, "perception": 18, "stealth": 11, "dmgmin": 3, "dmgmax": 9, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.85, "chanceH": 0.80, "chanceW": 0.60, "chanceRe": 0.40, "chanceB": 0.60, "chanceRange": 0.80 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.85, "chanceH": 0.80, "chanceW": 0.60, "chanceRe": 0.40, "chanceB": 0.60, "chanceRange": 0.80, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.5, "name": "MainGauche"},
@@ -226,7 +226,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 18, "inte": 11, "cons": 13, "morale": 13, "perception": 17, "stealth": 15, "dmgmin": 3, "dmgmax": 18, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.50, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.50, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.7, "name": "Rapier"},
@@ -245,7 +245,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 18, "dex": 13, "inte": 18, "cons": 17, "morale": 15, "perception": 13, "stealth": 7, "dmgmin": 2, "dmgmax": 3, "defence": 14 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -280,7 +280,7 @@
                       "chanceW": 0.70, 
                       "chanceRe": 0.00, 
                       "chanceB": 0.50, 
-                      "chanceRange": 0.00 },
+                      "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.1, "name": "Spear"}
@@ -315,7 +315,7 @@
         "chanceW": 0.70, 
         "chanceRe": 0.80, 
         "chanceB": 0.00, 
-        "chanceRange": 0.0 },
+        "chanceRange": 0.0, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 1.0, "name": "Spear"},
@@ -351,8 +351,7 @@
                     "chanceW": 0.05, 
                     "chanceRe": 0.00, 
                     "chanceB": 0.00, 
-                    "chanceRange": 0.00 
-  },
+                    "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -368,7 +367,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 12, "dex": 10, "inte": 8, "cons": 20, "morale": 140, "perception": 11, "stealth": 8, "dmgmin": 3, "dmgmax": 5, "defence": 5 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         
@@ -400,8 +399,7 @@
                       "chanceH": 0.5, 
                       "chanceW": 0.50, 
                       "chanceB": 0.50, 
-                      "chanceRange": 0.00 
-                    },
+                      "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
          {"chance": 0.15, "name": "BrokenDagger"}
@@ -417,7 +415,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 12, "dex": 10, "inte": 12, "cons": 10, "morale": 200, "perception": 16, "stealth": 17, "dmgmin": 2, "dmgmax": 10, "defence": 1 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.0, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.0, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
           {"chance": 0.65, "name": "Mace"}
@@ -436,7 +434,7 @@
       "COMP_STATS": { "is": true, 
         "str": 5, "dex": 1, "inte": 5, "cons": 1, "morale": 90, "perception": 10, "stealth": 5, "dmgmin": 1, "dmgmax": 2, "defence": 0 },
       "COMP_STATE": { "is": true, "current": 0, 
-        "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+        "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -452,7 +450,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 19, "dex": 6, "inte": 7, "cons": 20, "morale": 18, "perception": 10, "stealth": 3, "dmgmin": 4, "dmgmax": 6, "defence": 4 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -468,17 +466,12 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 17, "dex": 14, "inte": 16, "cons": 16, "morale": 170, "perception": 15, "stealth": 11, "dmgmin": 10, "dmgmax": 15, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.999, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.999, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
           {"chance": 0.85, "name": "NasalHelm"},
           {"chance": 0.85, "name": "DragonscaleShield"},
           {"chance": 0.85, "name": "Halberd"}
-          
-
-
-
-       
       ]
     },
     {
@@ -490,14 +483,11 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 12, "dex": 6, "inte": 12, "cons": 6, "morale": 50, "perception": 20, "stealth": 11, "dmgmin": 4, "dmgmax": 7, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
             {"chance": 0.85, "name": "BattleAxe"},
             {"chance": 0.85, "name": "Robe"}
-            
-        
-       
       ]
     },
     {
@@ -509,14 +499,12 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 15, "dex": 10, "inte": 9, "cons": 14, "morale": 13, "perception": 12, "stealth": 10, "dmgmin": 8, "dmgmax": 12, "defence": 1 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
          {"chance": 0.85, "name": "BattleAxe"},
          {"chance": 0.85, "name": "Robe"},
          {"chance": 0.85, "name": "LetherBoots"}
-          
-       
       ]
     },
     {
@@ -537,13 +525,11 @@
         "dmgmin": 2, 
         "dmgmax": 4, 
         "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.01, "chanceRe": 0.80, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.01, "chanceRe": 0.80, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.85, "name": "Whip"},
         {"chance": 0.85, "name": "Robe"}
-        
-       
       ]
     },
     {
@@ -555,12 +541,11 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 8, "dex": 12, "inte": 17, "cons": 1, "morale": 16, "perception": 15, "stealth": 9, "dmgmin": 1, "dmgmax": 5, "defence": 1 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.85, "name": "Tourch"},
         {"chance": 0.85, "name": "LetherBoots"}
-       
       ]
     },
 
@@ -573,7 +558,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 17, "dex": 13, "inte": 10, "cons": 16, "morale": 15, "perception": 12, "stealth": 8, "dmgmin": 4, "dmgmax": 6, "defence": 1 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.85, "name": "BattleAxe"},
@@ -589,14 +574,12 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 19, "dex": 9, "inte": 7, "cons": 18, "morale": 16, "perception": 10, "stealth": 5, "dmgmin": 5, "dmgmax": 8, "defence": 1 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.85, "name": "BattleAxe"},
         {"chance": 0.85, "name": "LetherBoots"},
         {"chance": 0.85, "name": "MetalScaleMail"}
-        
-       
       ]
     },
     {
@@ -608,12 +591,11 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 12, "dex": 6, "inte": 12, "cons": 6, "morale": 50, "perception": 20, "stealth": 11, "dmgmin": 4, "dmgmax": 7, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.85, "name": "Katana"},
         {"chance": 0.85, "name": "SoftLeatherArmour"} 
-       
       ]
     },
     {
@@ -625,12 +607,11 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 18, "dex": 14, "inte": 14, "cons": 17, "morale": 180, "perception": 20, "stealth": 12, "dmgmin": 5, "dmgmax": 9, "defence": 2 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
         {"chance": 0.85, "name": "BattleAxe"},
         {"chance": 0.85, "name": "Robe"} 
-       
       ]
     },
 
@@ -653,15 +634,12 @@
       "dmgmin": 1, 
       "dmgmax": 2, 
       "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.58, "chanceH": 0.15, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.58, "chanceH": 0.15, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
        {"chance": 0.99, "name": "SoftLeatherArmour"},
        {"chance": 0.1, "name": "LetherBoots"},
        {"chance": 0.99, "name": "LetherGloves"}
-       
-        
-       
       ]
     },
 
@@ -691,7 +669,7 @@
                       "chanceH": 0.99,
                       "chanceW": 0.00, 
                       "chanceB": 0.00, 
-                      "chanceRange": 0.0 },
+                      "chanceRange": 0.0, "al": "AL_BEAST" },
                       "COMP_OPEN": { "is": false },
       "ITEMS": [
          {"chance": 0.85, "name": "Dagger"},
@@ -725,13 +703,12 @@
                       "chanceH": 0.6,
                       "chanceW": 0.70, 
                       "chanceB": 0.50, 
-                      "chanceRange": 0.99 },
+                      "chanceRange": 0.99, "al": "AL_RANGE" },
                       "COMP_OPEN": { "is": false },
       "ITEMS": [
          {"chance": 0.99, "name": "Bow"},
          {"chance": 0.99, "name": "Arrows"},
          {"chance": 0.85, "name": "Robe"}
-       
       ]
     },
     {
@@ -750,12 +727,11 @@
       "chanceW": 0.01, 
       "chanceRe": 0.0080, 
       "chanceB": 0.00, 
-      "chanceRange": 0.0 },
+      "chanceRange": 0.0, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
          {"chance": 0.85, "name": "Robe"},
         {"chance": 0.85, "name": "WarHammer"}
-       
       ]
     },
     {
@@ -767,7 +743,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 18, "dex": 6, "inte": 5, "cons": 20, "morale": 18, "perception": 8, "stealth": 2, "dmgmin": 3, "dmgmax": 5, "defence": 16 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -801,13 +777,12 @@
         "chanceH": 0.6, 
         "chanceW": 0.70, 
         "chanceB": 0.50, 
-        "chanceRange": 0.00 
-      },
+        "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
           {"chance": 0.05, "name": "DragonboneHelm"},
-          {"chance": 0.6,  "name": "FRobe"}
-         
+          {"chance": 0.6,  "name": "FRobe"},
+          {"chance": 0.99,  "name": "Mushroom"}
       ]
     },
     {
@@ -819,7 +794,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 8, "dex": 1, "inte": 3, "cons": 1, "morale": 60, "perception": 10, "stealth": 5, "dmgmin": 1, "dmgmax": 3, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -835,7 +810,8 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
        "COMP_STATS": { "is": true, "str": 8, "dex": 1, "inte": 3, "cons": 1, "morale": 60, "perception": 10, "stealth": 5, "dmgmin": 1, "dmgmax": 3, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },"COMP_OPEN": { "is": false },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_COWARD" },
+      "COMP_OPEN": { "is": false },
       "ITEMS": [
       
        
@@ -850,7 +826,8 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
        "COMP_STATS": { "is": true, "str": 8, "dex": 1, "inte": 3, "cons": 1, "morale": 60, "perception": 10, "stealth": 5, "dmgmin": 1, "dmgmax": 3, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },"COMP_OPEN": { "is": false },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_COWARD" },
+      "COMP_OPEN": { "is": false },
       "ITEMS": [
       
        
@@ -882,8 +859,7 @@
                     "chanceW": 0.70, 
                     "chanceRe": 0.00, 
                     "chanceB": 0.50, 
-                    "chanceRange": 0.10 
-  },
+                    "chanceRange": 0.10, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -899,7 +875,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 20, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 0 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.10, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -915,16 +891,12 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 13, "inte": 20, "cons": 15, "morale": 80, "perception": 100, "stealth": 6, "dmgmin": 2, "dmgmax": 10, "defence": 6 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
-      
        {"chance": 0.99, "name": "Quartestaff"},
        {"chance": 0.99, "name": "LeatherScaleMail"},
        {"chance": 0.99, "name": "LetherBoots"}
-
-       
-
       ]
     },
      {
@@ -936,7 +908,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 20, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 10, "dmgmax": 30, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -952,7 +924,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -968,7 +940,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 15, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 10, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.00, "al": "AL_COWARD" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -984,7 +956,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 50, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 4, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_RANGE" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -1000,7 +972,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 2, "dmgmax": 10, "defence": 9 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.0, "chanceRe": 0.0, "chanceB": 0.0, "chanceRange": 0.0 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.0, "chanceRe": 0.0, "chanceB": 0.0, "chanceRange": 0.0, "al": "AL_HUNTER" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -1016,7 +988,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 20, "dex": 9, "inte": 5, "cons": 15, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 10, "dmgmax": 15, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.00, "chanceH": 0.99, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -1032,7 +1004,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 20, "dex": 15, "inte": 50, "cons": 15, "morale": 800, "perception": 11, "stealth": 6, "dmgmin": 10, "dmgmax": 30, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -1048,7 +1020,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 20, "dex": 15, "inte": 50, "cons": 15, "morale": 800, "perception": 11, "stealth": 6, "dmgmin": 10, "dmgmax": 30, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.70, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -1064,7 +1036,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 13, "dex": 9, "inte": 5, "cons": 150, "morale": 8, "perception": 11, "stealth": 6, "dmgmin": 15, "dmgmax": 20, "defence": 5 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.99, "chanceW": 0.70, "chanceRe": 0.80, "chanceB": 0.50, "chanceRange": 0.10, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       
@@ -1080,7 +1052,7 @@
       "COMP_PLAYER": { "is": false },
       "COMP_INPUT": { "is": false, "aqua": 0 },
       "COMP_STATS": { "is": true, "str": 20, "dex": 15, "inte": 50, "cons": 15, "morale": 800, "perception": 11, "stealth": 6, "dmgmin": 10, "dmgmax": 30, "defence": 11 },
-      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00 },
+      "COMP_STATE": { "is": true, "current": 0, "chanceR": 0.08, "chanceH": 0.85, "chanceW": 0.00, "chanceRe": 0.00, "chanceB": 0.00, "chanceRange": 0.00, "al": "AL_BEAST" },
       "COMP_OPEN": { "is": false },
       "ITEMS": [
       

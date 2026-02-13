@@ -15,11 +15,7 @@
 //Use this for sending text to render in the screen
 
 
-typedef struct {
-	int 	count;
-	int 	capacity;
-	char** items;
-	} Str;
+
 
 typedef struct{
 	Model    model;
@@ -96,8 +92,7 @@ typedef struct{
 
 EngineData* init_engine(World *world, int player_entity_id, const char* name_atlas, const char* water_atlas);
 
-EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *engine);
-
+EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *engine, int isStart);
 void free_engine(EngineData *engine);
 
 void render_loop(World *world, EngineData *engine);

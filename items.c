@@ -2406,7 +2406,7 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         i.pos   = (Position){0, 0};
         i.type  = Tourch;
         i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        i.value = 100;
+        i.value = 1000 + rand()%200;
         i.nDice = 0;
         i.to    = EQUIPTED_TOURCH;
         i.isEqu = isEqu;
@@ -2442,6 +2442,40 @@ void add_item_to_inventory(Item_Type type, Item_DA* inventory, Scroll_Type scrol
         base_price = i.value; // Gold is its own price
         break;
     }
+
+    case Mushroom:{
+        i.name = malloc(128);
+        const int what = rand()%4;
+        switch (what){
+        case 0:
+            strcpy(i.name, "Mushroom of strenght");
+            break;            
+        case 1:
+            strcpy(i.name, "Mushroom of inte");
+            break;
+        case 2:
+            strcpy(i.name, "Mushroom of strenght");
+            break;
+        case 3:
+            strcpy(i.name, "Mushroom of dex");
+            break;    
+        
+        default:
+            break;
+        } 
+        
+        i.pos   = (Position){0, 0};
+        i.type  = Mushroom;
+        i.stats = (Stats){0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        i.value = what; 
+        i.nDice = 0;
+        i.to    = EQUIPTED_USE_MUSHROOM;
+        i.isEqu = isEqu;
+        i.itemChance = 4.0f;
+        base_price = 1000; 
+        break;
+    }
+    
 
     default:
         ASSERT("Not defined item");

@@ -118,8 +118,10 @@
         "assets/items/tourch.png",
         "assets/enviroment/food.png",
         "assets/enviroment/gold.png",
+        "assets/items/mushroom.png",
         "assets/items/scroll.png",
         "assets/items/potion.png",
+       
         
 
         "assets/enviroment/grass.png",
@@ -130,7 +132,11 @@
         "assets/enviroment/wepon.png",
         "assets/enviroment/general.png",
         "assets/enviroment/potion.png",
-        "assets/enviroment/scrol.png"
+        "assets/enviroment/scrol.png",
+        "assets/enviroment/ground.png",
+        "assets/enviroment/wall.png",
+        "assets/enviroment/water.png",
+        "assets/enviroment/lava.png"
         
         
         

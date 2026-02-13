@@ -183,8 +183,18 @@ void load_global_ent(Global_Ent_DA* ent, const char* name){
 					cJSON* chanceRange = cJSON_GetObjectItemCaseSensitive(cOMP_STATE, "chanceRange");
 					ERR_JSON(chanceRange);
 					g.state.chanceRange = (float)chanceRange->valuedouble;
-					
-					
+					cJSON* alText = cJSON_GetObjectItemCaseSensitive(cOMP_STATE, "al");
+					ERR_JSON(alText);	
+					int is = false;
+					for(AL_Type type = AL_BEAST; type < AL_NUM; type++){
+						if(strcmp(AL_Name[type], alText->string)){
+							is = true;
+							g.state.type = type;
+							break;
+						}
+					}
+					if(!is){ERROR_BREAK("Not nown type of al");}
+						
 					g.masks |= COMP_STATE;
 				}
 		}	
@@ -249,7 +259,7 @@ void init_world(World* world) {
 		world->identPotions[i] = false;
 	}	
 	world->identScrools[Scroll_Identif] = true;
-	world->tempStatsPlayer = (TempStats_DA){0};
+	world->tempStatsPlayer = (TempStats){0};
 	world->num_free = MAX_ENTITIES;
 	world->tempGen = NULL;
 	world->expPlayer = 0;
@@ -427,7 +437,7 @@ void add_components_to_ent_depending_on_T(World* world, Global_Ent_DA* ent, int 
 	if(e.masks & COMP_STATE){
 		add_component(world, monster, COMP_STATE,  &(State) {
 			e.state.current, e.state.chancesR, e.state.chancesH, e.state.chancesW, e.state.chancesRe, e.state.chancesB, 
-			e.state.chanceRange, 0, 1, 1, 0, (10 + rand()%50), (Position)world->position[monster], 0
+			e.state.chanceRange, 0, 1, 1, 0, (10 + rand()%50), (Position)world->position[monster], 0, e.state.type
 		});
 	}
 	if (e.masks & COMP_MONSTER){
@@ -440,8 +450,8 @@ void add_components_to_ent_depending_on_T(World* world, Global_Ent_DA* ent, int 
 	else{
 		add_component(world, monster, COMP_FIRE, &(Fire){0, 0});
 	}
-	
-	add_component(world, monster, COMP_STATUS, &(StatusEffects){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+	const StatusEffects temp0 = (StatusEffects){0};
+	add_component(world, monster, COMP_STATUS, (void*)&temp0);
 	//world->status[monster].confusionTurn = 1000;
 
 	//Spell system added
@@ -1109,7 +1119,7 @@ void calculate_diakstra_map(World *world, int goalX, int goalY, uint8_t isEnt) {
 
 	
 ///*
-void calculate_diakstra_map(World *world, int goalX, int goalY, uint8_t isEnt) {
+void calculate_diakstra_map_(World *world, int goalX, int goalY, uint8_t isEnt) {
     	for (int y = 0; y < MAP_HEIGHT; y++) {
 		for (int x = 0; x < MAP_WIDTH; x++) {
 			world->dikstra[y][x] = (float)255.0f;
@@ -1175,6 +1185,7 @@ void calculate_diakstra_map(World *world, int goalX, int goalY, uint8_t isEnt) {
 			world->dikstra[(int)world->input[i].nextPosition.y][(int)world->input[i].nextPosition.x] = 255;
 			//Around ent if monster add a +1 to tile value to disipate arround	
 			///*
+			//Add hear 
 		
 		}
 		}
@@ -1184,6 +1195,235 @@ void calculate_diakstra_map(World *world, int goalX, int goalY, uint8_t isEnt) {
 		
 }
 //*/
+
+void calculate_diakstra_map(World *world, int goalX, int goalY, uint8_t isEnt) {
+    
+    for (int y = 0; y < MAP_HEIGHT; y++) {
+        for (int x = 0; x < MAP_WIDTH; x++) {
+            world->dikstra[y][x] = (float)255.0f;
+        }
+    }
+
+    
+    world->dikstra[goalY][goalX] = 0.0f;
+    
+    
+    Vector2* queue = calloc(world->map.h * world->map.w, sizeof(Vector2));
+    int front = 0, back = 0;
+
+    queue[back++] = (Vector2){goalX, goalY};
+
+    
+    const int dx[8] = {  0,  1, 1,  1,  0, -1, -1, -1 };
+    const int dy[8] = { -1, -1, 0,  1,  1,  1,  0, -1 };
+
+    // Standard Dijkstra/BFS to calculate distances
+    while (front < back) {
+        Vector2 p = queue[front++];
+        const int x = (int)roundf(p.x);
+        const int y = (int)roundf(p.y);
+        float current_dist = world->dikstra[y][x];
+
+        for (int dir = 0; dir < 8; dir++) {
+            int nx = p.x + dx[dir];
+            int ny = p.y + dy[dir];
+
+            if (nx < 0 || ny < 0 || nx >= MAP_WIDTH || ny >= MAP_HEIGHT) continue;
+            if (world->map.walling[ny][nx] == '#') continue;  // Skip walls
+
+            if (world->dikstra[ny][nx] > current_dist + 1.0f) {
+                world->dikstra[ny][nx] = current_dist + 1.0f;
+                queue[back++] = (Vector2){nx, ny};
+            }
+        }
+    }
+    free(queue);
+
+    
+    for(int y = 0; y < MAP_HEIGHT; y++) {
+        for (int x = 0; x < MAP_WIDTH; x++) {
+            // Set walls to max cost
+            if (world->map.walling[y][x] == Tile_Wall) {
+                world->dikstra[y][x] = 255.0f;
+            }
+            
+            else if(world->map.walling[y][x] == Tile_Fire || 
+                   world->map.walling[y][x] == Tile_Lava || 
+                   world->map.walling[y][x] == Tile_Fire){  // Note: duplicate condition
+                if(world->dikstra[y][x] != 255.0f){
+                    world->dikstra[y][x] = 200.0f;
+                }
+            }
+        }
+    }
+
+    
+    if(isEnt) {
+       
+        for(int i = 0; i < MAX_ENTITIES; i++){
+            CompMask mask = COMP_MONSTER | COMP_POSITION;
+            if((mask & world->masks[i]) == mask){
+                int mx = (int)world->position[i].x;
+                int my = (int)world->position[i].y;
+                world->dikstra[my][mx] = 255.0f;
+                
+       
+                if(world->masks[i] & COMP_INPUT) {
+                    int nx = (int)world->input[i].nextPosition.x;
+                    int ny = (int)world->input[i].nextPosition.y;
+                    world->dikstra[ny][nx] = 255.0f;
+                }
+            }
+        }
+        for(int i = 0; i < MAX_ENTITIES; i++){
+            CompMask mask = COMP_MONSTER | COMP_POSITION;
+            if((mask & world->masks[i]) == mask){
+                int mx = (int)world->position[i].x;
+                int my = (int)world->position[i].y;
+         
+                for(int dy = -1; dy <= 1; dy++) {
+                    for(int dx = -1; dx <= 1; dx++) {
+                        if(dx == 0 && dy == 0) continue;  // Skip monster's own position
+                        
+                        int nx = mx + dx;
+                        int ny = my + dy;
+                        
+         
+                        if(nx < 0 || ny < 0 || nx >= MAP_WIDTH || ny >= MAP_HEIGHT) continue;
+                        
+         
+                        if(world->map.walling[ny][nx] == Tile_Wall) continue;
+                        if(world->dikstra[ny][nx] >= 255.0f) continue;
+                        
+                        // distance-based penalty: tiles closer to monsters are more expensive
+                        float penalty = 0.0f;
+                        
+                        // Directly adjacent tiles get highest penalty
+                        if(abs(dx) + abs(dy) == 1) {  // Cardinal directions
+                            penalty = 20.0f;
+                        } else {  // Diagonal directions
+                            penalty = 10.0f;
+                        }
+                        
+                        
+                        if(world->masks[i] & COMP_STATE) {
+                            if(world->state[i].type == AL_HUNTER) {
+                                
+                                penalty *= 0.5f;
+                            } else if(world->state[i].type == AL_COWARD) {
+                            
+                                penalty *= 2.0f;
+                            }
+                        }
+                        
+                        // Apply penalty (capped at 255)
+                        world->dikstra[ny][nx] += penalty;
+                        if(world->dikstra[ny][nx] > 255.0f) {
+                            world->dikstra[ny][nx] = 255.0f;
+                        }
+                    }
+                }
+            }
+        }
+
+        //FLANKING
+        int playerX = goalX;
+        int playerY = goalY;
+        
+        for(int y = 0; y < MAP_HEIGHT; y++) {
+            for(int x = 0; x < MAP_WIDTH; x++) {
+                
+                if(world->dikstra[y][x] >= 255.0f) continue;
+                
+                
+                float flankingBonus = 0.0f;
+                
+                
+                int dx = abs(x - playerX);
+                int dy = abs(y - playerY);
+                int dist = dx + dy;
+                
+                if(dist == 1) {  
+                
+                    int monstersInSameDirection = 0;
+                    
+                    for(int i = 1; i < MAX_ENTITIES; i++) {
+                        CompMask mask = COMP_MONSTER | COMP_POSITION;
+                        if((mask & world->masks[i]) == mask) {
+                            int mx = (int)world->position[i].x;
+                            int my = (int)world->position[i].y;
+                            
+                            int mdx = abs(mx - playerX);
+                            int mdy = abs(my - playerY);
+                            int mdist = mdx + mdy;
+                            
+                            
+                            if(mdist == 1) {
+                                
+                                int dirX = mx - playerX;
+                                int dirY = my - playerY;
+                                int thisDirX = x - playerX;
+                                int thisDirY = y - playerY;
+                                
+                                
+                                if((dirX * thisDirX > 0) || (dirY * thisDirY > 0)) {
+                                    monstersInSameDirection++;
+                                }
+                            }
+                        }
+                    }
+                    
+                    flankingBonus = 5.0f * (4 - monstersInSameDirection); // Max 20 bonus
+                }
+                
+                //
+                if(dist <= 2) {
+                    // Calculate which quadrant relative to player
+                    int relX = x - playerX;
+                    int relY = y - playerY;
+                    
+                    // Count monsters in opposite quadrant
+                    int monstersInOppositeQuadrant = 0;
+                    
+                    for(int i = 1; i < MAX_ENTITIES; i++) {
+                        CompMask mask = COMP_MONSTER | COMP_POSITION;
+                        if((mask & world->masks[i]) == mask) {
+                            int mx = (int)world->position[i].x;
+                            int my = (int)world->position[i].y;
+                            
+                            int mdx = abs(mx - playerX);
+                            int mdy = abs(my - playerY);
+                            int mdist = mdx + mdy;
+                            
+                            if(mdist <= 3) {  // Only consider nearby monsters
+                                int mRelX = mx - playerX;
+                                int mRelY = my - playerY;
+                                
+                                // Check if in opposite quadrant
+                                if((relX * mRelX < 0) || (relY * mRelY < 0)) {
+                                    monstersInOppositeQuadrant++;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Bonus for positions opposite existing monsters (encircling)
+                    flankingBonus += 3.0f * monstersInOppositeQuadrant;
+                }
+                
+                // Apply the flanking bonus (reduces cost)
+                world->dikstra[y][x] -= flankingBonus;
+                if(world->dikstra[y][x] < 0.0f) {
+                    world->dikstra[y][x] = 0.0f;
+                }
+            }
+        }
+    }
+
+    
+    world->dikstra[(int)world->position[0].y][(int)world->position[0].x] = 255.0f;
+    world->dikstra[goalY][goalX] = 0.0f;
+}
 
 
 int is_monster_in_next_postition(World* world, float x, float y){
@@ -1269,10 +1509,10 @@ for(int i = 0; i < n; i++){
 
 
 
-#define CHANCE_BREAK_WEPON 0.01f
-#define CHANCE_BREAK_ARMOR 0.05f
+#define CHANCE_BREAK_WEPON 0.005f
+#define CHANCE_BREAK_ARMOR 0.01f
 
-int attack_dmg_callculations(World* world, int attacker, int defender, int isRange){
+int attack_dmg_callculations(World* world, Str *str, int attacker, int defender, int isRange){
 
 	//CALCULATION FOR ENGEGING IN COMBAT
 	//IT WILL ROLLL A DICESS FOR const of bests
@@ -1324,7 +1564,9 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 					}
 					//BREAK ITEM
 					if(rand_f32() <= CHANCE_BREAK_WEPON){
-						printf("BROKE w\n");
+						if(attacker == 0){
+							da_append(str, "Your wepon is degraded");
+						}
 						if(rand_f32() < 0.1){
 							world->inventory[attacker].items[i].nDice--;
 							CLAMP(world->inventory[attacker].items[i].nDice, 0, 100);
@@ -1380,7 +1622,9 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 					}
 					//BREAK ITEM
 					if(rand_f32() <= CHANCE_BREAK_ARMOR){
-						printf("BROKE\n");
+						if(defender == 0){
+							da_append(str, "Your armor is degraded");
+						}
 						if(rand_f32() < 0.1){
 							world->inventory[defender].items[i].nDice--;
 							CLAMP(world->inventory[defender].items[i].nDice, 0, 100);
@@ -1407,19 +1651,25 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 	//If added in stats Tbd
 	//Crit 4 - 10
 	if(dicesAttSpecial[CRIT] >= D1(100)){
-		printf("Crit\n");
+		if(attacker == 0){
+			da_append(str, "You crit");
+		}
 		dmgValue += 4 + rand()%6;
 	}
 
 	if(dicesAttSpecial[LIFESTEAL] >= D1(100)){
-		printf("Life\n");
+		if(attacker == 0){
+			da_append(str, "You lifsteal");
+		}
 		world->health[attacker].current += dmgATTACK;
 		CLAMP(world->health[attacker].current, 0, world->health[attacker].max);
 	}
 	
 	
 	if(dicesAttSpecial[BASH] >= D1(100)){
-		printf("Bash\n");
+		if(attacker == 0){
+			da_append(str, "You bashed");
+		}
 		world->state[defender].stunTurn += 4 + rand()%6;
 		world->state[defender].current = STATE_STUN;
 	}
@@ -1434,19 +1684,25 @@ int attack_dmg_callculations(World* world, int attacker, int defender, int isRan
 
 		//Crit 4 - 10
 	if(dicesDefSpecial[DOGE] >= D1(100)){
-		printf("Doge\n");
+		if(defender == 0){
+			da_append(str, "You doged");
+		}
 		AC += 4 + rand()%6;
 	}
 
 	if(dicesDefSpecial[THORN] >= D1(100)){
-		printf("Thorn\n");
+		if(defender == 0){
+			da_append(str, "You thorn");
+		}
 		world->health[attacker].current -= 4 + rand()%6;
 		CLAMP(world->health[attacker].current, 0, world->health[attacker].max);
 	}
 	
 	
 	if(dicesDefSpecial[BASH] >= D1(100)){
-		printf("Bash def\n");
+		if(defender == 0){
+			da_append(str, "You bashed");
+		}
 		//exit(-1);
 		world->state[attacker].stunTurn += 4 + rand()%6;
 		world->state[attacker].current = STATE_STUN;
@@ -1604,6 +1860,7 @@ void generate_monster_generator(World* world, Generator* gen, Position pos, Glob
 }
 
 #define CHANCE_SHOP 0.5f
+#define MONSTERS_ON_LEVEL 12
 void generate_level(World* world, int level, Generator_DA *generators, Global_Ent_DA *ent){
 	//40% B, 30% N, 25% G, 5% RM
 	if(world->tempGen != NULL){
@@ -1618,7 +1875,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	//int maxRooms = ;
 	if(whatLevel <= 0.4){
 		
-		world->map = xmgen_brogue(MAP_WIDTH, MAP_HEIGHT, maxRooms, 8, 9 + rand()%12);
+		world->map = xmgen_brogue(MAP_WIDTH, MAP_HEIGHT, maxRooms, 6, 9 + rand()%12);
 		xmgen_add_enviroment(&world->map, TIle_Grass, 0, 0, MAP_WIDTH, MAP_HEIGHT, (0.45 + rand_f32() / 10.0f));
 		xmgen_add_enviroment(&world->map, Tile_Water, rand()%MAP_WIDTH, rand()%MAP_HEIGHT, 20, 20, 0.4);
 		
@@ -1673,7 +1930,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 		}
 
 	}
-	
+	//xmgen_add_lake(&world->map, Tile_Lava, 0, 0, MAP_WIDTH, MAP_HEIGHT,  (0.45 + rand_f32() / 10.0f));
 	//For this prob ight map 
 	world->ambientStrenght = rand_f32() / 2.0f;    // 0.0 - 0.1 PROB LIGHTING POWER
 	if(rand_f32() < 0.15)
@@ -1784,7 +2041,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	
 	//Get ge  n
 	//Tbd machines for secret puzzle rooms or somthing
-	int nItems  = 3 + rand()%2;
+	int nItems  = 3 + rand()%5;
 	while(nItems > 0){
 		const int x = rand()%world->map.w;
 		const int y = rand()%world->map.h;
@@ -1809,7 +2066,7 @@ void generate_level(World* world, int level, Generator_DA *generators, Global_En
 	//exit(-1);
 	Position_DA dist = {0}; 
 	int numIt = 0;	
-	while(world->nMonster < 12){
+	while(world->nMonster < MONSTERS_ON_LEVEL){
 		
 		numIt++;
 		if(numIt == 1000){

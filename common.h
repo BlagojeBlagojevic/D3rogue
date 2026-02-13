@@ -50,6 +50,13 @@ typedef struct {
 	} Position;
 */
 
+typedef struct {
+	int 	count;
+	int 	capacity;
+	char** items;
+	} Str;
+
+
 typedef enum{
 	//Undead monsters
 	Artas,
@@ -367,8 +374,10 @@ typedef enum{
 	S_Tourch,
 	S_Food,
 	S_Gold,
+	S_Mushroom,
 	S_Scroll,
 	S_Potion,
+	
 	//S_Pile,
 	//S_asd,
 	
@@ -382,6 +391,10 @@ typedef enum{
 	S_GeneralS,
 	S_PotionS,
 	S_ScrollS,
+	S_Ground,
+	S_Wall,
+	S_Water,
+	S_Lava,
 
 	S_Sprite_Num
 
@@ -446,6 +459,11 @@ typedef struct{
 	int inte; 
 	int cons;
 	int turns;
+	int dmgMax;
+	int dmgMin;
+	int defence;
+	int health;
+	int maxHealth;
 }TempStats;
 
 typedef struct 
@@ -486,14 +504,33 @@ typedef enum {
 	STATE_NUM
 	} State_Monster;
 
+	typedef enum{
+		AL_BEAST,
+		AL_COWARD,
+		AL_HUNTER,
+		AL_RANGE,
+		AL_NUM,
+
+		
+	}AL_Type;
+
+static const char* AL_Name[] = {
+		"AL_BEAST",
+		"AL_COWARD",
+		"AL_HUNTER",
+		"AL_RANGE",
+	};
+
 typedef struct {
 	State_Monster current;
-	float chancesR;
-	float chancesH;
-	float chancesW;
-	float chancesRe;
-	float chancesB;
-	float chanceRange;	
+	//Tbd remove
+	float    chancesR;
+	float    chancesH;
+	float    chancesW;
+	float    chancesRe;
+	float    chancesB;
+	float    chanceRange;
+	
 	float 	 fear;
 	int   	 lastSeenX;
 	int   	 lastSeenY;
@@ -501,7 +538,7 @@ typedef struct {
 	int   	 territoryRadius;
 	Position home;
 	int      stunTurn;
-
+	AL_Type  type;	
 }State;
 
 /*
@@ -703,7 +740,23 @@ typedef struct{
 	int telepatyTurn;
 	int telepatyImune;
 	
+	int str;
+	int isStr;
+	int strTurn;
+	int strImune;
 
+
+	int inte;
+	int isInte;
+	int inteTurn;
+	int inteImune;
+
+
+	int dex;
+	int isDex;
+	int dexTurn;
+	int dexImune;
+	
 
 }StatusEffects;
 
