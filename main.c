@@ -47,7 +47,7 @@ void main_loop(void) {
     const int lightingOption = g_engine->isTorchEqu ? 3 : 0;
     SetShaderValue(g_lightingShader, GetShaderLocation(g_lightingShader, "lightingOption"), &lightingOption, SHADER_UNIFORM_INT);
     	if(g_engine->isTorchEqu == true){
-			int what = 3;
+			int what = 2;
 			SetShaderValue(g_lightingShader,  GetShaderLocation(g_lightingShader, "lightingOption"), &what, SHADER_UNIFORM_INT);
 		}
 		else{
@@ -74,6 +74,7 @@ void main_loop(void) {
         //rUN ALL 
         health_system(g_world, &g_entDA, g_engine);
         food_system(g_world, g_engine);
+        mushroom_system(g_world, g_engine);
         scroll_system(g_world, &g_entDA, g_engine);
         potion_system(g_world, g_engine);
         throw_system(g_world, g_engine);
@@ -120,7 +121,7 @@ void main_loop(void) {
             //render_system2d(g_world, g_engine, &g_sprites);
             render_system(g_world, g_engine, &g_sprites);
             rlPopMatrix();
-           
+            
         }
     EndMode3D();
     EndTextureMode();
@@ -133,6 +134,8 @@ void main_loop(void) {
          rlPushMatrix();
             render_system2d(g_world, g_engine, &g_sprites);
         rlPopMatrix();
+         float wobble = 0.001;
+            
         EndTextureMode();
         }
         render_event_messages(g_engine, 100, 0, 600, 200);
@@ -164,6 +167,7 @@ void main_loop(void) {
        
     EndDrawing();
 	 BeginShaderMode(g_blureShader);
+        
         DrawTextureRec(g_target.texture, 
                       (Rectangle){ 0, 0, (float)g_target.texture.width, (float)-g_target.texture.height }, 
                       (Vector2){ 0, 0 }, WHITE);
@@ -199,7 +203,17 @@ int main() {
     add_tag(g_world, player, COMP_PLAYER);
     add_component(g_world, player, COMP_INPUT, NULL);
     add_component(g_world, player, COMP_FIRE, &(Fire){0, 0});
-    add_component(g_world, player, COMP_STATUS, &(StatusEffects){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    const StatusEffects temp0 = (StatusEffects){0};
+    add_component(g_world, player, COMP_STATUS, (void*)&temp0
+        //&(StatusEffects){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  //  ,0,0,0,0,0,0,0,0,0}
+  );
+    //g_world->status[0].strTurn = 10;
+    //g_world->status[0].str = 10;
+    //g_world->status[0].dexTurn = 10;
+    //g_world->status[0].dex = 10;
+    //g_world->status[0].inteTurn = 10;
+    //g_world->status[0].inte = 10;
     //world.expPlayer = 10000;
     unsigned int temp;
     printf("\n\n Input start exp:\n >");
@@ -242,6 +256,12 @@ int main() {
     add_item_to_inventory(Dagger, &g_world->inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Robe,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Food,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    
+    //add_item_to_inventory(Mushroom,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    //add_item_to_inventory(Mushroom,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    //add_item_to_inventory(Mushroom,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    //add_item_to_inventory(Mushroom,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
+    
     add_item_to_inventory(Gold,   &g_world->inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Tourch, &g_world->inventory[player], Scroll_No, Potion_No, false, false);
     add_item_to_inventory(Scroll, &g_world->inventory[player], Scroll_Identif, Potion_No, false, false);
@@ -315,7 +335,7 @@ int main() {
     #else
         //g_engine = init_engine_soft(g_world, 0, g_engine);
         load_system(g_world, g_engine, &g_generators);
-        g_engine = init_engine_soft(g_world, 0, g_engine);
+        g_engine = init_engine_soft(g_world, 0, g_engine, true);
         //Garbage in FIXED 
 
         engine->drawDistance = 20 - 1.0f / g_world->ambientStrenght;

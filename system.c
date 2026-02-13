@@ -209,9 +209,10 @@ void render_system(World* world, EngineData* engine, Sprite_DA *sprites) {
 		//if(world->visibe[(int)p->y][(int)p->x] == true)
 		{
 			if(distance > engine->drawDistance){
-			//	Color c = BLACK;
-			//	c.a = 255;
-			//	DrawRectangle(pos.x, pos.z, 500, 500, c);
+				Color c = BLACK;
+				//c.a = 200;
+				//DrawRectangle(pos.x, pos.z, 500, 500, c);
+				//DrawCubeV((Vector3){(float)p->x, 0.0f, (float)p->y}, (Vector3){10, 10, 1}, c);
 			}
 			//Tbd shader 
 			else if(world->status[0].hallucinationTurn > 0){
@@ -456,76 +457,54 @@ void render_system2d(World* world, EngineData* engine, Sprite_DA *sprites) {
             const float worldX = x * tileSize;
             const float worldY = y * tileSize;
 
-            // Determine tile color based on tile type
-            Color tileColor = BLACK;
             const char tile = world->map.walling[y][x];
-            
-            if (tile == Tile_Water) {
-                tileColor = BLUE;
-            }
-            else if (tile == Tile_Dwater) {
-                tileColor = DARKBLUE;
-            }
-            else if (tile == Tile_Lava) {
-                tileColor = ORANGE;
-            }
-            else if (tile == Tile_Fire) {
-                tileColor = RED;
-            }
-            else if (tile == Tile_Caz) {
-                tileColor = BLACK;
-            }
-            else if (tile == '#') {
-                tileColor = (Color){0x18, 0x18, 0x18, 255}; // Wall
-            }
-            else if (tile == ' ' || tile == '*' || tile == Tile_Armory || tile == Tile_Wepon || tile == Tile_Genera || tile == Tile_Pot || tile == Tile_Scro) {
-                tileColor = BROWN; // Floor
-            }
-            else if (tile == '+' || tile == '-') {
-                tileColor = (Color){150, 100, 50, 255}; // Brown for door
-            }
-            else if (tile == Tile_DownS) {
-                tileColor = (Color){200, 200, 200, 255}; // Light gray stairs
-            }
-            else if (tile == Tile_UpS) {
-                tileColor = (Color){100, 100, 100, 255}; // Dark gray stairs
-            }
-            else if (tile == '\"' || tile == Tile_BGrass) {
-                tileColor = BROWN;
-            }
-            else if (tile == '~') {
-                tileColor = BLUE;
-            }
-
             // Draw the tile
-            DrawRectangle(worldX, worldY, tileSize, tileSize, tileColor);
+            if(tile == Tile_Wall){
+				
+				Rectangle source = { 0.0f, 0.0f, 
+					(float)sprites->items[S_Wall].texture.width, (float)sprites->items[S_Ground].texture.height };
+				Rectangle dest = { (float)worldX, (float)worldY, (float)tileSize, (float)tileSize };
+				Vector2 origin = { 0.0f, 0.0f };
+				DrawTexturePro(sprites->items[S_Wall].texture, source, dest, origin, 0.0f, WHITE);
+			}	
+			else if(tile == Tile_Armory 
+				|| tile == Tile_Wepon || tile == Tile_Genera || tile == Tile_Pot || tile == Tile_Scro 
+				|| TIle_Grass || Tile_BGrass || Tile_Dirt){		
+				Rectangle source = { 0.0f, 0.0f, 
+					(float)sprites->items[S_Ground].texture.width, (float)sprites->items[S_Ground].texture.height };
+				Rectangle dest = { (float)worldX, (float)worldY, (float)tileSize, (float)tileSize };
+				Vector2 origin = { 0.0f, 0.0f };
+				DrawTexturePro(sprites->items[S_Ground].texture, source, dest, origin, 0.0f, WHITE);
+				
+			}
+			if(tile == Tile_Lava){
+			//	exit(-1);
+				Rectangle source = { 0.0f, 0.0f, 
+					(float)sprites->items[S_Lava].texture.width, (float)sprites->items[S_Water].texture.height };
+				Rectangle dest = { (float)worldX, (float)worldY, (float)tileSize, (float)tileSize };
+				Vector2 origin = { 0.0f, 0.0f };
+				DrawTexturePro(sprites->items[S_Lava].texture, source, dest, origin, 0.0f, WHITE);
+			}
+			if(tile == Tile_Water || tile == Tile_Dwater){
+			//	exit(-1);
+				Rectangle source = { 0.0f, 0.0f, 
+					(float)sprites->items[S_Water].texture.width, (float)sprites->items[S_Water].texture.height };
+				Rectangle dest = { (float)worldX, (float)worldY, (float)tileSize, (float)tileSize };
+				Vector2 origin = { 0.0f, 0.0f };
+				DrawTexturePro(sprites->items[S_Water].texture, source, dest, origin, 0.0f, WHITE);
+			}
+			if(tile == Tile_Fire){
+				DrawRectangle(worldX, worldY, tileSize, tileSize, ORANGE);
+			}
+			if(tile == Tile_Caz){
+				DrawRectangle(worldX, worldY, tileSize, tileSize, BLACK);
+			}
+				//DrawRectangle(worldX, worldY, tileSize, tileSize, tileColor);
 			
                // Rectangle source = { 0.0f, 0.0f, (float)s.texture.width, (float)s.texture.height };
                // Rectangle dest = { worldX, worldY, (float)tileSize, (float)tileSize };
                // DrawTexturePro(s.texture, source, dest, (Vector2){0,0}, 0.0f, WHITE);
             
-            // Draw tile symbols (optional - can be removed for pure sprite-based)
-            if((tile == '+' || tile == '-') && world->isExpMap[y][x]){
-                DrawText("+", worldX + 8, worldY + 8, 10, GREEN);
-            }
-            if((tile == '~' || tile == Tile_Dwater) && world->isExpMap[y][x]){
-                DrawText("~", worldX + 8, worldY + 8, 10, BLUE);
-            }
-            if((tile == Tile_Fire) && world->isExpMap[y][x]){
-                DrawText("^", worldX + 8, worldY + 8, 10, ORANGE);
-            }
-            if((tile == Tile_Caz) && world->isExpMap[y][x]){
-                DrawText(";", worldX + 8, worldY + 8, 10, WHITE);
-            }
-            if((tile == Tile_DownS) && world->isExpMap[y][x]){
-                DrawText("<", worldX + 6, worldY + 6, 20, WHITE);
-            }
-            if((tile == Tile_UpS) && world->isExpMap[y][x]){
-                DrawText(">", worldX + 6, worldY + 6, 20, WHITE);
-            }
-            if((tile == '\"' || tile == Tile_BGrass) && world->isExpMap[y][x]){
-                DrawText("\"", worldX + 8, worldY + 8, 10, GREEN);
-            }
         }
     }
 
@@ -924,102 +903,283 @@ static void set_memory_wandering(World* world, int ent){
 		}
 }
 
-
-void monster_change_state_system(World* world, EngineData *engine) {
-    CompMask mask = COMP_POSITION | COMP_MONSTER | COMP_STATE | COMP_STATS;
-
+#define CHANGE_PERCEPTION_BEAST  20
+#define CHANGE_PERCEPTION_COWARD 2
+#define CHANGE_PERCEPTION_HUNTER 100
+#define CHANGE_PERCEPTION_RANGE  50
+// AL_BEAST
+static void monster_change_beast(World* world, EngineData *engine, int ent) {
     const int playerX = world->position[0].x;
     const int playerY = world->position[0].y;
-    	const int dirs[8][2] = {
-        { 0, -1}, // Up
-        { 0,  1}, // Down
-        {-1,  0}, // Left
-        { 1,  0}, // Right
-        {-1, -1}, // Up-left
-        {-1,  1}, // Down-left
-        { 1, -1}, // Up-right
-        { 1,  1}  // Down-right
-    };
-	field_of_vison(world, engine, 0);
-	for(int i = 1; i < MAX_ENTITIES; i++){
-		if((world->masks[i] & mask) == mask){
-			
-		if(world->state[i].current == STATE_STUN){
-			if(world->state[i].stunTurn > 0){
-				world->state[i].stunTurn--;
-				world->state[i].current = STATE_STUN;
-				//return;
-			}
-		else{
-			world->state[i].current = STATE_WANDERING;
-		}
-		}
-		else{
-			field_of_vison(world, engine, i);
-			bool isV = is_player_visible_by_monster(world, playerX, playerY);
-			int perception = rand()%(world->stats[i].perception + 1) - rand()%(world->stats[0].stealth + 1);
-			if(engine->isTorch)
-				perception+=10;
-			else 
-				perception-=5;	
-			if(world->state[i].current == STATE_HUNTING)
-				perception+=5;	
-			//IF vis by player -> HUNTING / RUNNING / STAKING(we will see) 
-			if(isV && ((perception > 0))){
-				//HUNTING -> FLEEING if maxHealh < 10% and running chane 
-				if(world->state[i].current == STATE_HUNTING){
-					const int dmg = world->health[i].max - world->health[i].current;
-					if(dmg >= 0.5f * world->health[i].max){
-						if(rand_f32() < world->state[i].chancesR)
-							world->state[i].current = STATE_RUNING;
-					}
-				}
-				else if(world->state[i].current != STATE_RUNING){
-					if(rand_f32() < world->state[i].chancesH){
-						world->state[i].current = STATE_HUNTING;
+    
+    field_of_vison(world, engine, ent);
+    bool isV = is_player_visible_by_monster(world, playerX, playerY);
+    
+    int perception = rand()%(world->stats[ent].perception + 1) 
+                     - rand()%(world->stats[0].stealth + 1);
+    
+    if(engine->isTorch)
+        perception += 10;
+    else 
+        perception -= 5;
+    
+    if(world->state[ent].current == STATE_HUNTING)
+        perception += CHANGE_PERCEPTION_BEAST;
+    
+    if(isV && ((perception > 0))) {
+        
+        if(world->state[ent].current == STATE_HUNTING) {
+            const int dmg = world->health[ent].max - world->health[ent].current;
+           
+            if(dmg >= 0.8f * world->health[ent].max) {
+                if(rand_f32() < world->state[ent].chancesR) {
+                    world->state[ent].current = STATE_RUNING;
+                }
+            }
+        } else if(world->state[ent].current != STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesH) {
+                world->state[ent].current = STATE_HUNTING;
+				world->state[ent].lastSeenX = world->position[0].x;
+				world->state[ent].lastSeenY = world->position[0].y;
+				world->state[ent].memoryTimer = 10;
+            }
+        }
+    }
+	else if(!isV && world->state[ent].current == STATE_HUNTING){
+		world->state[ent].current = STATE_ALERTED;
+		
+	}
+	 else {
+        if(world->state[ent].current == STATE_WANDERING) {
+            const bool isMonster = is_monster_on_position(world, world->state[ent].lastSeenX, world->state[ent].lastSeenY);
+            if(isMonster) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+        if(world->state[ent].current == STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesW ) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+    }
+}
 
-					}
-				}
-			}
-			//WANDERING ifNotSet, 
-			else{
-				//Wandering if on tile set a new wandering location if not do nothing
-				if(world->state[i].current == STATE_WANDERING){
-					const bool isMonster = is_monster_on_position(world, world->state[i].lastSeenX, world->state[i].lastSeenY);
-					if(isMonster){
-						world->state[i].current = STATE_WANDERING;
-						set_memory_wandering(world, i);
-					}
-				}
-				if(world->state[i].current == STATE_RUNING){
-					if(rand_f32() < world->state[i].chancesW){
-						world->state[i].current = STATE_WANDERING;
-						set_memory_wandering(world, i);
-					}
-				}	
-			}
-		}
+// AL_COWARD
+static void monster_change_coward(World* world, EngineData *engine, int ent) {
+    const int playerX = world->position[0].x;
+    const int playerY = world->position[0].y;
+    
+    field_of_vison(world, engine, ent);
+    bool isV = is_player_visible_by_monster(world, playerX, playerY);
+    
+    int perception = rand()%(world->stats[ent].perception + 1) 
+                     - rand()%(world->stats[0].stealth + 1);
+    
+    if(engine->isTorch)
+        perception += 10;
+    else 
+        perception -= 5;
+    
+    if(world->state[ent].current == STATE_HUNTING)
+        perception += CHANGE_PERCEPTION_COWARD;
+    
+    if(isV && ((perception > 0))) {
+        
+        if(world->state[ent].current == STATE_HUNTING) {
+            const int dmg = world->health[ent].max - world->health[ent].current;
+            
+            if(dmg >= 0.4f * world->health[ent].max) {
+                if(rand_f32() < world->state[ent].chancesR * 2.0f) {
+                    world->state[ent].current = STATE_RUNING;
+                }
+            }
+        } else if(world->state[ent].current != STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesH) {
+                world->state[ent].current = STATE_HUNTING;
+            }
+        }
+    } else {
+        if(world->state[ent].current == STATE_WANDERING) {
+            const bool isMonster = is_monster_on_position(world, world->state[ent].lastSeenX, world->state[ent].lastSeenY);
+            if(isMonster) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+        if(world->state[ent].current == STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesW * 0.7f) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+    }
+}
 
-		//gROUP
 
-		if (world->state[i].current == STATE_HUNTING || world->state[i].current == STATE_STALKING) {
-            for (int j = 1; j < MAX_ENTITIES; j++) {
-                if (i == j || (world->masks[j] & mask) != mask) continue;
+static void monster_change_hunter(World* world, EngineData *engine, int ent) {
+    const int playerX = world->position[0].x;
+    const int playerY = world->position[0].y;
+    
+    field_of_vison(world, engine, ent);
+    bool isV = is_player_visible_by_monster(world, playerX, playerY);
+    
+    int perception = rand()%(world->stats[ent].perception + 1) 
+                     - rand()%(world->stats[0].stealth + 1);
+    
+    if(engine->isTorch)
+        perception += 10;
+    else 
+        perception -= 5;
+    
+    if(world->state[ent].current == STATE_HUNTING)
+        perception += CHANGE_PERCEPTION_HUNTER;
+    
+    if(isV && ((perception > 0))) {
 
-                if (Vector2DistanceSqr(world->position[i], world->position[j]) < 16) { // Alert radius of ~4 tiles
-                    if (world->state[j].current != STATE_HUNTING && world->state[j].current != STATE_RUNING && world->state[j].current != STATE_STUN) {
-                        // Not all monsters get alerted - some might ignore the alert
-                        if (rand_f32() < 0.7f) { // 70% chance to respond to alert
-                            world->state[j].current = STATE_ALERTED;
-                            world->state[j].memoryTimer = 10 + rand()%20; // Alerted monsters remember for a while
-                            world->state[j].lastSeenX = playerX;
-                            world->state[j].lastSeenY = playerY;
+        if(world->state[ent].current == STATE_HUNTING) {
+            const int dmg = world->health[ent].max - world->health[ent].current;
+
+            if(dmg >= 0.9f * world->health[ent].max) {
+                if(rand_f32() < world->state[ent].chancesR) {
+                    world->state[ent].current = STATE_RUNING;
+                }
+            }
+        } else if(world->state[ent].current != STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesH) {
+                world->state[ent].current = STATE_HUNTING;
+            }
+        }
+    } else {
+        if(world->state[ent].current == STATE_WANDERING) {
+            const bool isMonster = is_monster_on_position(world, world->state[ent].lastSeenX, world->state[ent].lastSeenY);
+            if(isMonster) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+        if(world->state[ent].current == STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesW ) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+    }
+}
+
+
+static void monster_change_range(World* world, EngineData *engine, int ent) {
+    const int playerX = world->position[0].x;
+    const int playerY = world->position[0].y;
+    
+    field_of_vison(world, engine, ent);
+    bool isV = is_player_visible_by_monster(world, playerX, playerY);
+    
+    int perception = rand()%(world->stats[ent].perception + 1) 
+                     - rand()%(world->stats[0].stealth + 1);
+    
+    if(engine->isTorch)
+        perception += 10;
+    else 
+        perception -= 5;
+    
+    if(world->state[ent].current == STATE_HUNTING)
+        perception += CHANGE_PERCEPTION_RANGE;
+    
+    if(isV && ((perception > 0))) {
+        
+        if(world->state[ent].current == STATE_HUNTING) {
+            const int dmg = world->health[ent].max - world->health[ent].current;
+           
+            if(dmg >= 0.6f * world->health[ent].max) {
+                if(rand_f32() < world->state[ent].chancesR) {
+                    world->state[ent].current = STATE_RUNING;
+                }
+            }
+        } else if(world->state[ent].current != STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesH * 0.8f) {
+                world->state[ent].current = STATE_HUNTING;
+            }
+        }
+    } else {
+        if(world->state[ent].current == STATE_WANDERING) {
+            const bool isMonster = is_monster_on_position(world, world->state[ent].lastSeenX, world->state[ent].lastSeenY);
+            if(isMonster) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+        if(world->state[ent].current == STATE_RUNING) {
+            if(rand_f32() < world->state[ent].chancesW) {
+                world->state[ent].current = STATE_WANDERING;
+                set_memory_wandering(world, ent);
+            }
+        }
+    }
+}
+
+
+void monster_change_state_system(World* world, EngineData *engine) {
+      CompMask mask = COMP_POSITION | COMP_MONSTER | COMP_STATE | COMP_STATS;
+    const float chanceHuntP = 1.0f - (float)world->health[0].current / (float)world->health[0].max;
+    
+    field_of_vison(world, engine, 0);
+    
+    for(int i = 1; i < MAX_ENTITIES; i++) {
+        if((world->masks[i] & mask) == mask) {
+            // Handle stun state (common to all)
+            if(world->state[i].current == STATE_STUN) {
+                if(world->state[i].stunTurn > 0) {
+                    world->state[i].stunTurn--;
+                    world->state[i].current = STATE_STUN;
+                    continue;
+                } else {
+                    world->state[i].current = STATE_WANDERING;
+                }
+            }
+            
+            // Call appropriate behavior function based on alignment
+			float  alertChance = 0.7f;
+			if (world->state[i].type == AL_BEAST) {
+                monster_change_beast(world, engine, i);
+				alertChance = 0.5;
+            }
+			else if (world->state[i].type == AL_HUNTER) {
+                monster_change_coward(world, engine, i);
+				alertChance = 0.5;
+            }
+			else if (world->state[i].type == AL_RANGE) {
+                monster_change_hunter(world, engine, i);
+				alertChance = 0.5;
+            }
+			else if (world->state[i].type == AL_COWARD) {
+                monster_change_range(world, engine, i);
+				alertChance = 0.5;
+            }
+            else {ERROR_BREAK("AL is not exist");}
+			//Groop alert
+			for (int j = 1; j < MAX_ENTITIES; j++) {
+                    if (i == j || (world->masks[j] & mask) != mask) continue;
+                    
+                    if (Vector2DistanceSqr(world->position[i], world->position[j]) < 40) {
+                        if (world->state[j].current != STATE_HUNTING && 
+                            world->state[j].current != STATE_RUNING && 
+                            world->state[j].current != STATE_STUN) {
+                            
+                            if (rand_f32() < alertChance) {
+                                world->state[j].current = STATE_ALERTED;
+                                world->state[j].memoryTimer = 10 + rand()%20;
+                                world->state[j].lastSeenX = world->position[0].x;
+                                world->state[j].lastSeenY = world->position[0].y;
+                            }
                         }
                     }
                 }
+			//SPONTAN HUNTING
+			//if()		
             }
-        }
-	}	
+            
 	}
 
 }
@@ -1809,6 +1969,7 @@ void monster_state_system(World* world, EngineData *engine, Global_Ent_DA* ent) 
 	//calculate_diakstra_map(world, world->position[0].x, world->position[0].y, 1);
 	for (int i = 1; i < MAX_ENTITIES; i++) {
 		if ((world->masks[i] & mask) == mask && world->input[i].isMoving == false ) {
+			calculate_diakstra_map(world, world->position[0].x, world->position[0].y, 1);
 			if(world->renderable[i].type == S_FireDemon){
 				const int x = (int)world->position[i].x;
 				const int y = (int)world->position[i].y;
@@ -2310,7 +2471,7 @@ void projectile_system(World* world, EngineData *engine){
 				if(distance < 2.5f){
 						//MESSAGE_F("Distance %f", distance);
 						//destroy_entity(world, i);
-						int dmg = attack_dmg_callculations(world,  world->input[i].entProjectile, 0, true);
+						int dmg = attack_dmg_callculations(world, &engine->messeges,  world->input[i].entProjectile, 0, true);
 						world->health[0].current-=dmg;
 						//MESSAGE_F("PLAYER ATTACK health %d", world->health[0].current);
 						MESSAGE_F("You are atacked by %s", world->name[world->input[i].entProjectile])
@@ -2341,7 +2502,7 @@ void projectile_system(World* world, EngineData *engine){
 						if(world->projectile[i].type == P_Arrow){
 						MESSAGE_F("Distance %f", distance);
 						//destroy_entity(world, i);
-						int dmg = attack_dmg_callculations(world,  world->input[i].entProjectile, j, true);
+						int dmg = attack_dmg_callculations(world, &engine->messeges, world->input[i].entProjectile, j, true);
 						world->health[j].current-=dmg;
 						MESSAGE_F("PLAYER ATTACK health %d", world->health[j].current);
 						destroy_entity(world, i);
@@ -2515,7 +2676,11 @@ void saveWorld(World* world, FILE* f) {
     }
     
     // Write 2D arrays
-    fwrite(world->isExpMap, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
+	for(int y = 0; y < world->map.h; y++){
+		for(int x = 0; x < world->map.w; x++)
+		fwrite(&world->isExpMap[y][x], sizeof(int), 1, f);
+	}
+    //fwrite(world->isExpMap, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
     fwrite(world->dikstra, sizeof(float), MAP_HEIGHT * MAP_WIDTH, f);
     fwrite(world->visibe, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
     fwrite(world->gasMap, sizeof(Gas), MAP_HEIGHT * MAP_WIDTH, f);
@@ -2534,7 +2699,8 @@ void saveWorld(World* world, FILE* f) {
     fwrite(&world->nMonster, sizeof(int), 1, f);
     fwrite(world->identScrools, sizeof(int), Scroll_Num, f);
     fwrite(world->identPotions, sizeof(int), Potion_Num, f);
-    fwrite(&world->tempStatsPlayer, sizeof(TempStats_DA), 1, f);
+    //TEMP
+	fwrite(&world->tempStatsPlayer, sizeof(TempStats), 1, f);
     fwrite(&world->level, sizeof(int), 1, f);
     fwrite(&world->expPlayer, sizeof(int), 1, f);
     
@@ -2713,7 +2879,12 @@ void loadWorld(World* world, FILE* f, Generator_DA *generators) {
     }
     
     // Read 2D arrays
-    fread(world->isExpMap, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
+	
+	for(int y = 0; y < world->map.h; y++){
+		for(int x = 0; x < world->map.w; x++)
+		fread(&world->isExpMap[y][x], sizeof(int), 1, f);
+	}
+    //fread(world->isExpMap, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
     fread(world->dikstra, sizeof(float), MAP_HEIGHT * MAP_WIDTH, f);
     fread(world->visibe, sizeof(int), MAP_HEIGHT * MAP_WIDTH, f);
     fread(world->gasMap, sizeof(Gas), MAP_HEIGHT * MAP_WIDTH, f);
@@ -2732,7 +2903,7 @@ void loadWorld(World* world, FILE* f, Generator_DA *generators) {
     fread(&world->nMonster, sizeof(int), 1, f);
     fread(world->identScrools, sizeof(int), Scroll_Num, f);
     fread(world->identPotions, sizeof(int), Potion_Num, f);
-    fread(&world->tempStatsPlayer, sizeof(TempStats_DA), 1, f);
+    fread(&world->tempStatsPlayer, sizeof(TempStats), 1, f);
     fread(&world->level, sizeof(int), 1, f);
     fread(&world->expPlayer, sizeof(int), 1, f);
     
@@ -2866,7 +3037,7 @@ void input_system(World* world, EngineData *engine) {
 					if(world->dikstra[y][x] >= 255 ) {
 					int whatMonster = is_monster_in_next_postition(world,(float)x, (float)y); 
 					if(whatMonster){
-						int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+						int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
 						world->health[whatMonster].current-=dmg;
 						MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
 						//exit(-1);
@@ -2891,7 +3062,7 @@ void input_system(World* world, EngineData *engine) {
 				
 				int whatMonster = is_monster_in_next_postition(world,engine->nextPosition.x, engine->nextPosition.z); 
 				if(whatMonster){
-					int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+					int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
 					world->health[whatMonster].current-=dmg;
 					MESSAGE_F("You atacked %s", world->name[whatMonster])
 				//MESSAGE_F("Player health %d", world->health[0].current);
@@ -3026,7 +3197,7 @@ void input_system(World* world, EngineData *engine) {
 					if(world->dikstra[y][x] >= 255 ) {
 					int whatMonster = is_monster_in_next_postition(world,(float)x, (float)y); 
 					if(whatMonster){
-						int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+						int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
 						world->health[whatMonster].current-=dmg;
 						MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
 						//exit(-1);
@@ -3051,7 +3222,7 @@ void input_system(World* world, EngineData *engine) {
 				
 				int whatMonster = is_monster_in_next_postition(world,engine->nextPosition.x, engine->nextPosition.z); 
 				if(whatMonster){
-					int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+					int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
 					world->health[whatMonster].current-=dmg;
 					MESSAGE_F("You atacked %s", world->name[whatMonster])
 				//MESSAGE_F("Player health %d", world->health[0].current);
@@ -3094,7 +3265,7 @@ void input_system(World* world, EngineData *engine) {
 					if(world->dikstra[y][x] >= 255 ) {
 					int whatMonster = is_monster_in_next_postition(world,(float)x, (float)y); 
 					if(whatMonster){
-						int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+						int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
 						world->health[whatMonster].current-=dmg;
 						MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
 					}
@@ -3120,7 +3291,7 @@ void input_system(World* world, EngineData *engine) {
 			if(world->dikstra[y][x] >= 255 ) {
 				int whatMonster = is_monster_in_next_postition(world,engine->nextPosition.x, engine->nextPosition.z); 
 				if(whatMonster){
-					int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+					int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
 					world->health[whatMonster].current-=dmg;
 					MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
 				}
@@ -3225,7 +3396,7 @@ void input_system2d(World* world, EngineData *engine) {
                     if(world->dikstra[y][x] >= 255 ) {
                     int whatMonster = is_monster_in_next_postition(world,(float)x, (float)y); 
                     if(whatMonster){
-                        int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                        int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
                         world->health[whatMonster].current-=dmg;
                         MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
                         //exit(-1);
@@ -3250,7 +3421,7 @@ void input_system2d(World* world, EngineData *engine) {
                 
                 int whatMonster = is_monster_in_next_postition(world,engine->nextPosition.x, engine->nextPosition.z); 
                 if(whatMonster){
-                    int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                    int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
                     world->health[whatMonster].current-=dmg;
                     MESSAGE_F("You atacked %s", world->name[whatMonster])
                 //MESSAGE_F("Player health %d", world->health[0].current);
@@ -3330,7 +3501,7 @@ void input_system2d(World* world, EngineData *engine) {
                     if(world->dikstra[y][x] >= 255 ) {
                         int whatMonster = is_monster_in_next_postition(world,(float)x, (float)y); 
                         if(whatMonster){
-                            int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                            int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
                             world->health[whatMonster].current-=dmg;
                             MESSAGE_F("PLAYER ATTACK health %d", world->health[whatMonster].current);
                         }
@@ -3362,7 +3533,7 @@ void input_system2d(World* world, EngineData *engine) {
                 if(world->dikstra[y][x] >= 255 ) {
                     int whatMonster = is_monster_in_next_postition(world,engine->nextPosition.x, engine->nextPosition.z); 
                     if(whatMonster){
-                        int dmg = attack_dmg_callculations(world, 0, whatMonster, false);
+                        int dmg = attack_dmg_callculations(world, &engine->messeges, 0, whatMonster, false);
                         world->health[whatMonster].current-=dmg;
                         MESSAGE_F("You atacked %s", world->name[whatMonster])
                         if(dmg == 0){
@@ -3463,7 +3634,7 @@ void update_player_position_system(World* world, EngineData* engine) {
 	if(engine->isRotation)
 		MOVE_SPEED = 2.0f;
 	else{
-		MOVE_SPEED = (engine->is2d) ? 50.0f : 5.0f;
+		MOVE_SPEED = (engine->is2d) ? 50.0f : 50.0f;
 	} 
 		
 	const float TILE_SIZE  = 1.0f;
@@ -3564,7 +3735,7 @@ void update_entity_position_system(World* world, EngineData* engine) {
 	
 			if(world->input[i].isMoving == ATTACK && world->input[i].isFinishedAttack == false){
 				
-				int dmg = attack_dmg_callculations(world, i, 0, false);
+				int dmg = attack_dmg_callculations(world, &engine->messeges, i, 0, false);
 				//MESSAGE("Monster attack");
 				MESSAGE_F("You are atacked by %s", world->name[i])
 				//MESSAGE_F("Player health %d", world->health[0].current);
@@ -4208,7 +4379,7 @@ void status_system(World* world, EngineData* engine){
 			}
 			if(world->status[i].confusionTurn > 0){
 				world->status[i].confusionTurn--;
-				//MESSAGE_F("You are confuse %d", world->status[i].confusionTurn);
+				
 				if(i == 0){
 					MESSAGE_F("You are confuse");
 				}
@@ -4220,18 +4391,82 @@ void status_system(World* world, EngineData* engine){
 			}
 			if(world->status[i].levitationTurn > 0){
 				world->status[i].levitationTurn--;
-				//MESSAGE_F("You are confuse %d", world->status[i].confusionTurn);
+				
 				if(i == 0){
 					MESSAGE_F("You are levitating for %d turn", world->status[i].levitationTurn);
 				}
 			}
 			if(world->status[i].telepatyTurn > 0){
 				world->status[i].telepatyTurn--;
-				//MESSAGE_F("You are confuse %d", world->status[i].confusionTurn);
+				
 				if(i == 0){
-					//MESSAGE_F("You are levitating for %d turn", world->status[i].levitationTurn);
+					MESSAGE_F("You see enemy");
 				}
 			}
+
+			//Status efects for stats
+			if(world->status[i].strTurn > 0){
+				world->status[i].strTurn--;
+				if(world->status[i].strTurn > 0 && world->status[i].isStr == false){
+					world->stats[i].str += world->status[i].str;
+					world->status[i].isStr = true;
+					CLAMP(world->stats[i].str, 1, 10000);
+				}
+				else if(world->status[i].strTurn == 0){
+					world->status[i].isStr = false;
+					world->stats[i].str -= world->status[i].str;
+					CLAMP(world->stats[i].str, 1, 10000);
+				}
+				if(i == 0){
+					if(world->status[i].str > 0)
+						MESSAGE("You are strong");
+					else	
+						MESSAGE("You are weak");	
+				}
+			}
+			// Intelligence Status Effect
+            if(world->status[i].inteTurn > 0){
+                world->status[i].inteTurn--;
+                if(world->status[i].inteTurn > 0 && world->status[i].isInte == false){
+                    world->stats[i].inte += world->status[i].inte;
+                    world->status[i].isInte = true;
+                    CLAMP(world->stats[i].inte, 1, 10000);
+                }
+                else if(world->status[i].inteTurn == 0){
+                    world->status[i].isInte = false;
+                    world->stats[i].inte -= world->status[i].inte;
+                    CLAMP(world->stats[i].inte, 1, 10000);
+                }
+                if(i == 0){
+                    if(world->status[i].inte > 0)
+                        MESSAGE("You feel enlightened");
+                    else    
+                        MESSAGE("You feel confused");    
+                }
+            } 
+
+            // Dexterity Status Effect
+            if(world->status[i].dexTurn > 0){
+                world->status[i].dexTurn--;
+                if(world->status[i].dexTurn > 0 && world->status[i].isDex == false){
+                    world->stats[i].dex += world->status[i].dex;
+                    world->status[i].isDex = true;
+                    CLAMP(world->stats[i].dex, 1, 10000);
+                }
+                else if(world->status[i].dexTurn == 0){
+                    world->status[i].isDex = false;
+                    world->stats[i].dex -= world->status[i].dex;
+                    CLAMP(world->stats[i].dex, 1, 10000);
+                }
+                if(i == 0){
+                    if(world->status[i].dex > 0)
+                        MESSAGE("You are nimble");
+                    else    
+                        MESSAGE("You are clumsy");    
+                }
+            }
+			
+
 			
 		}
 	}
@@ -5145,7 +5380,7 @@ static void  free_level(World *world, Generator_DA *generators, Global_Ent_DA *e
 	xmclose(world->map);
 	generate_level(world, world->level, generators, ent);
 	//free_engine(engine);
-	engine = init_engine_soft(world, 0, engine);
+	engine = init_engine_soft(world, 0, engine, false);
 	if(engine == NULL){
 		ASSERT("Non inited engine");
 	}
@@ -5203,7 +5438,8 @@ void level_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, En
 
 //Spawn mons if num monster < 10 and rand_f32() < 1% 
 //Maybe in fog
-#define CHANCE_SPAWN_MONSTER 0.01f
+#define CHANCE_SPAWN_MONSTER 0.02f
+#define MIN_MONSTERS
 void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine){
 	if(world->nMonster < 10){
 		if(rand_f32() <= CHANCE_SPAWN_MONSTER){
@@ -5248,6 +5484,38 @@ void food_system(World *world, EngineData *engine){
 	}	
 }
 
+void mushroom_system(World *world, EngineData *engine){
+	if(engine->whatAction == EQUIPTED_USE_MUSHROOM){
+		const Item item = world->inventory[0].items[engine->itemAction];
+		MESSAGE_F("%s", item.name);
+		switch (item.value){
+        case 0:
+			world->status[0].strTurn += (10 + rand()%5);
+			world->status[0].str += (1 + rand()%10);
+            break;            
+        case 1:
+            world->status[0].inteTurn += (10 + rand()%5);
+			world->status[0].inte += (1 + rand()%10);
+            break;
+        case 2:
+            world->status[0].hallucination = 1;
+			world->status[0].hallucinationTurn += (10 + rand()%30);
+            break;
+        case 3:
+            world->status[0].dexTurn += (10 + rand()%5);
+			world->status[0].dex += (1 + rand()%10);
+            break;    
+        
+        default:
+			ASSERT("Unrechable");
+            break;
+        } 
+		free_item(&world->inventory[0], engine->itemAction);
+		
+	}
+}
+
+
 #define NUTRITION_DEC 30
 void nutrition_system(World *world, EngineData *engine){
 	const float chance = world->stats[0].str / (world->stats[0].cons*10.0f) + 0.1f;
@@ -5276,3 +5544,4 @@ void stamina_system(World *world, EngineData *engine){
 	}
 	DROP(engine);
 }
+

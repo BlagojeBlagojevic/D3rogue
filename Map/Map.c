@@ -1215,7 +1215,7 @@ static void isolate_largest_region(char** tiles, int w, int h) {
 }
 
 static void generate_ca_shape(char** tiles, int w, int h) {
-    float wall_chance = 0.55f;
+    float wall_chance = 0.1f;
     for(int y=0; y<h; y++) for(int x=0; x<w; x++) {
         tiles[y][x] = (rand() % 100 < wall_chance * 100) ? '#' : ' ';
     }
@@ -1267,6 +1267,7 @@ static BrogueRoom create_brogue_room(int min_size, int max_size) {
             }
         }
     } else {
+        //Maybe fail!!!
         generate_ca_shape(room.tiles, room.w, room.h);
     }
 
@@ -1609,8 +1610,8 @@ void xmgen_add_enviroment(Map* map, char tile, int x, int y,  int w, int h, floa
     for(int yL = 0; yL < lake.h; yL++){
         for(int xL = 0; xL < lake.w; xL++){
             if(lake.walling[yL][xL] == ' ' ){
-                int xM = (xL + x)%map->w;
-                int yM = (yL + y)%map->h;
+                int xM = (xL + x)%(map->w - 1);
+                int yM = (yL + y)%(map->h - 1);
                 if(xM == 0){
                     xM = 1;
                 }
@@ -1666,11 +1667,11 @@ Map xmgen_drunk(const int w, const int h, const float floor_goal_percent) {
 
 Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_size, const int max_size) {
     srand((unsigned)time(0));
-    const Map map = mnew(h, w);
-    int isGen = true;
+    Map map; //= mnew(h, w);
+    int isGen = false;
     
-    while(isGen){
- 
+    while(!isGen){
+    map = mnew(h, w);
     
 
     Rect* rooms = toss(Rect, max_rooms);
@@ -1679,6 +1680,7 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
     BrogueRoom first_room = create_brogue_room(min_size, max_size);
     int start_x = (w / 2) - (first_room.w / 2);
     int start_y = (h / 2) - (first_room.h / 2);
+    
     for (int y = 0; y < first_room.h; y++) {
         for (int x = 0; x < first_room.w; x++) {
             if (first_room.tiles[y][x] == ' ') {
@@ -1687,6 +1689,8 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
             }
         }
     }
+    //xmprint(map);
+    //exit(1);
     rooms[room_count_local++] = (Rect){start_x, start_y, first_room.w, first_room.h};
 
     for(int y=0; y<first_room.h; y++) free(first_room.tiles[y]); free(first_room.tiles);
@@ -1694,7 +1698,7 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
     int rooms_placed = 1;
     int attempts = 0;
 
-    while (rooms_placed < max_rooms && attempts < 2000) {
+    while (rooms_placed < max_rooms && attempts < 20000) {
         attempts++;
         BrogueRoom new_room = create_brogue_room(min_size, max_size);
 
@@ -1702,6 +1706,7 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
         int perimeter_count = 0;
         for (int y = 1; y < h - 1; y++) {
             for (int x = 1; x < w - 1; x++) {
+                //printf("%d %d\n", x, y);
                 if (map.walling[y][x] == '#') {
                     if (map.walling[y - 1][x] == ' ' || map.walling[y + 1][x] == ' ' ||
                         map.walling[y][x - 1] == ' ' || map.walling[y][x + 1] == ' ') {
@@ -1810,7 +1815,8 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
         free(perimeter);
         for(int y=0; y<new_room.h; y++) free(new_room.tiles[y]); free(new_room.tiles);
     }
-
+   // xmprint(map);
+   // exit(1);
     int wallCount = 0;
     for(int y = 0; y < map.h; y++){
         for(int x = 0; x < map.w; x++){
@@ -1822,11 +1828,11 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
     if(wallCount == (map.h*map.w)){
         xmclose(map);
         free(rooms);
-        isGen = true;
+        isGen = false;
         //return xmgen_brogue(w, h, max_rooms, min_size, max_size);
     }
     else{
-        isGen = false;
+        isGen = true;
         connect_rooms(map, rooms, room_count_local);
         free(rooms);    
     }
@@ -1843,8 +1849,10 @@ Map xmgen_brogue(const int w, const int h, const int max_rooms, const int min_si
       //      isLake = true;
       //  }
    // }
+   printf("isgen %d\n", isGen);
 
 }
-
+ //   xmprint(map);
+//    exit(-1);
     return map;
 }

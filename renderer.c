@@ -112,7 +112,7 @@ EngineData* init_engine(World *world, int player_entity_id, const char* name_atl
 
 
 //, int isMapReset
-EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *engine) {
+EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *engine, int isStart) {
 	const Position p =  world->position[player_entity_id];
 
 
@@ -148,22 +148,16 @@ EngineData* init_engine_soft(World *world, int player_entity_id, EngineData *eng
 			else {
 				data[y* world->map.w+x] = 0; //FLOOR
 				}
-				world->dikstra[y][x] = 0;
-				world->isExpMap[y][x] = false;
-				world->visibe[y][x] = 0;
-		        world->gasMap[y][x] = (Gas){0};
-		        world->trapMap[y][x] =  (Trap){0};;
-		       // world->fire[y][x] = (Fire){0};
+				if(!isStart){
+					world->dikstra[y][x] = 0;
+					world->isExpMap[y][x] = false;
+					world->visibe[y][x] = 0;
+					world->gasMap[y][x] = (Gas){0};
+					world->trapMap[y][x] =  (Trap){0};;	
+				}
 			}
-			
 		}
 	map_image.data = data;
-	//Unloaded at the end
-
-	//engine->texture = LoadTextureFromImage(map_image);
-
-
-
 	engine->camera.position = (Vector3) {
 		(float)p.x, 0.6f, (float)p.y
 		};

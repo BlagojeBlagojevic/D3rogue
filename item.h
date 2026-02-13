@@ -27,6 +27,7 @@ typedef enum{
 	EQUIPTED_USE_SCROL,
 	EQUIPTED_USE_POTION,
 	EQUIPTED_USE_FOOD,
+	EQUIPTED_USE_MUSHROOM,
 	EQUIPTED_USE_GOLD, //Prob not used 
 
 	EQUIPTED_NUM,
@@ -155,8 +156,10 @@ typedef enum{
 	Tourch,
 	Food,
 	Gold,
+	Mushroom,
 	Scroll,
 	Potion,
+	
 	
 	Item_Num
 }Item_Type;
@@ -282,8 +285,9 @@ static const char* ITEM_NAMES[] = {
     "Tourch",
 	"Food",
 	"Gold",
+	"Mushroom",
 	"Scroll",
-	"Potion",
+	"Potion"
 	
 };
 

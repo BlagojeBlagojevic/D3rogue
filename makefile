@@ -1,6 +1,6 @@
 CC = gcc
 DEBUG_CFLAGS = -Og -fsanitize=address -static-libasan -ggdb
-CFLAGS = -Og -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -Wno-unused-result -I./cJSON/ 
+CFLAGS =  -O3 -std=c99 -Wall -Wextra -Wno-unused-variable -Wno-misleading-indentation -Wno-unused-result -I./cJSON/ 
  
 
 

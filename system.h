@@ -47,6 +47,7 @@ void level_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, En
 void spawn_monster_system(World *world, Generator_DA *generators, Global_Ent_DA *ent, EngineData *engine);
 
 void food_system(World *world, EngineData *engine);
+void mushroom_system(World *world, EngineData *engine);
 void nutrition_system(World *world, EngineData *engine);
 void stamina_system(World *world, EngineData *engine);
 
